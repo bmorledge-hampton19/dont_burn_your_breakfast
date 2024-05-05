@@ -1,0 +1,157 @@
+[gd_scene load_steps=5 format=3 uid="uid://djsgoo6pmga6k"]
+
+[ext_resource type="Texture2D" uid="uid://cvkcvyv67te5x" path="res://sprites/backgrounds/bathroom.png" id="1_67bnv"]
+[ext_resource type="Script" path="res://scripts/Terminal.gd" id="2_2jsel"]
+[ext_resource type="Script" path="res://scripts/Caret.gd" id="3_vv4nk"]
+[ext_resource type="Script" path="res://scripts/InputText.gd" id="3_ylcda"]
+
+[node name="MainViewport" type="CenterContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Borders" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(2000, 2000)
+layout_mode = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Background" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 400)
+layout_mode = 2
+texture = ExtResource("1_67bnv")
+stretch_mode = 5
+
+[node name="Terminal" type="ColorRect" parent="VBoxContainer" node_paths=PackedStringArray("terminalLines", "inputText")]
+custom_minimum_size = Vector2(720, 140)
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0, 0, 0, 1)
+script = ExtResource("2_2jsel")
+terminalLines = [NodePath("VBoxContainer/Line1/Label1"), NodePath("VBoxContainer/Line2/Label2"), NodePath("VBoxContainer/Line3/Label3"), NodePath("VBoxContainer/Line4/Label4")]
+inputText = NodePath("VBoxContainer/ActiveLine/HBoxContainer/InputText/InputLabel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Terminal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Line1" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label1" type="Label" parent="VBoxContainer/Terminal/VBoxContainer/Line1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 24
+text = "Test test test test"
+vertical_alignment = 1
+
+[node name="Line2" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label2" type="Label" parent="VBoxContainer/Terminal/VBoxContainer/Line2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 24
+text = "another test> This font"
+vertical_alignment = 1
+
+[node name="Line3" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label3" type="Label" parent="VBoxContainer/Terminal/VBoxContainer/Line3"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 24
+text = "actually has even kerning!"
+vertical_alignment = 1
+
+[node name="Line4" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label4" type="Label" parent="VBoxContainer/Terminal/VBoxContainer/Line4"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 24
+text = "The max length is reliably 30!"
+vertical_alignment = 1
+
+[node name="ActiveLine" type="Control" parent="VBoxContainer/Terminal/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine"]
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 28.0
+theme_override_constants/separation = 0
+
+[node name="LineStart" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine/HBoxContainer/LineStart"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 24
+text = "> "
+vertical_alignment = 1
+
+[node name="InputText" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="InputLabel" type="Label" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine/HBoxContainer/InputText" node_paths=PackedStringArray("caretContainer")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+vertical_alignment = 1
+script = ExtResource("3_ylcda")
+caretContainer = NodePath("../../../CaretContainer")
+
+[node name="CaretContainer" type="MarginContainer" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+offset_left = 48.0
+offset_right = 72.0
+offset_bottom = 28.0
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Caret" type="ColorRect" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine/CaretContainer"]
+layout_mode = 2
+script = ExtResource("3_vv4nk")
+
+[node name="Timer" type="Timer" parent="VBoxContainer/Terminal/VBoxContainer/ActiveLine/CaretContainer/Caret"]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="VBoxContainer/Terminal/VBoxContainer/ActiveLine/CaretContainer/Caret/Timer" to="VBoxContainer/Terminal/VBoxContainer/ActiveLine/CaretContainer/Caret" method="toggleCarat"]

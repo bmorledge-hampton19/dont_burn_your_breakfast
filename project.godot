@@ -1,0 +1,37 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="dont_burn_your_breakfast"
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+config/icon="res://sprites/misc/icon.svg"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=540
+window/size/initial_position_type=4
+window/size/window_width_override=1440
+window/size/window_height_override=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+
+[dotnet]
+
+project/assembly_name="dont_burn_your_breakfast"
+
+[gui]
+
+theme/custom_font="res://other_resources/kongtext.ttf"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
