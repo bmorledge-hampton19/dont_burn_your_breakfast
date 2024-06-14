@@ -1,0 +1,174 @@
+[gd_scene load_steps=8 format=3 uid="uid://diwikhab7cyls"]
+
+[ext_resource type="Script" path="res://scripts/endings/Endings.gd" id="1_ndbwb"]
+[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_ubale"]
+[ext_resource type="Texture2D" uid="uid://cuco0kwfdox22" path="res://sprites/backgrounds/main_menu.png" id="3_wbmg4"]
+[ext_resource type="PackedScene" uid="uid://db2h0swgmao7f" path="res://scenes/scene_modules/endings/ending_preview.tscn" id="4_uew22"]
+[ext_resource type="Texture2D" uid="uid://568p6p1ky1qc" path="res://sprites/movable_objects/lock.png" id="5_q6cla"]
+[ext_resource type="Texture2D" uid="uid://qf2j1pald6as" path="res://sprites/movable_objects/cereal_coin.png" id="6_4v7rk"]
+[ext_resource type="Script" path="res://scripts/endings/EndingsParser.gd" id="7_ysavo"]
+
+[node name="Achievements" type="CenterContainer" node_paths=PackedStringArray("background", "grayFilter", "lockedEnding", "shortcutText", "lockedSprite", "unlockedSprite", "titleText", "cerealCoinCounter", "endingsGrid", "prevText", "nextText", "inputParser")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_ndbwb")
+background = NodePath("VBoxContainer/Background")
+grayFilter = NodePath("VBoxContainer/Background/GrayFilter")
+lockedEnding = NodePath("VBoxContainer/Background/LockedEnding")
+shortcutText = NodePath("VBoxContainer/Background/Shortcut")
+lockedSprite = NodePath("VBoxContainer/Background/Locked")
+unlockedSprite = NodePath("VBoxContainer/Background/Unlocked")
+titleText = NodePath("VBoxContainer/Background/SceneName")
+cerealCoinCounter = NodePath("VBoxContainer/Background/CrumbCoinCounter")
+endingsGrid = NodePath("VBoxContainer/Background/EndingsGrid")
+endingPreviewScene = ExtResource("4_uew22")
+prevText = NodePath("VBoxContainer/Background/Prev")
+nextText = NodePath("VBoxContainer/Background/Next")
+inputParser = NodePath("EndingsParser")
+
+[node name="Borders" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(4320, 2340)
+layout_mode = 2
+color = Color(0.964706, 0.964706, 0.964706, 1)
+
+[node name="RepeatingCereal" type="TextureRect" parent="Borders"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ubale")
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Background" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 400)
+layout_mode = 2
+texture = ExtResource("3_wbmg4")
+stretch_mode = 5
+
+[node name="GrayFilter" type="ColorRect" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_right = 720.0
+offset_bottom = 400.0
+color = Color(0, 0, 0, 0.556863)
+
+[node name="LockedEnding" type="ColorRect" parent="VBoxContainer/Background"]
+visible = false
+layout_mode = 0
+offset_right = 720.0
+offset_bottom = 400.0
+color = Color(0.368627, 0.368627, 0.368627, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/LockedEnding"]
+layout_mode = 0
+offset_right = 720.0
+offset_bottom = 400.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 240
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Shortcut" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 128.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 16
+text = "Shortcut"
+horizontal_alignment = 2
+
+[node name="Locked" type="Sprite2D" parent="VBoxContainer/Background"]
+visible = false
+position = Vector2(148, 22)
+scale = Vector2(2, 2)
+texture = ExtResource("5_q6cla")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Unlocked" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(148, 22)
+scale = Vector2(2, 2)
+texture = ExtResource("5_q6cla")
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 16)
+
+[node name="SceneName" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -144.0
+offset_top = 8.0
+offset_right = 144.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Main Menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CrumbCoinCounter" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 604.0
+offset_top = 11.0
+offset_right = 676.0
+offset_bottom = 35.0
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+
+[node name="CrumbCoin" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(696, 24)
+scale = Vector2(2, 2)
+texture = ExtResource("6_4v7rk")
+
+[node name="EndingsGrid" type="GridContainer" parent="VBoxContainer/Background"]
+layout_direction = 2
+layout_mode = 0
+offset_left = 60.0
+offset_top = 48.0
+offset_right = 660.0
+offset_bottom = 368.0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Prev" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_top = 376.0
+offset_right = 144.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 24
+text = "< Prev"
+
+[node name="Next" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 576.0
+offset_top = 376.0
+offset_right = 720.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 24
+text = "Next >"
+
+[node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
+layout_mode = 2
+
+[node name="EndingsParser" type="Node" parent="." node_paths=PackedStringArray("endings")]
+script = ExtResource("7_ysavo")
+endings = NodePath("..")

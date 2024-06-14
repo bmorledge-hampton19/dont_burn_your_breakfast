@@ -1,0 +1,191 @@
+[gd_scene load_steps=7 format=3 uid="uid://djsgoo6pmga6k"]
+
+[ext_resource type="Texture2D" uid="uid://cvkcvyv67te5x" path="res://sprites/backgrounds/bathroom.png" id="1_67bnv"]
+[ext_resource type="Script" path="res://scripts/bathroom/Bathroom.gd" id="1_p4c17"]
+[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_snu0w"]
+[ext_resource type="Texture2D" uid="uid://bi7u64ci57n62" path="res://sprites/movable_objects/bathroom_movable_objects.png" id="2_tqea7"]
+[ext_resource type="Script" path="res://scripts/bathroom/BathroomParser.gd" id="6_ch1kd"]
+[ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="6_g0ou1"]
+
+[node name="Bathroom" type="CenterContainer" node_paths=PackedStringArray("playerControl", "player", "toothpastedPlayer", "playersToothpaste", "playersToothbrush", "playerInTub", "lubedPlayerInTub", "spilledShampoo", "openedCabinet", "toothpaste", "openedTopDrawer", "openedMiddleDrawer", "openedBottomDrawer", "toothbrush", "openedToiletSeat", "keyInLock", "openedDoor", "inputParser")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_p4c17")
+playerControl = NodePath("VBoxContainer/Background/PlayerControl")
+player = NodePath("VBoxContainer/Background/PlayerControl/Player")
+toothpastedPlayer = NodePath("VBoxContainer/Background/PlayerControl/ToothpastedPlayer")
+playersToothpaste = NodePath("VBoxContainer/Background/PlayerControl/PlayersToothpaste")
+playersToothbrush = NodePath("VBoxContainer/Background/PlayerControl/PlayersToothbrush")
+playerInTub = NodePath("VBoxContainer/Background/PlayerInTub")
+lubedPlayerInTub = NodePath("VBoxContainer/Background/LubedPlayerInTub")
+spilledShampoo = NodePath("VBoxContainer/Background/SpilledShampoo")
+openedCabinet = NodePath("VBoxContainer/Background/OpenCabinet")
+toothpaste = NodePath("VBoxContainer/Background/OpenCabinet/Toothpaste")
+openedTopDrawer = NodePath("VBoxContainer/Background/OpenTopDrawer")
+openedMiddleDrawer = NodePath("VBoxContainer/Background/OpenMiddleDrawer")
+openedBottomDrawer = NodePath("VBoxContainer/Background/OpenBottomDrawer")
+toothbrush = NodePath("VBoxContainer/Background/OpenMiddleDrawer/Toothbrush")
+openedToiletSeat = NodePath("VBoxContainer/Background/OpenToiletSeat")
+keyInLock = NodePath("VBoxContainer/Background/Key")
+openedDoor = NodePath("VBoxContainer/Background/OpenDoor")
+inputParser = NodePath("BathroomParser")
+
+[node name="Borders" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(4320, 2340)
+layout_mode = 2
+color = Color(0.964706, 0.964706, 0.964706, 1)
+
+[node name="RepeatingCereal" type="TextureRect" parent="Borders"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_snu0w")
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Background" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 400)
+layout_mode = 2
+texture = ExtResource("1_67bnv")
+stretch_mode = 5
+
+[node name="OpenCabinet" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(491, 333)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(96, 64, 121, 67)
+
+[node name="Toothpaste" type="Sprite2D" parent="VBoxContainer/Background/OpenCabinet"]
+position = Vector2(47, -29)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(16, 0, 13, 5)
+
+[node name="OpenBottomDrawer" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(641, 309)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(0, 96, 25, 15)
+
+[node name="OpenMiddleDrawer" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(642, 298)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(32, 96, 26, 18)
+
+[node name="Toothbrush" type="Sprite2D" parent="VBoxContainer/Background/OpenMiddleDrawer"]
+position = Vector2(-1.5, -1)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(0, 0, 7, 8)
+
+[node name="OpenTopDrawer" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(642, 284)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(64, 96, 26, 18)
+
+[node name="OpenToiletSeat" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(670, 323)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(96, 16, 50, 37)
+
+[node name="Key" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(326, 205)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(48, 0, 4, 3)
+
+[node name="OpenDoor" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(262, 232)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(224, 0, 70, 124)
+
+[node name="SpilledShampoo" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(146, 378)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(32, 0, 6, 6)
+
+[node name="PlayerInTub" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(78, 317)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(0, 16, 36, 65)
+
+[node name="LubedPlayerInTub" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(78, 317)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(48, 16, 36, 65)
+
+[node name="PlayerControl" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 156.0
+offset_top = 232.0
+offset_right = 212.0
+offset_bottom = 382.0
+
+[node name="PlayersToothpaste" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+position = Vector2(0, 72)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(16, 0, 13, 5)
+
+[node name="PlayersToothbrush" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+position = Vector2(54, 76)
+rotation = 1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("2_tqea7")
+region_enabled = true
+region_rect = Rect2(0, 0, 7, 8)
+
+[node name="ToothpastedPlayer" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+scale = Vector2(2, 2)
+texture = ExtResource("6_g0ou1")
+centered = false
+region_enabled = true
+region_rect = Rect2(34, 2, 28, 75)
+
+[node name="Player" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+scale = Vector2(2, 2)
+texture = ExtResource("6_g0ou1")
+centered = false
+region_enabled = true
+region_rect = Rect2(2, 2, 28, 75)
+
+[node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
+layout_mode = 2
+
+[node name="BathroomParser" type="Node" parent="." node_paths=PackedStringArray("bathroom")]
+script = ExtResource("6_ch1kd")
+bathroom = NodePath("..")

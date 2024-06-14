@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://cwxsaly5e57nt"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_muyrj"]
+
+[resource]
+script = ExtResource("1_muyrj")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["My daddy used to always say: Treat every tube of toothpaste like it's loaded!", "When the key is visible, make sure to aim the tube of toothpaste at yourself before squeezing it hard."])
+unlockingHintCosts = Array[int]([1, 2])
+avoidingHints = Array[String](["Where do you want the key to end up?", "When the key is visible, aim the tube of toothpaste at the keyhole before squeezing it hard."])
+avoidingHintCosts = Array[int]([1, 2])

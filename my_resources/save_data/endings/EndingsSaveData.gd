@@ -1,0 +1,21 @@
+class_name EndingsSaveData
+extends Resource
+
+@export var cerealCoins := 0
+
+@export var isSceneBeaten := {
+	SceneManager.SceneID.MAIN_MENU : true,
+	SceneManager.SceneID.BATHROOM : false,
+	SceneManager.SceneID.FRONT_YARD : false,
+	SceneManager.SceneID.BEDROOM : false,
+	SceneManager.SceneID.KITCHEN : false
+}
+
+@export var isSceneShortcutUnlocked := {
+	SceneManager.SceneID.BATHROOM : true,
+	SceneManager.SceneID.FRONT_YARD : false,
+	SceneManager.SceneID.BEDROOM : false,
+	SceneManager.SceneID.KITCHEN : false
+}
+
+@export var endings := {}

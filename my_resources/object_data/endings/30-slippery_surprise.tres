@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://6qcy1qlgtvpr"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_sktcm"]
+
+[resource]
+script = ExtResource("1_sktcm")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["Your shampoo is so slippery it could be considered a hazard in certain situations...", "Try being more general when applying the shampoo.", "Squeeze the shampoo onto the floor before exiting the tub. Make sure you've lubed yourself up too!"])
+unlockingHintCosts = Array[int]([1, 1, 2])
+avoidingHints = Array[String](["You'll need to be more specific when applying the shampoo.", "What do you actually want to apply the shampoo to?", "Apply the shampoo to yourself."])
+avoidingHintCosts = Array[int]([1, 1, 1])

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://cyr4poe8ey78y"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_7wjby"]
+
+[resource]
+script = ExtResource("1_7wjby")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["Your toilet is filled with water, and you've probably seen by now how dangerous that can be...", "Flush the toilet while the lid is open."])
+unlockingHintCosts = Array[int]([1, 2])
+avoidingHints = Array[String](["Don't be gross. Close the lid before you flush!"])
+avoidingHintCosts = Array[int]([2])

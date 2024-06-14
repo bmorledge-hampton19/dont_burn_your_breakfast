@@ -1,0 +1,357 @@
+[gd_scene load_steps=5 format=3 uid="uid://cd27df5ltxigd"]
+
+[ext_resource type="Script" path="res://scripts/options/OptionsScene.gd" id="1_6rfhp"]
+[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_4ll71"]
+[ext_resource type="Texture2D" uid="uid://c16j2frhibyjy" path="res://sprites/movable_objects/spoon_checkmark.png" id="3_0xxti"]
+[ext_resource type="Script" path="res://scripts/options/OptionsParser.gd" id="4_smppa"]
+
+[node name="Options_Scene" type="CenterContainer" node_paths=PackedStringArray("smallFontSizeSpoon", "mediumFontSizeSpoon", "largeFontSizeSpoon", "painfullySmallFontSizeSpoon", "painfullyLargeFontSizeSpoon", "slowFontSpeedSpoon", "mediumFontSpeedSpoon", "fastFontSpeedSpoon", "windowedSpoon", "fullscreenSpoon", "painfullySmallFontSizeLabel", "painfullyLargeFontSizeLabel", "inputParser")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_6rfhp")
+smallFontSizeSpoon = NodePath("VBoxContainer/Background/FontSize/Option1/Spoon")
+mediumFontSizeSpoon = NodePath("VBoxContainer/Background/FontSize/Option2/Spoon")
+largeFontSizeSpoon = NodePath("VBoxContainer/Background/FontSize/Option3/Spoon")
+painfullySmallFontSizeSpoon = NodePath("VBoxContainer/Background/FontSize/Option4/Spoon")
+painfullyLargeFontSizeSpoon = NodePath("VBoxContainer/Background/FontSize/Option5/Spoon")
+slowFontSpeedSpoon = NodePath("VBoxContainer/Background/FontSpeed/Option1/Spoon")
+mediumFontSpeedSpoon = NodePath("VBoxContainer/Background/FontSpeed/Option2/Spoon")
+fastFontSpeedSpoon = NodePath("VBoxContainer/Background/FontSpeed/Option3/Spoon")
+windowedSpoon = NodePath("VBoxContainer/Background/Display/Option1/Spoon")
+fullscreenSpoon = NodePath("VBoxContainer/Background/Display/Option2/Spoon")
+painfullySmallFontSizeLabel = NodePath("VBoxContainer/Background/FontSize/Option4/Label")
+painfullyLargeFontSizeLabel = NodePath("VBoxContainer/Background/FontSize/Option5/Label")
+inputParser = NodePath("OptionsParser")
+
+[node name="Borders" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(4320, 2340)
+layout_mode = 2
+color = Color(0.964706, 0.964706, 0.964706, 1)
+
+[node name="RepeatingCereal" type="TextureRect" parent="Borders"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4ll71")
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Background" type="ColorRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 400)
+layout_mode = 2
+color = Color(0.168883, 0.175339, 0.16569, 1)
+
+[node name="Title" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 7.0
+offset_right = 176.0
+offset_bottom = 39.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Options"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FontSize" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 50.0
+offset_right = 291.0
+offset_bottom = 101.0
+theme_override_font_sizes/font_size = 24
+text = "Terminal
+Font size:"
+vertical_alignment = 1
+
+[node name="Option1" type="Control" parent="VBoxContainer/Background/FontSize"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 2.0
+offset_top = 71.0
+offset_right = 2.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSize/Option1"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Small"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSize/Option1"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option2" type="Control" parent="VBoxContainer/Background/FontSize"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 125.0
+offset_top = 71.0
+offset_right = 125.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSize/Option2"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Medium
+"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSize/Option2"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option3" type="Control" parent="VBoxContainer/Background/FontSize"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 265.0
+offset_top = 71.0
+offset_right = 265.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSize/Option3"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Large"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSize/Option3"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option4" type="Control" parent="VBoxContainer/Background/FontSize"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 2.0
+offset_top = 121.0
+offset_right = 2.0
+offset_bottom = 121.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSize/Option4"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "???????????????"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSize/Option4"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option5" type="Control" parent="VBoxContainer/Background/FontSize"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 2.0
+offset_top = 171.0
+offset_right = 2.0
+offset_bottom = 171.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSize/Option5"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "???????????????"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSize/Option5"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="FontSpeed" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 275.0
+offset_right = 291.0
+offset_bottom = 326.0
+theme_override_font_sizes/font_size = 24
+text = "Terminal
+Font speed:"
+vertical_alignment = 1
+
+[node name="Option1" type="Control" parent="VBoxContainer/Background/FontSpeed"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 2.0
+offset_top = 71.0
+offset_right = 2.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSpeed/Option1"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Slow"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSpeed/Option1"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option2" type="Control" parent="VBoxContainer/Background/FontSpeed"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 125.0
+offset_top = 71.0
+offset_right = 125.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSpeed/Option2"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Medium
+"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSpeed/Option2"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option3" type="Control" parent="VBoxContainer/Background/FontSpeed"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 265.0
+offset_top = 71.0
+offset_right = 265.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/FontSpeed/Option3"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Fast"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/FontSpeed/Option3"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Display" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 50.0
+offset_right = 695.0
+offset_bottom = 101.0
+theme_override_font_sizes/font_size = 24
+text = "Display
+Format:"
+vertical_alignment = 2
+
+[node name="Option1" type="Control" parent="VBoxContainer/Background/Display"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 2.0
+offset_top = 71.0
+offset_right = 2.0
+offset_bottom = 71.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/Display/Option1"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Windowed"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/Display/Option1"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="Option2" type="Control" parent="VBoxContainer/Background/Display"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 2.0
+offset_top = 121.0
+offset_right = 2.0
+offset_bottom = 121.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Background/Display/Option2"]
+layout_mode = 2
+offset_left = 20.0
+offset_top = 4.0
+offset_right = 100.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 16
+text = "Fullscreen"
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/Display/Option2"]
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-5, -8)
+
+[node name="DeleteSaveData" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 275.0
+offset_right = 700.0
+offset_bottom = 326.0
+theme_override_colors/font_color = Color(0.698039, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "[Delete]
+Save data?"
+vertical_alignment = 2
+
+[node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
+layout_mode = 2
+
+[node name="OptionsParser" type="Node" parent="." node_paths=PackedStringArray("optionsScene")]
+script = ExtResource("4_smppa")
+optionsScene = NodePath("..")

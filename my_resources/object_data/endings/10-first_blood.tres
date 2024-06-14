@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://ctjq48ujg5fxi"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_1gyfe"]
+
+[resource]
+script = ExtResource("1_1gyfe")
+endingID = 10
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["Really? You didn't unlock this one on accident? Well, just remember that you needed that shampoo for a reason.", "Exit the bathtub before putting the shampoo on yourself."])
+unlockingHintCosts = Array[int]([1, 1])
+avoidingHints = Array[String](["You'll need to make sure there's not so much friction between you and the cereal. Maybe some kind of lubricant would help...", "Put the shampoo on yourself before exiting the bathtub."])
+avoidingHintCosts = Array[int]([1, 1])

@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://db2h0swgmao7f"]
+
+[ext_resource type="Script" path="res://scripts/endings/EndingPreview.gd" id="1_h2tjp"]
+[ext_resource type="Texture2D" uid="uid://qf2j1pald6as" path="res://sprites/movable_objects/cereal_coin.png" id="2_obo71"]
+
+[node name="EndingPreview" type="MarginContainer" node_paths=PackedStringArray("preview", "obfuscator", "endingNumber", "cerealCoin")]
+custom_minimum_size = Vector2(150, 80)
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+script = ExtResource("1_h2tjp")
+preview = NodePath("Control/Preview")
+obfuscator = NodePath("Control/Obfuscator")
+endingNumber = NodePath("Control/EndingNumber")
+cerealCoin = NodePath("Control/CerealCoin")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Preview" type="TextureRect" parent="Control"]
+layout_mode = 2
+offset_right = 90.0
+offset_bottom = 80.0
+stretch_mode = 4
+
+[node name="CerealCoin" type="Sprite2D" parent="Control"]
+position = Vector2(45, 25)
+scale = Vector2(2, 2)
+texture = ExtResource("2_obo71")
+
+[node name="Obfuscator" type="ColorRect" parent="Control"]
+layout_mode = 0
+offset_right = 90.0
+offset_bottom = 50.0
+color = Color(0.370364, 0.370364, 0.370364, 1)
+
+[node name="QuestionMark" type="Label" parent="Control/Obfuscator"]
+layout_mode = 0
+offset_right = 90.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EndingNumber" type="Label" parent="Control"]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 90.0
+offset_bottom = 66.0
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 1

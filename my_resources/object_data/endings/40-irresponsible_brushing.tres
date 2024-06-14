@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://bf3nri6bj788i"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_ai07n"]
+
+[resource]
+script = ExtResource("1_ai07n")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["You'll have to brush your teeth more than once.", "Brush your teeth multiple times without spitting in between."])
+unlockingHintCosts = Array[int]([1, 2])
+avoidingHints = Array[String](["Make sure to spit  your toothpaste into the toilet after each brushing."])
+avoidingHintCosts = Array[int]([2])

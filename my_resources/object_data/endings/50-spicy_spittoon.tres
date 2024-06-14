@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://1g0im08o4giw"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_x1b2u"]
+
+[resource]
+script = ExtResource("1_x1b2u")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["Your mouth waters at the thought of the delicious breakfast waiting for you in the kitchen!", "Your saliva is just as reactive as any other water you've put in the tub.", "When you have a mouth full of toothpaste, spit into the bathtub."])
+unlockingHintCosts = Array[int]([1, 2, 1])
+avoidingHints = Array[String](["When simple instructions have catastrophic results, remember to be more specific.", "When you need to spit out the toothpaste, spit it into the sink or the toilet."])
+avoidingHintCosts = Array[int]([1, 2])

@@ -10,23 +10,44 @@ config_version=5
 
 [application]
 
-config/name="dont_burn_your_breakfast"
+config/name="Don't Burn Your Breakfast"
+config/description="A silly little game about the inherent dangers of the most important meal of the day.
+Inspired by the timeless classic, \"Don't Shit Your Pants\"."
+config/version="0.1"
+run/main_scene="res://scenes/main_scenes/main_menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
-config/icon="res://sprites/misc/icon.svg"
+boot_splash/show_image=false
+config/icon="res://sprites/misc/app_icon.png"
+config/windows_native_icon="res://sprites/misc/app_icon.ico"
+
+[autoload]
+
+SceneManager="*res://scripts/singletons/SceneManager.gd"
+Options="*res://scripts/singletons/Options.gd"
+EndingsManager="*res://scripts/singletons/EndingsManager.gd"
+Helpers="*res://scripts/singletons/Helpers.gd"
+
+[debug]
+
+gdscript/warnings/integer_division=0
 
 [display]
 
 window/size/viewport_width=720
 window/size/viewport_height=540
 window/size/initial_position_type=4
-window/size/window_width_override=1440
-window/size/window_height_override=1080
+window/size/window_width_override=720
+window/size/window_height_override=540
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
 [dotnet]
 
 project/assembly_name="dont_burn_your_breakfast"
+
+[filesystem]
+
+import/blender/enabled=false
 
 [gui]
 

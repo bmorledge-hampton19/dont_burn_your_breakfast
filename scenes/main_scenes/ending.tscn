@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmssmkmtldj4w"]
+
+[ext_resource type="Script" path="res://scripts/ending/Ending.gd" id="1_7odxc"]
+[ext_resource type="Script" path="res://scripts/ending/EndingParser.gd" id="3_xc0cu"]
+
+[node name="Ending" type="CenterContainer" node_paths=PackedStringArray("backgroundTextureRect", "terminal", "inputParser")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_7odxc")
+backgroundTextureRect = NodePath("VBoxContainer/Background")
+terminal = NodePath("VBoxContainer/PlaceholderTerminal")
+inputParser = NodePath("EndingParser")
+
+[node name="Borders" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(2000, 2000)
+layout_mode = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Background" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 400)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
+layout_mode = 2
+
+[node name="EndingParser" type="Node" parent="." node_paths=PackedStringArray("endingScene")]
+script = ExtResource("3_xc0cu")
+endingScene = NodePath("..")

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://fxeu3w6skg6s"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_5qmne"]
+
+[resource]
+script = ExtResource("1_5qmne")
+endingID = 5
+sceneID = 2
+coinsRewarded = 2
+unlockingHints = Array[String](["A watched pot never boils, but this title screen ain't no pot!", "Inspect the title"])
+unlockingHintCosts = Array[int]([1, 1])
+avoidingHints = Array[String](["Just play the game, dummy!"])
+avoidingHintCosts = Array[int]([0])

@@ -1,0 +1,376 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6b6dl8vehrvy"]
+
+[ext_resource type="Script" path="res://scripts/terminal/Terminal.gd" id="1_5jw0x"]
+[ext_resource type="Script" path="res://scripts/terminal/InputText.gd" id="2_us3v0"]
+[ext_resource type="Script" path="res://scripts/terminal/Caret.gd" id="3_lk77g"]
+
+[node name="Terminal" type="ColorRect" node_paths=PackedStringArray("terminalLines", "inputText")]
+custom_minimum_size = Vector2(720, 140)
+size_flags_vertical = 3
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_5jw0x")
+terminalLines = [NodePath("VBoxContainer/Line1/Label1"), NodePath("VBoxContainer/Line2/Label2"), NodePath("VBoxContainer/Line3/Label3"), NodePath("VBoxContainer/Line4/Label4"), NodePath("VBoxContainer/Line5/Label5"), NodePath("VBoxContainer/Line6/Label6"), NodePath("VBoxContainer/Line7/Label7"), NodePath("VBoxContainer/Line8/Label8"), NodePath("VBoxContainer/Line9/Label9"), NodePath("VBoxContainer/Line10/Label10"), NodePath("VBoxContainer/Line11/Label11"), NodePath("VBoxContainer/Line12/Label12"), NodePath("VBoxContainer/Line13/Label13"), NodePath("VBoxContainer/Line14/Label14"), NodePath("VBoxContainer/Line15/Label15"), NodePath("VBoxContainer/Line16/Label16"), NodePath("VBoxContainer/Line17/Label17"), NodePath("VBoxContainer/Line18/Label18"), NodePath("VBoxContainer/Line19/Label19"), NodePath("VBoxContainer/Line20/Label20"), NodePath("VBoxContainer/Line21/Label21"), NodePath("VBoxContainer/Line22/Label22"), NodePath("VBoxContainer/Line23/Label23"), NodePath("VBoxContainer/Line24/Label24"), NodePath("VBoxContainer/Line25/Label25"), NodePath("VBoxContainer/Line26/Label26"), NodePath("VBoxContainer/Line27/Label27")]
+inputText = NodePath("VBoxContainer/ActiveLine/HBoxContainer/InputText/InputLabel")
+lineCount = 27
+lineCharacterMax = 180
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Line1" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="Label1" type="Label" parent="VBoxContainer/Line1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line2" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label2" type="Label" parent="VBoxContainer/Line2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line3" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label3" type="Label" parent="VBoxContainer/Line3"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line4" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label4" type="Label" parent="VBoxContainer/Line4"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line5" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label5" type="Label" parent="VBoxContainer/Line5"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line6" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label6" type="Label" parent="VBoxContainer/Line6"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line7" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label7" type="Label" parent="VBoxContainer/Line7"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line8" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label8" type="Label" parent="VBoxContainer/Line8"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line9" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label9" type="Label" parent="VBoxContainer/Line9"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line10" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label10" type="Label" parent="VBoxContainer/Line10"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line11" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label11" type="Label" parent="VBoxContainer/Line11"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line12" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label12" type="Label" parent="VBoxContainer/Line12"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line13" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label13" type="Label" parent="VBoxContainer/Line13"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line14" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label14" type="Label" parent="VBoxContainer/Line14"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line15" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label15" type="Label" parent="VBoxContainer/Line15"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line16" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label16" type="Label" parent="VBoxContainer/Line16"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line17" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label17" type="Label" parent="VBoxContainer/Line17"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line18" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label18" type="Label" parent="VBoxContainer/Line18"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line19" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label19" type="Label" parent="VBoxContainer/Line19"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line20" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label20" type="Label" parent="VBoxContainer/Line20"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line21" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label21" type="Label" parent="VBoxContainer/Line21"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line22" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label22" type="Label" parent="VBoxContainer/Line22"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line23" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label23" type="Label" parent="VBoxContainer/Line23"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line24" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label24" type="Label" parent="VBoxContainer/Line24"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line25" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label25" type="Label" parent="VBoxContainer/Line25"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line26" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label26" type="Label" parent="VBoxContainer/Line26"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="Line27" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label27" type="Label" parent="VBoxContainer/Line27"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+
+[node name="ActiveLine" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ActiveLine"]
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 5.0
+theme_override_constants/separation = 0
+
+[node name="LineStart" type="MarginContainer" parent="VBoxContainer/ActiveLine/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/ActiveLine/HBoxContainer/LineStart"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 4
+text = "> "
+vertical_alignment = 1
+
+[node name="InputText" type="MarginContainer" parent="VBoxContainer/ActiveLine/HBoxContainer"]
+layout_mode = 2
+
+[node name="InputLabel" type="Label" parent="VBoxContainer/ActiveLine/HBoxContainer/InputText" node_paths=PackedStringArray("caretContainer")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 4
+vertical_alignment = 1
+script = ExtResource("2_us3v0")
+caretContainer = NodePath("../../../CaretContainer")
+caretIncrement = 4
+maxInputCharacters = 177
+
+[node name="CaretContainer" type="MarginContainer" parent="VBoxContainer/ActiveLine"]
+layout_mode = 2
+offset_left = 8.0
+offset_right = 12.0
+offset_bottom = 5.0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Caret" type="ColorRect" parent="VBoxContainer/ActiveLine/CaretContainer"]
+layout_mode = 2
+script = ExtResource("3_lk77g")
+
+[node name="Timer" type="Timer" parent="VBoxContainer/ActiveLine/CaretContainer/Caret"]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="VBoxContainer/ActiveLine/CaretContainer/Caret/Timer" to="VBoxContainer/ActiveLine/CaretContainer/Caret" method="toggleCarat"]

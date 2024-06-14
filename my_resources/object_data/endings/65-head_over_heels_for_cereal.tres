@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://bh0lhmqmty22m"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_63l3w"]
+
+[resource]
+script = ExtResource("1_63l3w")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["Bathrooms are full of tripping hazards.", "Look for something sticking out at waist level.
+(And get your mind out of the gutter!)", "With the cabinet door open, walk to the tub or door."])
+unlockingHintCosts = Array[int]([1, 1, 1])
+avoidingHints = Array[String](["Close the cabinet door when you need to walk back over to the door."])
+avoidingHintCosts = Array[int]([2])

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://ch8hlkiq6tlj7"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_cdus1"]
+
+[resource]
+script = ExtResource("1_cdus1")
+endingID = 0
+sceneID = 7
+coinsRewarded = 2
+unlockingHints = Array[String](["The cereal in the tub reacts violently with water.", "What is the easiest way to get water in the tub?", "Turn on the bathtub faucet."])
+unlockingHintCosts = Array[int]([1, 1, 1])
+avoidingHints = Array[String](["The bathtub faucet is turned on by two handles, but these are not the only handles in the bathroom. Be careful when turning these other handles. You'll need to give very specific commands.", "When opening the door to exit the bathroom, make sure you specifically turn the \"door handle\"."])
+avoidingHintCosts = Array[int]([1, 1])

@@ -1,0 +1,222 @@
+[gd_scene load_steps=4 format=3 uid="uid://d4inquxmoghal"]
+
+[ext_resource type="Script" path="res://scripts/terminal/Terminal.gd" id="1_bhe5k"]
+[ext_resource type="Script" path="res://scripts/terminal/InputText.gd" id="2_fg2xt"]
+[ext_resource type="Script" path="res://scripts/terminal/Caret.gd" id="3_3ifg2"]
+
+[node name="Terminal" type="ColorRect" node_paths=PackedStringArray("terminalLines", "inputText")]
+custom_minimum_size = Vector2(720, 140)
+size_flags_vertical = 3
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_bhe5k")
+terminalLines = [NodePath("VBoxContainer/Line1/Label1"), NodePath("VBoxContainer/Line2/Label2"), NodePath("VBoxContainer/Line3/Label3"), NodePath("VBoxContainer/Line4/Label4"), NodePath("VBoxContainer/Line5/Label5"), NodePath("VBoxContainer/Line6/Label6"), NodePath("VBoxContainer/Line7/Label7"), NodePath("VBoxContainer/Line8/Label8"), NodePath("VBoxContainer/Line9/Label9"), NodePath("VBoxContainer/Line10/Label10"), NodePath("VBoxContainer/Line11/Label11"), NodePath("VBoxContainer/Line12/Label12"), NodePath("VBoxContainer/Line13/Label13")]
+inputText = NodePath("VBoxContainer/ActiveLine/HBoxContainer/InputText/InputLabel")
+lineCount = 13
+lineCharacterMax = 90
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Line1" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="Label1" type="Label" parent="VBoxContainer/Line1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line2" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label2" type="Label" parent="VBoxContainer/Line2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line3" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label3" type="Label" parent="VBoxContainer/Line3"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line4" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label4" type="Label" parent="VBoxContainer/Line4"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line5" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label5" type="Label" parent="VBoxContainer/Line5"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line6" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label6" type="Label" parent="VBoxContainer/Line6"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line7" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label7" type="Label" parent="VBoxContainer/Line7"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line8" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label8" type="Label" parent="VBoxContainer/Line8"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line9" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label9" type="Label" parent="VBoxContainer/Line9"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line10" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label10" type="Label" parent="VBoxContainer/Line10"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line11" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label11" type="Label" parent="VBoxContainer/Line11"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line12" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label12" type="Label" parent="VBoxContainer/Line12"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="Line13" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="Label13" type="Label" parent="VBoxContainer/Line13"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+
+[node name="ActiveLine" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ActiveLine"]
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 10.0
+theme_override_constants/separation = 0
+
+[node name="LineStart" type="MarginContainer" parent="VBoxContainer/ActiveLine/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/ActiveLine/HBoxContainer/LineStart"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 8
+text = "> "
+vertical_alignment = 1
+
+[node name="InputText" type="MarginContainer" parent="VBoxContainer/ActiveLine/HBoxContainer"]
+layout_mode = 2
+
+[node name="InputLabel" type="Label" parent="VBoxContainer/ActiveLine/HBoxContainer/InputText" node_paths=PackedStringArray("caretContainer")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1
+script = ExtResource("2_fg2xt")
+caretContainer = NodePath("../../../CaretContainer")
+caretIncrement = 8
+maxInputCharacters = 87
+
+[node name="CaretContainer" type="MarginContainer" parent="VBoxContainer/ActiveLine"]
+layout_mode = 2
+offset_left = 16.0
+offset_right = 24.0
+offset_bottom = 10.0
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="Caret" type="ColorRect" parent="VBoxContainer/ActiveLine/CaretContainer"]
+layout_mode = 2
+script = ExtResource("3_3ifg2")
+
+[node name="Timer" type="Timer" parent="VBoxContainer/ActiveLine/CaretContainer/Caret"]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="VBoxContainer/ActiveLine/CaretContainer/Caret/Timer" to="VBoxContainer/ActiveLine/CaretContainer/Caret" method="toggleCarat"]
