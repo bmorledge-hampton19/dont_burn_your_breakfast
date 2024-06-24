@@ -136,7 +136,7 @@ func initParsableSubjects():
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.RUG, ["rug", "mat", "bath mat"],
 			[ActionID.INSPECT, ActionID.MOVE_TO])
-	addParsableSubject(SubjectID.OUTSIDE, ["outside", "outdoors"],
+	addParsableSubject(SubjectID.OUTSIDE, ["outside", "outdoors", "front yard", "yard"],
 			[ActionID.INSPECT, ActionID.MOVE_TO])
 
 
@@ -596,9 +596,6 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 						return (
 							"Now that you're out of the tub, you don't have any use for the shampoo any more."
 						)
-				
-				-1:
-					return requestAdditionalSubjectContext()
 
 
 		ActionID.APPLY:
@@ -1400,7 +1397,7 @@ func useShampoo(modifierID: int) -> String:
 		ModifierID.ON_FLOOR, ModifierID.TO_FLOOR, ModifierID.ON, -1:
 			bathroom.spillShampoo()
 			return (
-				"Unsure of where to " + originalInputSansPunct + ", you pour a glob of shampoo onto the floor next to " +
+				"Unsure of where to put the shampoo, you pour a glob of it onto the floor next to " +
 				"the tub. It hits the ground with a satisfying *splat* and forms a small puddle. " +
 				"(You'll need to be more specific if you want to put the shampoo on yourself.)"
 			)
