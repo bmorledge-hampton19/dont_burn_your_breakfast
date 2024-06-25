@@ -6,8 +6,9 @@ extends Node
 #		custom initialization prior to use, similar to the multi-scene setup I used in Unity.
 
 enum SceneID {
-	UNINITIALIZED, LAST_SCENE, MAIN_MENU, HELP, ACHIEVEMENTS, OPTIONS, CREDITS, ENDING,
+	UNINITIALIZED, LAST_SCENE, MAIN_MENU, HELP, ACHIEVEMENTS, OPTIONS, ENDING,
 	BATHROOM, FRONT_YARD, BEDROOM, KITCHEN,
+	CREDITS, 
 }
 
 enum EndingID {
