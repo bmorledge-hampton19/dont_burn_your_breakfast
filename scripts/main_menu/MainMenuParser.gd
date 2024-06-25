@@ -5,12 +5,12 @@ extends InputParser
 
 enum ActionID {
 	INSPECT, SELECT,
-	PLAY, ENDINGS, HELP, OPTIONS,
+	PLAY, ENDINGS, HELP, OPTIONS, CREDITS,
 	MAIN_MENU, POOP, QUIT, AFFIRM, DENY,
 }
 
 enum SubjectID {
-	PLAY_BUTTON, ENDINGS_BUTTON, HELP_BUTTON, OPTIONS_BUTTON, AMBIGUOUS_BUTTON, 
+	PLAY_BUTTON, HELP_BUTTON, OPTIONS_BUTTON, CREDITS_BUTTON, AMBIGUOUS_BUTTON, 
 	QUAKER_MAN, MILK, CEREAL, GASOLINE, MATCH, TITLE
 }
 
@@ -20,17 +20,19 @@ enum ModifierID {
 
 
 func initParsableActions():
+	addParsableAction(ActionID.ENDINGS,
+			["endings", "view endings", "achievements", "view achievements", "hints", "hint"])
 	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
 	addParsableAction(ActionID.MAIN_MENU,
-			["main menu", "menu", "go to the main menu","go to main menu", "go back to the main menu", "go back to main menu",
-			"return to the main menu", "return to main menu"])
+			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
+			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.SELECT, ["select", "click", "choose", "go to"])
 	addParsableAction(ActionID.PLAY, ["play game", "play", "start", "begin"])
-	addParsableAction(ActionID.ENDINGS, ["endings", "ending", "achievements", "awards"])
 	addParsableAction(ActionID.HELP, ["help me", "help", "get help", "--help", "-h"])
 	addParsableAction(ActionID.OPTIONS, ["options", "settings"])
+	addParsableAction(ActionID.CREDITS, ["credits", "acknowledgements"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
-	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
+	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game", "exit"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
 
@@ -38,11 +40,11 @@ func initParsableActions():
 func initParsableSubjects():
 	addParsableSubject(SubjectID.PLAY_BUTTON, ["play button", "play", "top left button"],
 			[ActionID.INSPECT, ActionID.SELECT])
-	addParsableSubject(SubjectID.ENDINGS_BUTTON, ["endings button", "ending button", "endings", "top right button"],
+	addParsableSubject(SubjectID.HELP_BUTTON, ["help button", "help", "top right button"],
 			[ActionID.INSPECT, ActionID.SELECT])
-	addParsableSubject(SubjectID.HELP_BUTTON, ["help button", "help", "bottom left button"],
+	addParsableSubject(SubjectID.OPTIONS_BUTTON, ["options button", "settings button", "settings", "bottom left button"],
 			[ActionID.INSPECT, ActionID.SELECT])
-	addParsableSubject(SubjectID.OPTIONS_BUTTON, ["options button", "settings button", "settings", "buttom right button"],
+	addParsableSubject(SubjectID.CREDITS_BUTTON, ["credits button", "credits", "bottom right button"],
 			[ActionID.INSPECT, ActionID.SELECT])
 	addParsableSubject(SubjectID.AMBIGUOUS_BUTTON, ["buttons", "button"],
 			[ActionID.INSPECT, ActionID.SELECT])
@@ -78,11 +80,7 @@ func initParsableModifiers():
 			[ActionID.PLAY, ActionID.SELECT])
 
 
-func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
-
-	previousActionID = actionID
-	previousSubjectID = subjectID
-	previousModifierID = modifierID
+func parseItems() -> String:
 
 	parseEventsSinceLastConfirmation += 1
 
@@ -103,10 +101,9 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 						"you will also be able to start the game from specific levels."
 					)
 				
-				SubjectID.ENDINGS_BUTTON:
+				SubjectID.CREDITS_BUTTON:
 					return (
-						"This button will let you view the endings you have unlocked and use earned breakfastcoins " +
-						"to unlock hints on how to unlock or avoid specific endings."
+						"This button will let you view all the wonderful people who helped make this game."
 					)
 				
 				SubjectID.HELP_BUTTON:
@@ -166,8 +163,8 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 
 				SubjectID.PLAY_BUTTON:
 					return attemptStartGame(modifierID)
-				SubjectID.ENDINGS_BUTTON:
-					SceneManager.transitionToScene(SceneManager.SceneID.ACHIEVEMENTS)
+				SubjectID.CREDITS_BUTTON:
+					SceneManager.transitionToScene(SceneManager.SceneID.CREDITS)
 				SubjectID.HELP_BUTTON:
 					SceneManager.transitionToScene(SceneManager.SceneID.HELP)
 				SubjectID.OPTIONS_BUTTON:
@@ -179,20 +176,24 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 		ActionID.PLAY:
 			return attemptStartGame(modifierID)
 
-		ActionID.ENDINGS:
-			SceneManager.transitionToScene(SceneManager.SceneID.ACHIEVEMENTS)
-
 		ActionID.HELP:
 			SceneManager.transitionToScene(SceneManager.SceneID.HELP)
 
 		ActionID.OPTIONS:
 			SceneManager.transitionToScene(SceneManager.SceneID.OPTIONS)
 
+		ActionID.CREDITS:
+			SceneManager.transitionToScene(SceneManager.SceneID.CREDITS)
+
 
 		ActionID.POOP:
 			return (
 				"Nice try, but this isn't that game."
 			)
+
+		ActionID.ENDINGS:
+			SceneManager.openEndings(mainMenu)
+			return SceneManager.openEndingsScene.defaultStartingMessage
 
 		ActionID.MAIN_MENU:
 			return "You're already at the main menu."
@@ -230,9 +231,9 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 	return unknownParse()
 
 
-func attemptStartGame(modifierID: ModifierID):
+func attemptStartGame(startGameModifierID: ModifierID):
 
-	match modifierID:
+	match startGameModifierID:
 		-1, ModifierID.BATHROOM:
 			SceneManager.transitionToScene(SceneManager.SceneID.BATHROOM)
 		ModifierID.FRONT_YARD:

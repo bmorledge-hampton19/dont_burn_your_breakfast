@@ -34,8 +34,6 @@ var confirmingHintCost: int
 
 
 func _init():
-	var sid := SceneManager.SceneID
-	sceneTransitions = [sid.MAIN_MENU]
 	defaultStartingMessage = (
 		"Behold: Your greatest failures! (so far)\n" +
 		"Here you can view any endings you've unlocked and buy hints to help you figure out " +
@@ -45,11 +43,14 @@ func _init():
 	)
 
 func _ready():
-	super()
 	visualCerealCoinNumber = EndingsManager.getCerealCoins()
 	cerealCoinCounter.text = str(visualCerealCoinNumber)
 	changeLevel(SceneManager.SceneID.MAIN_MENU)
 
+
+func initFromExistingTerminal(existingTerminal):
+	terminal = existingTerminal
+	inputParser.connectTerminal(existingTerminal, defaultStartingMessage)
 
 func _process(delta):
 	timeSinceLastCerealCoinUpdate += delta

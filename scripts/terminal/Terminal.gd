@@ -44,7 +44,6 @@ func setFontSpeed():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	inputText.sendInput.connect(receiveInput)
-	initMessage(SceneManager.customStartingMessage)
 	setFontSpeed()
 
 

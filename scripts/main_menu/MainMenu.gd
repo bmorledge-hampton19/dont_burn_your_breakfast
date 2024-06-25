@@ -4,7 +4,7 @@ extends Scene
 func _init():
 	var sid := SceneManager.SceneID
 	sceneTransitions = [
-		sid.ENDING, sid.ACHIEVEMENTS, sid.HELP, sid.OPTIONS,
+		sid.ENDING, sid.HELP, sid.OPTIONS, sid.CREDITS,
 		sid.BATHROOM, sid.FRONT_YARD, sid.BEDROOM, sid.KITCHEN
 	]
 	defaultStartingMessage = (

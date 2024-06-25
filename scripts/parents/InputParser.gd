@@ -10,24 +10,33 @@ class _ParsableItem:
 		id = p_id
 		aliases = p_aliases
 
-const omittedArticlesAndAdjectives: Array[String] = ["the", "a", "an", "this", "that", "these", "those", "your", "his", "my"]
+const omittedArticlesAndAdjectives: Array[String] = [
+	"the", "a", "an", "it", "this", "that", "these", "those", "your", "his", "my"
+]
 
 var parsableActions: Array[_ParsableItem]
 var actionsWithWildcards: Array[int]
 var parsableSubjects: Dictionary
 var parsableModifiers: Dictionary
 
-var originalInputSansPunct: String
+var _originalInputSansPunct: String
 var workingInput: String
 
 var actionAlias: String
+var previousActionAlias: String
 var subjectAlias: String
+var previousSubjectAlias: String
 var modifierAlias: String
+var previousModifierAlias: String
 var wildCard: String
+var previousWildCard: String
 
+var actionID: int
 var confirmingActionID: int
 var previousActionID: int
+var subjectID: int
 var previousSubjectID: int
+var modifierID: int
 var previousModifierID: int
 
 var parseEventsSinceLastConfirmation: int = 2
@@ -53,6 +62,11 @@ func connectTerminal(p_terminal: Terminal, startingMessage: String):
 	terminal.sendInputForParsing.connect(receiveInputFromTerminal)
 	lastMessage = startingMessage
 
+func disconnectTerminal():
+	terminal.sendInputForParsing.disconnect(receiveInputFromTerminal)
+
+func reconnectTerminal():
+	terminal.sendInputForParsing.connect(receiveInputFromTerminal)
 
 func addParsableAction(id: int, aliases: Array[String], allowWildCard = false):
 	var newParsableAction = _ParsableItem.new(id, aliases)
@@ -122,70 +136,94 @@ func receiveInputFromTerminal(input: String):
 
 func parseInput(input: String) -> String:
 
-	var actionID: int
-	var subjectID: int
-	var modifierID: int
+	previousActionID = actionID
+	previousActionAlias = actionAlias
 
-	actionAlias = ""
-	subjectAlias = ""
-	modifierAlias = ""
+	previousSubjectID = subjectID
+	previousSubjectAlias = subjectAlias
 
-	originalInputSansPunct = removePunctionation(input)
-	workingInput = removeBlacklistedArticlesAndAdjectives(originalInputSansPunct)
+	previousModifierID = modifierID
+	previousModifierAlias = modifierAlias
+
+	previousWildCard = wildCard
+
+	_originalInputSansPunct = removePunctionation(input)
+	workingInput = removeBlacklistedArticlesAndAdjectives(_originalInputSansPunct)
 
 	if requestingSubject:
+		recallLastParse()
 		requestingSubject = false
-		subjectID = checkForRequestedSubject(previousActionID)
-		if subjectID != -1: return parseItems(previousActionID, subjectID, previousModifierID)
+		subjectID = checkForRequestedSubject()
+		if subjectID != -1: return parseItems()
 		for prefix in requestingHelperPrefixes:
-			subjectID = checkForRequestedSubject(previousActionID, prefix)
-			if subjectID != -1: return parseItems(previousActionID, subjectID, previousModifierID)
+			subjectID = checkForRequestedSubject(prefix)
+			if subjectID != -1: return parseItems()
 		for suffix in requestingHelperSuffixes:
-			subjectID = checkForRequestedSubject(previousActionID, "", suffix)
-			if subjectID != -1: return parseItems(previousActionID, subjectID, previousModifierID)
+			subjectID = checkForRequestedSubject("", suffix)
+			if subjectID != -1: return parseItems()
 		if previousActionID in actionsWithWildcards: requestingWildCard = true
 
 	if requestingModifier:
+		recallLastParse()
 		requestingModifier = false
-		modifierID = checkForRequestedModifier(previousActionID)
-		if modifierID != -1: return parseItems(previousActionID, previousSubjectID, modifierID)
+		modifierID = checkForRequestedModifier()
+		if modifierID != -1: return parseItems()
 		for prefix in requestingHelperPrefixes:
-			modifierID = checkForRequestedModifier(previousActionID, prefix)
-			if modifierID != -1: return parseItems(previousActionID, previousSubjectID, modifierID)
+			modifierID = checkForRequestedModifier(prefix)
+			if modifierID != -1: return parseItems()
 		for suffix in requestingHelperSuffixes:
-			modifierID = checkForRequestedModifier(previousActionID, "", suffix)
-			if modifierID != -1: return parseItems(previousActionID, previousSubjectID, modifierID)
+			modifierID = checkForRequestedModifier("", suffix)
+			if modifierID != -1: return parseItems()
 		if previousActionID in actionsWithWildcards: requestingWildCard = true
 
 	if requestingWildCard:
+		recallLastParse()
 		requestingWildCard = false
-		wildCard = workingInput
-		var parseResult := parseItems(previousActionID, previousSubjectID, previousModifierID)
+		wildCard = workingInput.strip_edges()
+		var parseResult := parseItems()
 		if parseResult != unknownParse(): return parseResult
 		for prefix in requestingHelperPrefixes:
-			wildCard = prefix + workingInput
-			parseResult = parseItems(previousActionID, previousSubjectID, previousModifierID)
+			wildCard = prefix + workingInput.strip_edges()
+			parseResult = parseItems()
 			if parseResult != unknownParse(): return parseResult
 		for suffix in requestingHelperSuffixes:
-			wildCard = workingInput + suffix
-			parseResult = parseItems(previousActionID, previousSubjectID, previousModifierID)
+			wildCard = workingInput.strip_edges() + suffix
+			parseResult = parseItems()
 			if parseResult != unknownParse(): return parseResult
+
+	actionID = -1
+	actionAlias = ""
+
+	subjectID = -1
+	subjectAlias = ""
+
+	modifierID = -1
+	modifierAlias = ""
 
 	wildCard = ""
 
 	actionID = findAction()
 	if actionID == -1: return unknownParse()
-	if not workingInput: return parseItems(actionID, -1, -1)
+	if not workingInput: return parseItems()
 
-	subjectID = findSubject(actionID)
-	if not workingInput: return parseItems(actionID, subjectID, -1)
+	subjectID = findSubject()
+	if not workingInput: return parseItems()
 
-	modifierID = findModifier(actionID)
-	if not workingInput: return parseItems(actionID, subjectID, modifierID)
-	elif actionID in actionsWithWildcards:
-		wildCard = workingInput
-		return parseItems(actionID, subjectID, modifierID)
+	modifierID = findModifier()
+	if not workingInput or actionID in actionsWithWildcards:
+		wildCard = workingInput.strip_edges()
+		return parseItems()
 	else: return unknownParse()
+
+
+func recallLastParse():
+	actionID = previousActionID
+	actionAlias = previousActionAlias
+	subjectID = previousSubjectID
+	subjectAlias = previousSubjectAlias
+	modifierID = previousModifierID
+	modifierAlias = previousModifierAlias
+	wildCard = previousWildCard
 
 
 func removePunctionation(input: String) -> String:
@@ -212,7 +250,7 @@ func findAction() -> int:
 				return action.id
 	return -1
 
-func findSubject(actionID: int) -> int:
+func findSubject() -> int:
 	var inputForComparison = workingInput.to_lower()
 	for subject in parsableSubjects[actionID]:
 		for alias in subject.aliases:
@@ -222,7 +260,7 @@ func findSubject(actionID: int) -> int:
 				return subject.id
 	return -1
 
-func checkForRequestedSubject(actionID: int, helperPrefix := "", helperSuffix := "") -> int:
+func checkForRequestedSubject(helperPrefix := "", helperSuffix := "") -> int:
 	for subject in parsableSubjects[actionID]:
 		for alias: String in subject.aliases:
 
@@ -243,7 +281,7 @@ func checkForRequestedSubject(actionID: int, helperPrefix := "", helperSuffix :=
 					return subject.id
 	return -1
 
-func findModifier(actionID: int) -> int:
+func findModifier() -> int:
 	var inputForComparison = workingInput.to_lower()
 	for modifier in parsableModifiers[actionID]:
 		for alias in modifier.aliases:
@@ -253,7 +291,7 @@ func findModifier(actionID: int) -> int:
 				return modifier.id
 	return -1
 
-func checkForRequestedModifier(actionID: int, helperPrefix := "", helperSuffix := "") -> int:
+func checkForRequestedModifier(helperPrefix := "", helperSuffix := "") -> int:
 	for modifier in parsableModifiers[actionID]:
 		for alias: String in modifier.aliases:
 
@@ -275,7 +313,7 @@ func checkForRequestedModifier(actionID: int, helperPrefix := "", helperSuffix :
 	return -1
 
 
-func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
+func parseItems() -> String:
 	print(actionID, subjectID, modifierID, wildCard)
 	push_error("Unimplemented function.")
 	return unknownParse()
@@ -283,24 +321,32 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 
 func unknownParse() -> String:
 	storeThisMessage = false
-	return "You're not sure how to " + originalInputSansPunct + "."
+	return "You're not sure how to " + _originalInputSansPunct + "."
+
+func reconstructCommand() -> String:
+	var reconstructedCommand = actionAlias
+	if subjectAlias: reconstructedCommand += " " + subjectAlias
+	if modifierAlias: reconstructedCommand += " " + modifierAlias
+	if wildCard: reconstructedCommand += " " + wildCard
+	return reconstructedCommand
+	
 
 func wrongContextParse() -> String:
 	storeThisMessage = false
-	return "You can't " + originalInputSansPunct + " right now."
+	return "You can't " + reconstructCommand() + " right now."
 
 func requestAdditionalSubjectContext(questionStart := "What", prefixes := [], suffixes := []) -> String:
 	requestingSubject = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
-	return questionStart.capitalize() + " would you like to " + originalInputSansPunct + "?"
+	return questionStart.capitalize() + " would you like to " + reconstructCommand() + "?"
 
 func requestAdditionalModifierContext(questionStart := "How", questionEnd := "", prefixes := [], suffixes := []) -> String:
 	requestingModifier = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
 	if questionEnd and not questionEnd.begins_with(' '): questionEnd = ' ' + questionEnd
-	return questionStart.capitalize() + " would you like to " + originalInputSansPunct + questionEnd + "?"
+	return questionStart.capitalize() + " would you like to " + reconstructCommand() + questionEnd + "?"
 
 func requestAdditionalContextCustom(question: String, requestType: int, prefixes := [], suffixes := []) -> String:
 	if requestType == REQUEST_SUBJECT: requestingSubject = true
@@ -314,4 +360,4 @@ func requestSpecificAction() -> String:
 	return "This item can be used, but you need to give a more specific action."
 
 func requestConfirmation() -> String:
-	return "Are you sure you want to " + originalInputSansPunct + "?"
+	return "Are you sure you want to " + reconstructCommand() + "?"

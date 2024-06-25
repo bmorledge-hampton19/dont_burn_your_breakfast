@@ -6,7 +6,7 @@ extends Node
 #		custom initialization prior to use, similar to the multi-scene setup I used in Unity.
 
 enum SceneID {
-	UNINITIALIZED, LAST_SCENE, MAIN_MENU, HELP, ACHIEVEMENTS, OPTIONS, ENDING,
+	UNINITIALIZED, LAST_SCENE, MAIN_MENU, HELP, ACHIEVEMENTS, OPTIONS, CREDITS, ENDING,
 	BATHROOM, FRONT_YARD, BEDROOM, KITCHEN,
 }
 
@@ -50,6 +50,10 @@ var currentScene := SceneID.UNINITIALIZED
 var lastScene := SceneID.UNINITIALIZED
 var preloadedScenes: Array[SceneID] ### Would be nice to swap this out for a set if it ever gets implemented.
 
+var preloadedEndingsScreen: PackedScene
+var openEndingsScene: Endings
+var scenePausedForEndings: Scene
+
 var customStartingMessage := ""
 var endingID := EndingID.NONE
 
@@ -58,6 +62,7 @@ func _ready():
 	var sceneName := get_tree().current_scene.name.to_upper()
 	if sceneName == "OPTIONS_SCENE": currentScene = SceneID.OPTIONS
 	else: currentScene = SceneID[sceneName]
+	preloadedEndingsScreen = load(_getScenePath(SceneID.ACHIEVEMENTS))
 	# print("Starting scene: " + str(currentScene))
 	# var root = get_tree().root
 	# currentScene = root.get_child(root.get_child_count() - 1) # May be unnecessary?
@@ -70,6 +75,8 @@ func preloadScenes(sceneIDsToPreload: Array[SceneID]):
 
 	for i in range(sceneIDsToPreload.size()):
 		if sceneIDsToPreload[i] == SceneID.LAST_SCENE: sceneIDsToPreload[i] = lastScene
+		if sceneIDsToPreload[i] == SceneID.ACHIEVEMENTS:
+			print("Preloading achievements is deprecated. Simply call \"SceneManager.openEndings()\" instead.")
 
 	if currentScene in sceneIDsToPreload:
 		push_error(
@@ -103,7 +110,8 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 	if sceneID == SceneID.LAST_SCENE:
 		sceneID = lastScene
 
-	assert(sceneID in preloadedScenes, "Attempting to transition to non-preloaded scene: " + str(sceneID))
+	assert(sceneID in preloadedScenes or sceneID == currentScene,
+			"Attempting to transition to non-preloaded scene: " + str(sceneID))
 
 	customStartingMessage = p_customStartingMessage
 
@@ -128,3 +136,16 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 		# currentScene = newScene.instantiate()
 		# get_tree().root.add_child(currentScene)
 	
+func openEndings(openingScene: Scene):
+	openingScene.pause()
+	scenePausedForEndings = openingScene
+	openEndingsScene = preloadedEndingsScreen.instantiate()
+	scenePausedForEndings.add_sibling(openEndingsScene)
+	openEndingsScene.initFromExistingTerminal(openingScene.terminal)
+	if currentScene in endingsByScene:
+		openEndingsScene.changeLevel(currentScene)
+
+func closeEndings():
+	openEndingsScene.inputParser.disconnectTerminal()
+	scenePausedForEndings.resume()
+	openEndingsScene.queue_free()

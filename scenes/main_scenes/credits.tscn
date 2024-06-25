@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://57aaw4gtihgk"]
+
+[ext_resource type="Script" path="res://scripts/credits/Credits.gd" id="1_3o8rp"]
+[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_prnla"]
+[ext_resource type="Script" path="res://scripts/credits/CreditsParser.gd" id="3_1tw88"]
+
+[node name="credits" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_3o8rp")
+inputParser = NodePath("CreditsParser")
+
+[node name="Borders" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(4320, 2340)
+layout_mode = 2
+color = Color(0.964706, 0.964706, 0.964706, 1)
+
+[node name="RepeatingCereal" type="TextureRect" parent="Borders"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_prnla")
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Background" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 400)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Background" type="ColorRect" parent="VBoxContainer/Background"]
+custom_minimum_size = Vector2(720, 400)
+color = Color(0.168883, 0.175339, 0.16569, 1)
+
+[node name="Title" type="Label" parent="VBoxContainer/Background/Background"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 7.0
+offset_right = 176.0
+offset_bottom = 39.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Credits"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActualCredits" type="Label" parent="VBoxContainer/Background/Background"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 50.0
+offset_right = 291.0
+offset_bottom = 101.0
+theme_override_font_sizes/font_size = 24
+text = "A game by:
+
+  Ben Morledge-Hampton
+
+
+Special thanks to:
+
+  Nick Morledge-Hampton  
+  Shirley Shirley
+  Cellar Door Games"
+vertical_alignment = 1
+
+[node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
+layout_mode = 2
+
+[node name="CreditsParser" type="Node" parent="." node_paths=PackedStringArray("credits")]
+script = ExtResource("3_1tw88")
+credits = NodePath("..")

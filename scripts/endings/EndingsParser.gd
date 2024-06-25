@@ -6,7 +6,7 @@ extends InputParser
 enum ActionID {
 	INSPECT,
 	UNLOCK, LOCK, COLLECT_COINS, ENDING, BUY, PREVIOUS, NEXT, GO_BACK,
-	MAIN_MENU, POOP, QUIT, AFFIRM, DENY,
+	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY,
 }
 
 enum SubjectID {
@@ -19,10 +19,13 @@ enum ModifierID {
 
 
 func initParsableActions():
+	addParsableAction(ActionID.ENDINGS,
+			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
 	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"], true)
+	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.MAIN_MENU,
-			["main menu", "menu", "go to the main menu","go to main menu", "go back to the main menu", "go back to main menu",
-			"return to the main menu", "return to main menu"])
+			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
+			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.UNLOCK, ["unlock"])
 	addParsableAction(ActionID.LOCK, ["lock"])
 	addParsableAction(ActionID.COLLECT_COINS, ["collect coins", "collect cereal coins",  "collect cc", "collect"])
@@ -32,9 +35,8 @@ func initParsableActions():
 			["previous page", "previous level", "previous", "prev", "got to previous page", "go to previous level"])
 	addParsableAction(ActionID.NEXT, ["next page", "next level", "next", "go to next page", "go to next level"])
 	addParsableAction(ActionID.GO_BACK,
-			["go back to endings", "go back", "back", "return to endings", "return", "close ending", "close"])
+			["go back to endings", "go back", "back", "return to endings", "return", "close ending", "close", "exit"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
-	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
 
@@ -65,11 +67,7 @@ func initParsableModifiers():
 	pass
 
 
-func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
-
-	previousActionID = actionID
-	previousSubjectID = subjectID
-	previousModifierID = modifierID
+func parseItems() -> String:
 
 	parseEventsSinceLastConfirmation += 1
 
@@ -292,21 +290,8 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				endings.returnFromEnding()
 				return ""
 			else:
-				match endings.currentLevel:
-					SceneManager.SceneID.MAIN_MENU:
-						return wrongContextParse()
-					SceneManager.SceneID.BATHROOM:
-						endings.changeLevel(SceneManager.SceneID.MAIN_MENU)
-						return ""
-					SceneManager.SceneID.FRONT_YARD:
-						endings.changeLevel(SceneManager.SceneID.BATHROOM)
-						return ""
-					SceneManager.SceneID.BEDROOM:
-						endings.changeLevel(SceneManager.SceneID.FRONT_YARD)
-						return ""
-					SceneManager.SceneID.KITCHEN:
-						endings.changeLevel(SceneManager.SceneID.BEDROOM)
-						return ""
+				SceneManager.closeEndings()
+				return ""
 
 
 		ActionID.POOP:
@@ -315,12 +300,17 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 			)
 
 		ActionID.MAIN_MENU:
-			# if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.MAIN_MENU:
+			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.MAIN_MENU:
 				SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
-			# else:
-			# 	parseEventsSinceLastConfirmation = 0
-			# 	confirmingActionID = ActionID.MAIN_MENU
-			# 	return "Are you sure you want to return to the main menu?"
+			else:
+				parseEventsSinceLastConfirmation = 0
+				confirmingActionID = ActionID.MAIN_MENU
+				return "Are you sure you want to return to the main menu?"
+
+		ActionID.ENDINGS:
+			return (
+				"You're already viewing the endings screen. Use the command \"exit\" to return to the screen you came here from."
+			)
 
 		ActionID.QUIT:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:

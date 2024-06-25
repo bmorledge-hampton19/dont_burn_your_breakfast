@@ -6,7 +6,7 @@ extends InputParser
 enum ActionID {
 	INSPECT,
 
-	MAIN_MENU, POOP, QUIT, AFFIRM, DENY
+	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY
 }
 
 enum SubjectID {
@@ -19,10 +19,12 @@ enum ModifierID {
 
 
 func initParsableActions():
+	addParsableAction(ActionID.ENDINGS,
+			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
 	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
 	addParsableAction(ActionID.MAIN_MENU,
-			["main menu", "menu", "go to the main menu","go to main menu", "go back to the main menu", "go back to main menu",
-			"return to the main menu", "return to main menu"])
+			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
+			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
 	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
@@ -38,11 +40,7 @@ func initParsableModifiers():
 	pass
 
 
-func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
-
-	previousActionID = actionID
-	previousSubjectID = subjectID
-	previousModifierID = modifierID
+func parseItems() -> String:
 
 	parseEventsSinceLastConfirmation += 1
 
@@ -70,6 +68,10 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.MAIN_MENU
 				return "Are you sure you want to return to the main menu?"
+
+		ActionID.ENDINGS:
+			SceneManager.openEndings(frontYard)
+			return SceneManager.openEndingsScene.defaultStartingMessage
 
 		ActionID.QUIT:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:

@@ -46,7 +46,7 @@ layout_mode = 2
 texture = ExtResource("2_q1rol")
 stretch_mode = 5
 
-[node name="Choice1" type="Label" parent="VBoxContainer/Background"]
+[node name="Play" type="Label" parent="VBoxContainer/Background"]
 layout_mode = 0
 offset_left = 224.0
 offset_top = 228.0
@@ -56,33 +56,33 @@ text = "Play"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Choice2" type="Label" parent="VBoxContainer/Background"]
+[node name="Help" type="Label" parent="VBoxContainer/Background"]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 228.0
 offset_right = 500.0
 offset_bottom = 256.0
-text = "Endings"
+text = "Help"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Choice3" type="Label" parent="VBoxContainer/Background"]
+[node name="Options" type="Label" parent="VBoxContainer/Background"]
 layout_mode = 0
 offset_left = 224.0
 offset_top = 280.0
 offset_right = 348.0
 offset_bottom = 308.0
-text = "Help"
+text = "Options"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Choice4" type="Label" parent="VBoxContainer/Background"]
+[node name="Credits" type="Label" parent="VBoxContainer/Background"]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 280.0
 offset_right = 500.0
 offset_bottom = 308.0
-text = "Options"
+text = "Credits"
 horizontal_alignment = 1
 vertical_alignment = 1
 

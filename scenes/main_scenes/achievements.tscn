@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://diwikhab7cyls"]
+[gd_scene load_steps=7 format=3 uid="uid://diwikhab7cyls"]
 
 [ext_resource type="Script" path="res://scripts/endings/Endings.gd" id="1_ndbwb"]
-[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_ubale"]
 [ext_resource type="Texture2D" uid="uid://cuco0kwfdox22" path="res://sprites/backgrounds/main_menu.png" id="3_wbmg4"]
 [ext_resource type="PackedScene" uid="uid://db2h0swgmao7f" path="res://scenes/scene_modules/endings/ending_preview.tscn" id="4_uew22"]
 [ext_resource type="Texture2D" uid="uid://568p6p1ky1qc" path="res://sprites/movable_objects/lock.png" id="5_q6cla"]
@@ -35,21 +34,6 @@ endingPreviewScene = ExtResource("4_uew22")
 prevText = NodePath("VBoxContainer/Background/Prev")
 nextText = NodePath("VBoxContainer/Background/Next")
 inputParser = NodePath("EndingsParser")
-
-[node name="Borders" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(4320, 2340)
-layout_mode = 2
-color = Color(0.964706, 0.964706, 0.964706, 1)
-
-[node name="RepeatingCereal" type="TextureRect" parent="Borders"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_ubale")
-stretch_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -166,7 +150,8 @@ offset_bottom = 400.0
 theme_override_font_sizes/font_size = 24
 text = "Next >"
 
-[node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
+[node name="Control" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(720, 140)
 layout_mode = 2
 
 [node name="EndingsParser" type="Node" parent="." node_paths=PackedStringArray("endings")]

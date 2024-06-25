@@ -45,6 +45,11 @@ func _ready():
 		inputParser.connectTerminal(terminal, defaultStartingMessage)
 		terminal.initMessage(defaultStartingMessage)
 
+func pause():
+	inputParser.disconnectTerminal()
+
+func resume():
+	inputParser.reconnectTerminal()
 
 func resetTerminal():
 	terminal.queue_free()

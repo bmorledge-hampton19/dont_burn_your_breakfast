@@ -411,9 +411,10 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Many catastrophes await you
 on your journey to breakfast
-Nirvana! These \"endings\"
-that you will encounter are
-just a part of that journey!
+Nirvana! You can view these
+\"endings\" at almost anytime
+with the command \"endings\".
+Try it out here!
 "
 vertical_alignment = 1
 
@@ -427,8 +428,7 @@ theme_override_font_sizes/font_size = 24
 text = "Each discovered ending will
 earn you cereal coins (CC)
 that can be used to purchase
-hints on how to find more
-endings or get past them."
+hints when you are stuck."
 vertical_alignment = 1
 
 [node name="ExplanationContainer3" type="MarginContainer" parent="VBoxContainer/Background/Page6/Rule 9"]
@@ -438,7 +438,7 @@ theme_override_constants/margin_left = 48
 [node name="Explanation" type="Label" parent="VBoxContainer/Background/Page6/Rule 9/ExplanationContainer3"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Try to collect them all!"
+text = "Try to find all the endings!"
 vertical_alignment = 1
 
 [node name="Page7" type="VBoxContainer" parent="VBoxContainer/Background"]

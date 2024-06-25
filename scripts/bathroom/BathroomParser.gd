@@ -6,9 +6,9 @@ extends InputParser
 # Add option to flush toilet? This could be its own ending, splashing water in the tub.
 enum ActionID {
 	INSPECT, USE,
-	TURN_ON, SQUEEZE, SHAMPOO, ENTER, EXIT, STAND_UP, MOVE_TO,
+	TURN_ON, SQUEEZE, SHAMPOO, ENTER, EXIT, STAND_UP, MOVE_TO, LOOK_AWAY,
 	OPEN, CLOSE, TAKE, EAT, PLACE, APPLY, PUT, RINSE, BRUSH, SPIT, SWALLOW, RAISE, LOWER, FLUSH, AIM, TURN, UNLOCK, LOCK,
-	POOP, QUIT, MAIN_MENU, AFFIRM, DENY,
+	POOP, QUIT, MAIN_MENU, ENDINGS, AFFIRM, DENY,
 }
 
 enum SubjectID {
@@ -16,8 +16,8 @@ enum SubjectID {
 	AMBIGUOUS_DRAWER, TOP_DRAWER, MIDDLE_DRAWER, BOTTOM_DRAWER,
 	TOOTHPASTE_TUBE, TOOTHPASTE, TOOTHBRUSH, TEETH, TOILET, KEY,
 	TUB_FAUCET_HANDLE, TUB_FAUCET, SINK_FAUCET, BATHTUB, SHAMPOO, DOOR_HANDLE, DOOR,
-	SINK, SPIDER, PAINTING, PLANT, GARBAGE, MACHINE, GRAPEFRUIT, URINAL_CAKE, MIRROR, RUG,
-	OUTSIDE,
+	SINK, SPIDER, PAINTING, PLANT, GARBAGE, MACHINE, GRAPEFRUIT, URINAL_CAKE, BATH_BOMB, MIRROR, RUG,
+	OUTSIDE, GAME,
 }
 
 enum ModifierID {
@@ -27,6 +27,9 @@ enum ModifierID {
 
 
 func initParsableActions():
+	addParsableAction(ActionID.ENDINGS,
+			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
+	addParsableAction(ActionID.LOOK_AWAY, ["look away from", "look away"])
 	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
 	addParsableAction(ActionID.USE, ["use"])
 	addParsableAction(ActionID.TURN_ON, ["turn on", "activate"])
@@ -37,8 +40,8 @@ func initParsableActions():
 	addParsableAction(ActionID.EXIT, ["exit", "leave", "get out of"])
 	addParsableAction(ActionID.STAND_UP, ["stand up", "get up"])
 	addParsableAction(ActionID.MAIN_MENU,
-			["main menu", "menu", "go to the main menu","go to main menu", "go back to the main menu", "go back to main menu",
-			"return to the main menu", "return to main menu"])
+			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
+			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.MOVE_TO, ["move to", "move", "walk to", "walk", "go to", "go"])
 	addParsableAction(ActionID.OPEN, ["open"])
 	addParsableAction(ActionID.CLOSE, ["close", "shut"])
@@ -91,7 +94,8 @@ func initParsableSubjects():
 			[ActionID.SPIT, ActionID.USE, ActionID.SWALLOW, ActionID.EAT, ActionID.APPLY, ActionID.PUT])
 	addParsableSubject(SubjectID.TOOTHPASTE_TUBE,
 			["toothpaste tube", "toothpaste", "tube of toothpaste", "tube", "tooth paste", "paste"],
-			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.PLACE, ActionID.SQUEEZE, ActionID.PUT, ActionID.AIM])
+			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.PLACE, ActionID.SQUEEZE, ActionID.PUT, ActionID.AIM,
+			ActionID.LOOK_AWAY])
 	addParsableSubject(SubjectID.TOOTHBRUSH, ["toothbrush", "tooth brush", "brush"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.PLACE, ActionID.RINSE, ActionID.PUT])
 	addParsableSubject(SubjectID.TEETH, ["teeth"],
@@ -100,14 +104,18 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.USE, ActionID.OPEN, ActionID.CLOSE, ActionID.FLUSH,
 			ActionID.RAISE, ActionID.LOWER, ActionID.PLACE, ActionID.PUT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.KEY, ["key"],
-			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.TURN, ActionID.AIM])
+			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.TURN, ActionID.AIM, ActionID.LOOK_AWAY])
 	addParsableSubject(SubjectID.TUB_FAUCET_HANDLE, ["handles", "handle", "knobs", "knob", "faucet handles", "faucet handle"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TURN])
 	addParsableSubject(SubjectID.TUB_FAUCET, ["faucet", "tub faucet", "bathtub faucet"],
 			[ActionID.INSPECT, ActionID.TURN_ON, ActionID.TURN])
 	addParsableSubject(SubjectID.SINK_FAUCET, ["sink faucet"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN])
-	addParsableSubject(SubjectID.BATHTUB, ["tub", "bathtub"],
+	addParsableSubject(SubjectID.BATH_BOMB, ["bomb", "bath bomb", "powdered milk"],
+			[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
+	addParsableSubject(SubjectID.RUG, ["rug", "mat", "bath mat"],
+			[ActionID.INSPECT, ActionID.MOVE_TO])
+	addParsableSubject(SubjectID.BATHTUB, ["tub", "bathtub", "bath"],
 			[ActionID.INSPECT, ActionID.ENTER, ActionID.EXIT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SHAMPOO,
 			["shampoo bottle", "bottle", "shampoo", "4-in-1 shampoo", "soap", "lotion", "lubricant"],
@@ -117,7 +125,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.DOOR, ["door"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.OPEN, ActionID.CLOSE, ActionID.UNLOCK, ActionID.LOCK, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SINK, ["sink"],
-			[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN])
+			[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SPIDER, ["spiderweb", "spider web", "spider", "web"],
 			[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
 	addParsableSubject(SubjectID.PAINTING, ["painting", "portrait", "art", "quaker man", "quaker"],
@@ -131,13 +139,13 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.GRAPEFRUIT, ["grapefruits", "grapefruit"],
 			[ActionID.INSPECT, ActionID.EAT])
 	addParsableSubject(SubjectID.URINAL_CAKE, ["urinal cakes", "urinal cake", "cakes", "cake"],
-			[ActionID.INSPECT, ActionID.EAT])
+			[ActionID.INSPECT, ActionID.EAT, ActionID.TAKE])
 	addParsableSubject(SubjectID.MIRROR, ["mirror", "paper", "sign"],
 			[ActionID.INSPECT])
-	addParsableSubject(SubjectID.RUG, ["rug", "mat", "bath mat"],
-			[ActionID.INSPECT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.OUTSIDE, ["outside", "outdoors", "front yard", "yard"],
 			[ActionID.INSPECT, ActionID.MOVE_TO])
+	addParsableSubject(SubjectID.GAME, ["game"],
+			[ActionID.EXIT])
 
 
 func initParsableModifiers():
@@ -155,8 +163,6 @@ func initParsableModifiers():
 	addParsableModifier(ModifierID.ON_TOOTHBRUSH,
 			["on toothbrush", "on tooth brush", "on brush", "onto toothbrush", "onto tooth brush", "onto brush"],
 			[ActionID.SQUEEZE, ActionID.APPLY, ActionID.PUT])
-	addParsableModifier(ModifierID.ON, ["on"],
-			[ActionID.TURN, ActionID.PUT])
 	addParsableModifier(ModifierID.BACK, ["back"],
 			[ActionID.APPLY, ActionID.PUT])
 	addParsableModifier(ModifierID.UP, ["up"],
@@ -177,23 +183,36 @@ func initParsableModifiers():
 			[ActionID.PLACE])
 	addParsableModifier(ModifierID.AWAY, ["away from me", "away from self", "away from yourself", "away"],
 			[ActionID.AIM, ActionID.PUT])
-	addParsableModifier(ModifierID.AT_DOOR, ["at door", "at lock", "at keyhole", "at key hole"],
-			[ActionID.AIM])
+	addParsableModifier(ModifierID.AT_DOOR,
+			["at door", "on door", "onto door", "in door", "into door", "to door",
+			"at lock", "in lock", "into lock", "to lock",
+			"at keyhole", "at key hole", "in keyhole", "in key hole",
+			"into keyhole", "into key hole", "to keyhole", "to key hole"],
+			[ActionID.AIM, ActionID.SQUEEZE, ActionID.APPLY, ActionID.PUT])
 	addParsableModifier(ModifierID.AT_SELF, ["at self", "at yourself", "at me", "at you"],
 			[ActionID.AIM])
 	addParsableModifier(ModifierID.HARDER, ["harder", "hard", "forcefully", "with force", "firmly", "tightly"],
 			[ActionID.SQUEEZE])
+	addParsableModifier(ModifierID.ON, ["on"],
+			[ActionID.TURN, ActionID.PUT])
 
 
-func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
-
-	previousActionID = actionID
-	previousSubjectID = subjectID
-	previousModifierID = modifierID
+func parseItems() -> String:
 
 	parseEventsSinceLastConfirmation += 1
 
 	match actionID:
+
+		ActionID.LOOK_AWAY:
+			if not bathroom.playerHasToothpaste or bathroom.remainingToothpaste > 0:
+				return wrongContextParse()
+			else:
+				bathroom.aimToothpasteAway()
+				return (
+					"The key protruding from the tube of toothpaste is indeed mesmerizing, but you manage " +
+					"to tear your gaze away from it and point the loaded weapon away from you."
+				)
+
 
 		ActionID.INSPECT:
 			match subjectID:
@@ -401,6 +420,8 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 					return (
 						"These yellow spheres are an affront to mankind."
 					)
+				SubjectID.BATH_BOMB:
+					return "Luxurious, and nutritous!"
 				SubjectID.URINAL_CAKE:
 					if bathroom.isBottomDrawerOpen:
 						return (
@@ -534,7 +555,7 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				SubjectID.TOOTHPASTE_TUBE, -1:
 					if bathroom.playerHasToothpaste and not bathroom.isKeyInLock:
 						match modifierID:
-							ModifierID.ON_SELF, ModifierID.ON_FLOOR, ModifierID.ON_TOOTHBRUSH:
+							ModifierID.ON_SELF, ModifierID.ON_FLOOR, ModifierID.ON_TOOTHBRUSH, ModifierID.AT_DOOR:
 								return useToothpaste(modifierID)
 							ModifierID.HARDER:
 								if bathroom.remainingToothpaste > 0:
@@ -579,7 +600,7 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 							)
 						else:
 							return (
-								"You're not holding any toothpaste right now, so you can't " + originalInputSansPunct + "."
+								"You're not holding any toothpaste right now, so you can't " + reconstructCommand() + "."
 							)
 					
 					elif bathroom.isKeyInLock:
@@ -608,7 +629,7 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 
 					elif not bathroom.playerHasToothpaste:
 						return (
-							"You're not holding any toothpaste right now."
+							"You're not holding any toothpaste right now, so you can't " + reconstructCommand() + "."
 						)
 					
 					elif bathroom.isKeyInLock:
@@ -666,13 +687,13 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 					match modifierID:
 						ModifierID.BACK, ModifierID.AWAY:
 							return returnItem(subjectID)
-						ModifierID.ON_SELF, ModifierID.ON_FLOOR, ModifierID.ON_TOOTHBRUSH:
+						ModifierID.ON_SELF, ModifierID.ON_FLOOR, ModifierID.ON_TOOTHBRUSH, ModifierID.AT_DOOR:
 							if bathroom.playerHasToothpaste and not bathroom.isKeyInLock:
 								return useToothpaste(modifierID)
 
 							elif not bathroom.playerHasToothpaste:
 								return (
-									"You're not holding any toothpaste right now."
+									"You're not holding any toothpaste right now, so you can't " + reconstructCommand() + "."
 								)
 							
 							elif bathroom.isKeyInLock:
@@ -806,6 +827,9 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				SubjectID.SPIDER:
 					return "NO."
 				
+				SubjectID.BATH_BOMB:
+					return "Now's not the time for a bath. You need to focus on getting out of here!"
+
 				-1:
 					return requestAdditionalSubjectContext()
 
@@ -841,6 +865,14 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 						EndingsManager.onSceneBeaten(SceneManager.SceneID.BATHROOM)
 						SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
 					else: return attemptOpenDoor()
+
+				SubjectID.GAME:
+					if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:
+						get_tree().quit()
+					else:
+						parseEventsSinceLastConfirmation = 0
+						confirmingActionID = ActionID.QUIT
+						return requestConfirmation()
 
 				-1:
 					return requestAdditionalSubjectContext()
@@ -887,15 +919,15 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 								SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
 						else:
 							return "You can't go outside yet. The door is still closed."
-					
-					SubjectID.CABINET:
+
+					SubjectID.CABINET, SubjectID.SINK:
 						bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_CABINET)
-						return "You walk over to the cabinet."
+						return "You walk over to the " + subjectAlias + "."
 					
 					SubjectID.TOILET:
 						bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_TOILET)
 						return "You move over to the toilet."
-					
+
 					-1:
 						return requestAdditionalSubjectContext("Where")
 
@@ -1085,6 +1117,9 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				SubjectID.GRAPEFRUIT:
 					return "Grapefruit is much too gross to serve as your breakfast."
 
+				SubjectID.BATH_BOMB:
+					return "Gross! You wouldn't dream of consuming these without adding water first."
+
 				SubjectID.URINAL_CAKE:
 					if bathroom.isBottomDrawerOpen:
 						return (
@@ -1124,7 +1159,7 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 					elif bathroom.playerHasToothbrush:
 						return "There's not enough toothpaste on your toothbrush..."
 					else:
-						return "You're not holding your toothbrush right now."
+						return "You're not holding your toothbrush right now, so you can't " + reconstructCommand() + "."
 				
 				-1: return requestAdditionalSubjectContext()
 
@@ -1266,6 +1301,10 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				return "Are you sure you want to return to the main menu?"
 
 
+		ActionID.ENDINGS:
+			SceneManager.openEndings(bathroom)
+			return SceneManager.openEndingsScene.defaultStartingMessage
+
 		ActionID.QUIT:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:
 				get_tree().quit()
@@ -1302,8 +1341,8 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 
 	return unknownParse()
 
-func useToothpaste(modifierID: int) -> String:
-	match modifierID:
+func useToothpaste(toothpasteModifierID: int) -> String:
+	match toothpasteModifierID:
 		ModifierID.ON_SELF, ModifierID.TO_SELF:
 			return (
 				"You consider applying the toothpaste directly to your body but quickly decide " +
@@ -1373,15 +1412,30 @@ func useToothpaste(modifierID: int) -> String:
 					)
 			else:
 				return (
-					"You're not holding your toothbrush right now."
+					"You're not holding your toothbrush right now, so you can't " + reconstructCommand() + "."
 				)
+		ModifierID.AT_DOOR:
+			if bathroom.remainingToothpaste == 0 and not bathroom.isKeyInLock:
+				if bathroom.isPlayerBlockedByCabinet():
+					transitionToTripEnding("the door")
+				else:
+					bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_DOOR)
+					bathroom.aimToothpasteAway()
+					return (
+						"You aim the tube of toothpaste at the door and try to force the key out. It's still stuck, " +
+						"but you feel like you're getting somewhere! Maybe if you try to SQUEEZE HARDER you can get it out."
+					)
+			elif bathroom.remainingToothpaste > 0:
+				return ("You resist the urge to splatter your door with toothpaste.")
+			else:
+				return ("There's nothing left in the tube to squeeze out.")
 		-1:
 			return requestAdditionalModifierContext("What", "onto", ["onto "])
 	return unknownParse()
 
 
-func useShampoo(modifierID: int) -> String:
-	match modifierID:
+func useShampoo(shampooingModifierID: int) -> String:
+	match shampooingModifierID:
 		ModifierID.ON_SELF, ModifierID.TO_SELF:
 			if bathroom.isPlayerLubed:
 				return (
@@ -1404,8 +1458,8 @@ func useShampoo(modifierID: int) -> String:
 	return unknownParse()
 
 
-func returnItem(subjectID) -> String:
-	match subjectID:
+func returnItem(returningSubjectID) -> String:
+	match returningSubjectID:
 
 		SubjectID.TOOTHPASTE, SubjectID.TOOTHPASTE_TUBE:
 
@@ -1436,7 +1490,7 @@ func returnItem(subjectID) -> String:
 				)
 			else:
 				return (
-					"You don't have your toothbrush right now."
+					"You don't have your toothbrush right now, so you can't " + reconstructCommand() + "."
 				)
 
 	return unknownParse()
@@ -1503,10 +1557,10 @@ func attemptExitBathtub() -> String:
 	return unknownParse()
 
 
-func attemptRinseToothbrush(modifierID: int) -> String:
+func attemptRinseToothbrush(rinseModifierID: int) -> String:
 	if bathroom.playerHasToothbrush:
 						
-		match modifierID:
+		match rinseModifierID:
 
 			ModifierID.IN_SINK:
 				return (
@@ -1540,7 +1594,7 @@ func attemptRinseToothbrush(modifierID: int) -> String:
 				return requestAdditionalModifierContext("What", "in", ["in "])
 
 	else:
-		return "You don't have the toothbrush with you right now."
+		return "You don't have the toothbrush with you right now, so you can't " + reconstructCommand() + "."
 
 	return unknownParse()
 

@@ -6,7 +6,7 @@ extends InputParser
 enum ActionID {
 	INSPECT,
 	GO_TO, PROCEED, RETURN,
-	MAIN_MENU, POOP, QUIT, AFFIRM, DENY
+	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY
 }
 
 enum SubjectID {
@@ -19,15 +19,18 @@ enum ModifierID {
 
 
 func initParsableActions():
+	addParsableAction(ActionID.ENDINGS,
+			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
 	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
+	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.MAIN_MENU,
-			["main menu", "menu", "go to the main menu","go to main menu", "go back to the main menu", "go back to main menu",
-			"return to the main menu", "return to main menu"])
+			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
+			"go back to main menu", "return to the main menu", "return to main menu",
+			"exit tutorial", "exit help", "exit", "go back", "back"])
 	addParsableAction(ActionID.GO_TO, ["go to", "go on to", "move to", "move on to", "proceed to", "return to"])
 	addParsableAction(ActionID.PROCEED, ["proceed", "next page", "next"])
 	addParsableAction(ActionID.RETURN, ["return", "previous page", "previous", "prev", "last page", "last"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
-	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
 
@@ -48,11 +51,7 @@ func initParsableModifiers():
 			[ActionID.PROCEED, ActionID.RETURN, ActionID.GO_TO])
 
 
-func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
-
-	previousActionID = actionID
-	previousSubjectID = subjectID
-	previousModifierID = modifierID
+func parseItems() -> String:
 
 	parseEventsSinceLastConfirmation += 1
 
@@ -107,6 +106,10 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 				confirmingActionID = ActionID.MAIN_MENU
 				return "Are you sure you want to return to the main menu?"
 
+		ActionID.ENDINGS:
+			SceneManager.openEndings(help)
+			return SceneManager.openEndingsScene.defaultStartingMessage
+
 		ActionID.QUIT:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:
 				get_tree().quit()
@@ -142,7 +145,7 @@ func parseItems(actionID: int, subjectID: int, modifierID: int) -> String:
 	return unknownParse()
 
 
-func changePage(modifierID: int, goingBackwards: bool = false) -> String:
+func changePage(pageChangeModifierID: int, goingBackwards: bool = false) -> String:
 
 	if goingBackwards:
 		if help.currentPage == 1:
@@ -171,7 +174,7 @@ func changePage(modifierID: int, goingBackwards: bool = false) -> String:
 					"You're not sure how much further you'll be able to make it..."
 				)
 			4:
-				if modifierID == ModifierID.BRAVELY:
+				if pageChangeModifierID == ModifierID.BRAVELY:
 					help.goToNextPage()
 					return (
 						"You take a deep breath and steel yourself for the next page. You can do this!"
@@ -182,7 +185,7 @@ func changePage(modifierID: int, goingBackwards: bool = false) -> String:
 						"for this... Maybe if you try to \"proceed bravely\" you'll be able to move on."
 					)
 			5:
-				if modifierID == ModifierID.WITH_OATS:
+				if pageChangeModifierID == ModifierID.WITH_OATS:
 					help.goToNextPage()
 					return (
 						"Aha! Your oats! You'd almost forgotten! You reach into your back pocket and fish out a handful of " +

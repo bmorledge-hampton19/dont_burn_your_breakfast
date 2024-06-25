@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://c2hljl4ttrsnl"]
 
-[ext_resource type="Script" path="res://scripts/parents/Scene.gd" id="1_6l8dr"]
-[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_b56oq"]
-[ext_resource type="Script" path="res://scripts/parents/InputParser.gd" id="2_d3vwb"]
+[ext_resource type="Script" path="res://scripts/parents/Scene.gd" id="1_k5cdp"]
+[ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_abvx1"]
+[ext_resource type="Script" path="res://scripts/parents/InputParser.gd" id="3_uvju7"]
 
 [node name="TemplateScene" type="CenterContainer"]
 anchors_preset = 8
@@ -17,7 +17,7 @@ offset_bottom = 500.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
-script = ExtResource("1_6l8dr")
+script = ExtResource("1_k5cdp")
 
 [node name="Borders" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(4320, 2340)
@@ -31,7 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_b56oq")
+texture = ExtResource("2_abvx1")
 stretch_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -47,4 +47,4 @@ stretch_mode = 5
 layout_mode = 2
 
 [node name="TemplateInputParser" type="Node" parent="."]
-script = ExtResource("2_d3vwb")
+script = ExtResource("3_uvju7")
