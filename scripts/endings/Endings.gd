@@ -69,11 +69,21 @@ func _process(delta):
 		else: cerealCoinCounter.add_theme_color_override("font_color", Color.WHITE)
 
 
+func getBackgroundTexture() -> Texture2D:
+
+	var customBackgroundPath: String = (
+		"res://sprites/backgrounds/previews/" + SceneManager.SceneID.find_key(currentLevel).to_lower() + "_preview.png"
+	)
+
+	if FileAccess.file_exists(customBackgroundPath): return load(customBackgroundPath)
+	else: return load("res://sprites/backgrounds/" + SceneManager.SceneID.find_key(currentLevel).to_lower() + ".png")
+
+
 func changeLevel(sceneID: SceneManager.SceneID):
 
 	currentLevel = sceneID
 
-	background.texture = load("res://sprites/backgrounds/" + SceneManager.SceneID.find_key(sceneID).to_lower() + ".png")
+	background.texture = getBackgroundTexture()
 
 	if currentLevel == SceneManager.SceneID.MAIN_MENU: hideShortcut()
 	else: showShortcut()
@@ -90,7 +100,8 @@ func changeLevel(sceneID: SceneManager.SceneID):
 	if sceneID == SceneManager.SceneID.MAIN_MENU: prevText.hide()
 	else: prevText.show()
 
-	if sceneID == SceneManager.SceneID.BATHROOM: nextText.hide()
+	# CHANGE THIS WITH EACH DEMO
+	if sceneID == SceneManager.SceneID.FRONT_YARD: nextText.hide()
 	else: nextText.show()
 
 
@@ -101,8 +112,12 @@ func hideShortcut():
 
 func showShortcut():
 	shortcutText.show()
-	if EndingsManager.isSceneShortcutUnlocked(currentLevel): unlockedSprite.show()
-	else: lockedSprite.show()
+	if EndingsManager.isSceneShortcutUnlocked(currentLevel):
+		unlockedSprite.show()
+		lockedSprite.hide()
+	else:
+		unlockedSprite.hide()
+		lockedSprite.show()
 
 func collectCoins() -> int:
 	var coinsBeforeCollection := EndingsManager.getCerealCoins()
@@ -140,8 +155,9 @@ func returnFromEnding():
 	endingsGrid.show()
 	if currentLevel == SceneManager.SceneID.MAIN_MENU: prevText.hide()
 	else: prevText.show()
-	if currentLevel == SceneManager.SceneID.BATHROOM: nextText.hide()
+	# CHANGE THIS WITH EACH DEMO
+	if currentLevel == SceneManager.SceneID.FRONT_YARD: nextText.hide()
 	else: nextText.show()
 
-	background.texture = load("res://sprites/backgrounds/" + SceneManager.SceneID.find_key(currentLevel).to_lower() + ".png")
+	background.texture = getBackgroundTexture()
 

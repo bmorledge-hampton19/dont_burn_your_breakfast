@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://d5x4yirj3tp6"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_8dtol"]
+
+[resource]
+script = ExtResource("1_8dtol")
+endingID = 140
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["Have you tried inspecting the concrete?", "You need to get the concrete wet somehow.", "Take the gasoline and pour it on the ground."])
+unlockingHintCosts = Array[int]([2, 2, 2])
+avoidingHints = Array[String](["Well for starters, don't pour the gasoline on the concrete!", "You have to use the gasoline to refuel the mower, but you'll need be careful while doing so...", "Remove the gas cap before refueling the mower."])
+avoidingHintCosts = Array[int]([1, 2, 2])

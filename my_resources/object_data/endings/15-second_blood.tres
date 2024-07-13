@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_iceal")
-endingID = 0
+endingID = 15
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["This ending is closely tied to the first bathroom ending.", "Enter the tub again after leaving it safely."])

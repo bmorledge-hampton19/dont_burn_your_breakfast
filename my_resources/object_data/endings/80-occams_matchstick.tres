@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://cyaf13wdau62f"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_varl1"]
+
+[resource]
+script = ExtResource("1_varl1")
+endingID = 80
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["What is the simplest way forward?", "The steps aren't the only thing you can walk on.", "Walk on the lawn of matchsticks."])
+unlockingHintCosts = Array[int]([1, 2, 2])
+avoidingHints = Array[String](["You will need to progress using the stairs, not the lawn."])
+avoidingHintCosts = Array[int]([2])

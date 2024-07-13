@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://smck345cxbyd"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_ma8xo"]
+
+[resource]
+script = ExtResource("1_ma8xo")
+endingID = 160
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["This ending requires the mower to be running.", "You have two lawns that can be mown in your front yard.", "When the mower is running, mow the matchstick lawn."])
+unlockingHintCosts = Array[int]([1, 2, 2])
+avoidingHints = Array[String](["Be specific when indicating what you want to mow.", "Mow the grass or mow step 1. Don't mow the lawn."])
+avoidingHintCosts = Array[int]([2, 2])

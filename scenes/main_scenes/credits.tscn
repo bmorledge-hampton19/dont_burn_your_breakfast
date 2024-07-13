@@ -46,6 +46,7 @@ stretch_mode = 5
 
 [node name="Background" type="ColorRect" parent="VBoxContainer/Background"]
 custom_minimum_size = Vector2(720, 400)
+layout_mode = 0
 color = Color(0.168883, 0.175339, 0.16569, 1)
 
 [node name="Title" type="Label" parent="VBoxContainer/Background/Background"]
@@ -77,7 +78,8 @@ text = "A game by:
 
 Special thanks to:
 
-  Nick Morledge-Hampton  
+  Nick Morledge-Hampton
+  Charlie Morledge-Hampton
   Shirley Shirley
   Cellar Door Games"
 vertical_alignment = 1

@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_63l3w")
-endingID = 0
+endingID = 65
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["Bathrooms are full of tripping hazards.", "Look for something sticking out at waist level.

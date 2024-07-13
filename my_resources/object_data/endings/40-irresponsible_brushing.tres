@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_ai07n")
-endingID = 0
+endingID = 40
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["You'll have to brush your teeth more than once.", "Brush your teeth multiple times without spitting in between."])
 unlockingHintCosts = Array[int]([1, 2])
-avoidingHints = Array[String](["Make sure to spit  your toothpaste into the toilet after each brushing."])
+avoidingHints = Array[String](["Make sure to spit your toothpaste into the toilet after each brushing."])
 avoidingHintCosts = Array[int]([2])

@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_x1b2u")
-endingID = 0
+endingID = 50
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["Your mouth waters at the thought of the delicious breakfast waiting for you in the kitchen!", "Your saliva is just as reactive as any other water you've put in the tub.", "When you have a mouth full of toothpaste, spit into the bathtub."])

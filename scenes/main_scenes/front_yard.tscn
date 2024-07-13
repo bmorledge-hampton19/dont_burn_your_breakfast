@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://dp0rm30g5p4qa"]
+[gd_scene load_steps=7 format=3 uid="uid://dp0rm30g5p4qa"]
 
 [ext_resource type="Script" path="res://scripts/front_yard/FrontYard.gd" id="1_nmpaj"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_3ru3b"]
 [ext_resource type="Script" path="res://scripts/front_yard/FrontYardParser.gd" id="3_a11s1"]
+[ext_resource type="Texture2D" uid="uid://cvd4vx7sikaha" path="res://sprites/backgrounds/front_yard.png" id="3_qsp4k"]
+[ext_resource type="Texture2D" uid="uid://cu1tofntibdve" path="res://sprites/movable_objects/front_yard_movable_objects.png" id="4_oyxk4"]
+[ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="5_mr33o"]
 
-[node name="Front_Yard" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
+[node name="Front_Yard" type="CenterContainer" node_paths=PackedStringArray("playerControl", "playersGasoline", "playersRightShoeTied", "playersLeftShoeTied", "playersRightShoeUntied", "playersLeftShoeUntied", "playersShoesTiedTogether", "rightShoeControl", "rightShoeTied", "rightShoeUntied", "leftShoeControl", "leftShoeTied", "leftShoeUntied", "mowerControl", "mowerWithCap", "mowerWithoutCap", "mowerRunning", "gasoline", "mownGrass", "unmownGrass", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -18,6 +21,26 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_nmpaj")
+playerControl = NodePath("VBoxContainer/Background/PlayerControl")
+playersGasoline = NodePath("VBoxContainer/Background/PlayerControl/PlayersGasoline")
+playersRightShoeTied = NodePath("VBoxContainer/Background/PlayerControl/RightShoeTied")
+playersLeftShoeTied = NodePath("VBoxContainer/Background/PlayerControl/LeftShoeTied")
+playersRightShoeUntied = NodePath("VBoxContainer/Background/PlayerControl/RightShoeUntied")
+playersLeftShoeUntied = NodePath("VBoxContainer/Background/PlayerControl/LeftShoeUntied")
+playersShoesTiedTogether = NodePath("VBoxContainer/Background/PlayerControl/ShoesTiedTogether")
+rightShoeControl = NodePath("VBoxContainer/Background/RightShoe")
+rightShoeTied = NodePath("VBoxContainer/Background/RightShoe/RightShoeTied")
+rightShoeUntied = NodePath("VBoxContainer/Background/RightShoe/RightShoeUntied")
+leftShoeControl = NodePath("VBoxContainer/Background/LeftShoe")
+leftShoeTied = NodePath("VBoxContainer/Background/LeftShoe/LeftShoeTied")
+leftShoeUntied = NodePath("VBoxContainer/Background/LeftShoe/LeftShoeUntied")
+mowerControl = NodePath("VBoxContainer/Background/Mower")
+mowerWithCap = NodePath("VBoxContainer/Background/Mower/MowerWithCap")
+mowerWithoutCap = NodePath("VBoxContainer/Background/Mower/MowerWithoutCap")
+mowerRunning = NodePath("VBoxContainer/Background/Mower/MowerRunning")
+gasoline = NodePath("VBoxContainer/Background/Gasoline")
+mownGrass = NodePath("VBoxContainer/Background/MownGrass")
+unmownGrass = NodePath("VBoxContainer/Background/UnmownGrass")
 inputParser = NodePath("FrontYardParser")
 
 [node name="Borders" type="ColorRect" parent="."]
@@ -42,7 +65,167 @@ theme_override_constants/separation = 0
 [node name="Background" type="TextureRect" parent="VBoxContainer"]
 custom_minimum_size = Vector2(720, 400)
 layout_mode = 2
+texture = ExtResource("3_qsp4k")
 stretch_mode = 5
+
+[node name="Mower" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 590.0
+offset_top = 242.0
+offset_right = 706.0
+offset_bottom = 322.0
+
+[node name="MowerWithCap" type="Sprite2D" parent="VBoxContainer/Background/Mower"]
+position = Vector2(58, 40)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(66, 5, 58, 40)
+
+[node name="MowerWithoutCap" type="Sprite2D" parent="VBoxContainer/Background/Mower"]
+visible = false
+position = Vector2(58, 40)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(130, 5, 58, 40)
+
+[node name="MowerRunning" type="Sprite2D" parent="VBoxContainer/Background/Mower"]
+visible = false
+position = Vector2(58, 40)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(194, 5, 58, 40)
+
+[node name="Gasoline" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(601, 245)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(0, 36, 15, 11)
+
+[node name="MownGrass" type="Sprite2D" parent="VBoxContainer/Background"]
+visible = false
+position = Vector2(313, 292)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(6, 2, 21, 26)
+
+[node name="UnmownGrass" type="Sprite2D" parent="VBoxContainer/Background"]
+position = Vector2(310, 289)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(35, 2, 24, 29)
+
+[node name="LeftShoe" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 624.0
+offset_top = 246.0
+offset_right = 642.0
+offset_bottom = 258.0
+
+[node name="LeftShoeTied" type="Sprite2D" parent="VBoxContainer/Background/LeftShoe"]
+position = Vector2(9, 5)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(51, 37, 9, 5)
+
+[node name="LeftShoeUntied" type="Sprite2D" parent="VBoxContainer/Background/LeftShoe"]
+visible = false
+position = Vector2(9, 6)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(19, 37, 9, 6)
+
+[node name="RightShoe" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 648.0
+offset_top = 246.0
+offset_right = 666.0
+offset_bottom = 258.0
+
+[node name="RightShoeTied" type="Sprite2D" parent="VBoxContainer/Background/RightShoe"]
+position = Vector2(9, 5)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(51, 37, 9, 5)
+
+[node name="RightShoeUntied" type="Sprite2D" parent="VBoxContainer/Background/RightShoe"]
+visible = false
+position = Vector2(9, 6)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(35, 37, 9, 6)
+
+[node name="PlayerControl" type="Control" parent="VBoxContainer/Background"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 448.0
+offset_top = 150.0
+offset_right = 504.0
+offset_bottom = 300.0
+
+[node name="PlayersGasoline" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(1, 85)
+scale = Vector2(2, 2)
+texture = ExtResource("4_oyxk4")
+region_enabled = true
+region_rect = Rect2(0, 36, 15, 11)
+
+[node name="Player" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+scale = Vector2(2, 2)
+texture = ExtResource("5_mr33o")
+centered = false
+region_enabled = true
+region_rect = Rect2(2, 2, 28, 75)
+
+[node name="RightShoeTied" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(17, 144)
+scale = Vector2(2, 2)
+texture = ExtResource("5_mr33o")
+region_enabled = true
+region_rect = Rect2(104, 55, 7, 6)
+
+[node name="RightShoeUntied" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(16, 145)
+scale = Vector2(2, 2)
+texture = ExtResource("5_mr33o")
+region_enabled = true
+region_rect = Rect2(101, 40, 12, 5)
+
+[node name="LeftShoeTied" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(37, 142)
+scale = Vector2(2, 2)
+texture = ExtResource("5_mr33o")
+region_enabled = true
+region_rect = Rect2(114, 38, 7, 6)
+
+[node name="LeftShoeUntied" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(38, 143)
+scale = Vector2(2, 2)
+texture = ExtResource("5_mr33o")
+region_enabled = true
+region_rect = Rect2(113, 55, 10, 5)
+
+[node name="ShoesTiedTogether" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(27, 143)
+scale = Vector2(2, 2)
+texture = ExtResource("5_mr33o")
+region_enabled = true
+region_rect = Rect2(104, 6, 17, 7)
 
 [node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
 layout_mode = 2

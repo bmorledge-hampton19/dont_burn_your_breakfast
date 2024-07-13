@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_sktcm")
-endingID = 0
+endingID = 30
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["Your shampoo is so slippery it could be considered a hazard in certain situations...", "Try being more general when applying the shampoo.", "Squeeze the shampoo onto the floor before exiting the tub. Make sure you've lubed yourself up too!"])

@@ -30,6 +30,7 @@ var modifierAlias: String
 var previousModifierAlias: String
 var wildCard: String
 var previousWildCard: String
+var validWildCard: bool
 
 var actionID: int
 var confirmingActionID: int
@@ -38,6 +39,8 @@ var subjectID: int
 var previousSubjectID: int
 var modifierID: int
 var previousModifierID: int
+
+var parseSubs: Dictionary
 
 var parseEventsSinceLastConfirmation: int = 2
 enum {REQUEST_SUBJECT, REQUEST_MODIFIER, REQUEST_WILDCARD}
@@ -55,7 +58,8 @@ func _ready():
 	initParsableActions()
 	initParsableSubjects()
 	initParsableModifiers()
-	testParsables()
+	initParseSubs()
+	if OS.is_debug_build(): testParsables()
 
 func connectTerminal(p_terminal: Terminal, startingMessage: String):
 	terminal = p_terminal
@@ -96,16 +100,39 @@ func addParsableModifier(id: int, aliases: Array[String], associatedActionIDs: A
 func initParsableModifiers():
 	push_error("Unimplemented function.")
 
+func addParseSub(subFrom: String, subTo: String):
+	parseSubs[subFrom] = subTo
+
+func addParseSubs(subFroms: Array[String], subTo: String):
+	for subFrom in subFroms:
+		parseSubs[subFrom] = subTo
+
+func initParseSubs():
+	pass
+
+func invokeParseSubs(input: String) -> String:
+	var inputPieces := input.split(' ')
+	for i in range(len(inputPieces)):
+		if inputPieces[i] in parseSubs:
+			inputPieces[i] = parseSubs[inputPieces[i]]
+	
+	return ' '.join(inputPieces)
+
 
 func testParsables():
 	print("Testing parsables...")
 	var actionAliasesSoFar := []
+	var uniqueSubjectAliasesSoFar := {}
+	var uniqueModifierAliasesSoFar := {}
 
 	for parsableAction in parsableActions:
 		for newAlias in parsableAction.aliases:
 			for aliasSoFar in actionAliasesSoFar:
 				if newAlias.begins_with(aliasSoFar):
-					print("Action " + aliasSoFar + " hides " + newAlias)
+					print("Action \"" + aliasSoFar + "\" hides \"" + newAlias + "\"")
+			var afterParseSubs := invokeParseSubs(newAlias)
+			if afterParseSubs != newAlias:
+				print("Action \"" + newAlias + "\" altered to \"" + afterParseSubs + "\" following substitutions.")
 			actionAliasesSoFar.append(newAlias)
 
 		var subjectAliasesSoFar := []
@@ -113,16 +140,26 @@ func testParsables():
 			for newAlias in parsableSubject.aliases:
 				for aliasSoFar in subjectAliasesSoFar:
 					if newAlias.begins_with(aliasSoFar):
-						print("Subject " + aliasSoFar + " hides " + newAlias + " for action " + str(parsableAction.id))
+						print("Subject \"" + aliasSoFar + "\" hides \"" + newAlias + "\" for action " + str(parsableAction.id))
 				subjectAliasesSoFar.append(newAlias)
+				if newAlias not in uniqueSubjectAliasesSoFar:
+					uniqueSubjectAliasesSoFar[newAlias] = null
+					var afterParseSubs := invokeParseSubs(newAlias)
+					if afterParseSubs != newAlias:
+						print("Subject \"" + newAlias + "\" altered to \"" + afterParseSubs + "\" following substitutions.")
 		
 		var modifierAliasesSoFar := []
 		for parsableModifier in parsableModifiers[parsableAction.id]:
 			for newAlias in parsableModifier.aliases:
 				for aliasSoFar in modifierAliasesSoFar:
 					if newAlias.begins_with(aliasSoFar):
-						print("Modifier " + aliasSoFar + " hides " + newAlias + " for action " + str(parsableAction.id))
+						print("Modifier \"" + aliasSoFar + "\" hides \"" + newAlias + "\" for action " + str(parsableAction.id))
 				modifierAliasesSoFar.append(newAlias)
+				if newAlias not in uniqueModifierAliasesSoFar:
+					uniqueModifierAliasesSoFar[newAlias] = null
+					var afterParseSubs := invokeParseSubs(newAlias)
+					if afterParseSubs != newAlias:
+						print("Modifier \"" + newAlias + "\" altered to \"" + afterParseSubs + "\" following substitutions.")
 
 
 func receiveInputFromTerminal(input: String):
@@ -149,6 +186,7 @@ func parseInput(input: String) -> String:
 
 	_originalInputSansPunct = removePunctionation(input)
 	workingInput = removeBlacklistedArticlesAndAdjectives(_originalInputSansPunct)
+	workingInput = invokeParseSubs(workingInput)
 
 	if requestingSubject:
 		recallLastParse()
@@ -179,17 +217,18 @@ func parseInput(input: String) -> String:
 	if requestingWildCard:
 		recallLastParse()
 		requestingWildCard = false
+		validWildCard = false
 		wildCard = workingInput.strip_edges()
 		var parseResult := parseItems()
-		if parseResult != unknownParse(): return parseResult
+		if validWildCard: return parseResult
 		for prefix in requestingHelperPrefixes:
 			wildCard = prefix + workingInput.strip_edges()
 			parseResult = parseItems()
-			if parseResult != unknownParse(): return parseResult
+			if validWildCard: return parseResult
 		for suffix in requestingHelperSuffixes:
 			wildCard = workingInput.strip_edges() + suffix
 			parseResult = parseItems()
-			if parseResult != unknownParse(): return parseResult
+			if validWildCard: return parseResult
 
 	actionID = -1
 	actionAlias = ""
@@ -273,7 +312,8 @@ func checkForRequestedSubject(helperPrefix := "", helperSuffix := "") -> int:
 			if actionID in actionsWithWildcards:
 				if workingInput.to_lower().begins_with(alias):
 					subjectAlias = originalAlias
-					wildCard = workingInput.erase(0,alias.length()).strip_edges().to_lower()
+					var potentialWildCard := workingInput.erase(0,alias.length()).strip_edges().to_lower()
+					if potentialWildCard: wildCard = potentialWildCard
 					return subject.id
 			else:
 				if workingInput.to_lower() == alias:
@@ -304,7 +344,8 @@ func checkForRequestedModifier(helperPrefix := "", helperSuffix := "") -> int:
 			if actionID in actionsWithWildcards:
 				if workingInput.to_lower().begins_with(alias):
 					modifierAlias = originalAlias
-					wildCard = workingInput.erase(0,alias.length()).strip_edges().to_lower()
+					var potentialWildCard := workingInput.erase(0,alias.length()).strip_edges().to_lower()
+					if potentialWildCard: wildCard = potentialWildCard
 					return modifier.id
 			else:
 				if workingInput.to_lower() == alias:

@@ -28,12 +28,13 @@ func initParsableActions():
 			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.UNLOCK, ["unlock"])
 	addParsableAction(ActionID.LOCK, ["lock"])
-	addParsableAction(ActionID.COLLECT_COINS, ["collect coins", "collect cereal coins",  "collect cc", "collect"])
+	addParsableAction(ActionID.COLLECT_COINS,
+			["collect coins", "collect all coins", "collect cereal coins", "collect cc", "collect all", "collect"])
 	addParsableAction(ActionID.ENDING, ["ending", "end"], true)
 	addParsableAction(ActionID.BUY, ["buy", "purchase"], true)
 	addParsableAction(ActionID.PREVIOUS,
-			["previous page", "previous level", "previous", "prev", "got to previous page", "go to previous level"])
-	addParsableAction(ActionID.NEXT, ["next page", "next level", "next", "go to next page", "go to next level"])
+			["previous page", "previous level", "previous", "prev", "got to previous page", "go to previous level", "<"])
+	addParsableAction(ActionID.NEXT, ["next page", "next level", "next", "go to next page", "go to next level", ">"])
 	addParsableAction(ActionID.GO_BACK,
 			["go back to endings", "go back", "back", "return to endings", "return", "close ending", "close", "exit"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
@@ -42,7 +43,7 @@ func initParsableActions():
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.SHORTCUT, ["shortcut", "short cut"],
+	addParsableSubject(SubjectID.SHORTCUT, ["shortcut", "short cut", "lock"],
 			[ActionID.INSPECT, ActionID.LOCK, ActionID.UNLOCK])
 	addParsableSubject(SubjectID.COINS, ["coins", "coin", "cc", "cereal coins", "cereal coin", "money"],
 			[ActionID.INSPECT])
@@ -55,11 +56,12 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.LEVEL, ["level", "background"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.UNLOCKING_HINT,
-			["unlocking hint", "hint for unlocking", "hint to unlock", "unlocking", "unlock"],
+			["unlocking hints", "unlocking hint", "hint for unlocking", "hint to unlock", "unlocking", "unlock"],
 			[ActionID.INSPECT, ActionID.BUY])
-	addParsableSubject(SubjectID.AVOIDING_HINT, ["avoiding hint", "hint for avoiding", "hint to avoid", "avoiding", "avoid"],
+	addParsableSubject(SubjectID.AVOIDING_HINT,
+			["avoiding hints", "avoiding hint", "hint for avoiding", "hint to avoid", "avoiding", "avoid"],
 			[ActionID.INSPECT, ActionID.BUY])
-	addParsableSubject(SubjectID.AMBIGUOUS_HINT, ["hint"],
+	addParsableSubject(SubjectID.AMBIGUOUS_HINT, ["hints", "hint"],
 			[ActionID.INSPECT, ActionID.BUY])
 	
 
@@ -103,7 +105,8 @@ func parseItems() -> String:
 						)
 					else:
 						return (
-							"This shortcut is still locked... To unlock it, find all the endings in the previous level. " +
+							"This shortcut is still locked... To unlock it, complete the previous level and " +
+							"find all of its endings. " +
 							"Don't forget to buy hints if you're having trouble finding an ending!"
 						)
 
@@ -174,7 +177,11 @@ func parseItems() -> String:
 							"on the main menu."
 					)
 				else:
-					return "This shortcut is still locked... To unlock it, find all the endings for the previous level."
+					return (
+						"This shortcut is still locked... To unlock it, complete the previous level and " +
+						"find all of its endings. " +
+						"Don't forget to buy hints if you're having trouble finding an ending!"
+					)
 
 
 		ActionID.LOCK:
@@ -269,15 +276,18 @@ func parseItems() -> String:
 		ActionID.NEXT:
 			if endings.viewingEnding: return "You need to [go back] to the endings first."
 			else:
+				# CHANGE THIS WITH EACH DEMO
 				match endings.currentLevel:
 					SceneManager.SceneID.MAIN_MENU:
 						endings.changeLevel(SceneManager.SceneID.BATHROOM)
 						return ""
 					SceneManager.SceneID.BATHROOM:
-						return "You can't access the next level for this demo."
-					SceneManager.SceneID.FRONT_YARD:
-						endings.changeLevel(SceneManager.SceneID.BEDROOM)
+						endings.changeLevel(SceneManager.SceneID.FRONT_YARD)
 						return ""
+					SceneManager.SceneID.FRONT_YARD:
+						# endings.changeLevel(SceneManager.SceneID.BEDROOM)
+						# return ""
+						return "The next scene is not available in this demo."
 					SceneManager.SceneID.BEDROOM:
 						endings.changeLevel(SceneManager.SceneID.KITCHEN)
 						return ""
@@ -363,10 +373,12 @@ func attemptViewEnding() -> String:
 	var endingNum = wildCard.to_int()
 	if endingNum < 1 or endingNum > endings.currentLevelEndingPreviews.size():
 		return wildCard + " is not a valid ending number."
-	
+
+	validWildCard = true
+
 	if endings.viewingEnding:
 		return "You are already viewing an ending. [Go back] to view a different ending."
-	
+
 	endings.viewEnding(endingNum-1)
 	var endingID = endings.viewingEndingID
 	var totalUnlockingHints := EndingsManager.getNumberOfHints(endingID, EndingsManager.UNLOCKING, EndingsManager.TOTAL)
@@ -435,6 +447,8 @@ func attemptViewHint(hintType: int) -> String:
 	if hintNum < 1 or hintNum > EndingsManager.getNumberOfHints(endingID, hintType, EndingsManager.TOTAL):
 		return wildCard + " is not a valid " + hintText + " hint number."
 
+	validWildCard = true
+
 	if EndingsManager.hasHintBeenBought(endingID, hintType, hintNum-1):
 		if viewingCost:
 			return "You already own this hint. It costs nothing now! :)"
@@ -466,7 +480,9 @@ func attemptBuyHint(hintType: int) -> String:
 		hintNum = wildCard.to_int()
 		if hintNum < 1 or hintNum > EndingsManager.getNumberOfHints(endingID, hintType, EndingsManager.TOTAL):
 			return wildCard + " is not a valid " + hintText + " hint number."
-	
+
+	validWildCard = true
+
 	var nextHintIndex := EndingsManager.getNumberOfHints(endingID, hintType, EndingsManager.BOUGHT)
 	if hintNum == 0:
 		if nextHintIndex == EndingsManager.getNumberOfHints(endingID, hintType, EndingsManager.TOTAL):

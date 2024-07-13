@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_7wjby")
-endingID = 0
+endingID = 45
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["Your toilet is filled with water, and you've probably seen by now how dangerous that can be...", "Flush the toilet while the lid is open."])

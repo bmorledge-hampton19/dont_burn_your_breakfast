@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://clcutldee7tsl"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_ny6l4"]
+
+[resource]
+script = ExtResource("1_ny6l4")
+endingID = 70
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["You always wanted to be an action movie hero...", "Take the flamethrower."])
+unlockingHintCosts = Array[int]([2, 2])
+avoidingHints = Array[String](["You don't need the flamethrower at all to progress in this level. Just ignore it."])
+avoidingHintCosts = Array[int]([2])

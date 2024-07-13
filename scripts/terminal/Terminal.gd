@@ -62,7 +62,7 @@ func _process(delta):
 			terminalLines[lineCount-1].text += currentMessageChunk[currentMessageChunkIndex]
 		currentMessageChunkIndex += 1
 
-		if currentChar in [',', '.', '!', '?', ':']: preparingPause = true
+		if currentChar in [',', '.', '!', '?', ':', ';']: preparingPause = true
 		if preparingPause and (currentChar == ' ' or currentMessageChunkIndex == currentMessageChunk.length()):
 				nextUpdateThreshold = slowUpdateThreshold
 				preparingPause = false

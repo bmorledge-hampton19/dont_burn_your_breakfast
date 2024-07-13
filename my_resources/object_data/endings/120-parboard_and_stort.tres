@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://cvmyascy0aq83"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_t0wmi"]
+
+[resource]
+script = ExtResource("1_t0wmi")
+endingID = 120
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["You will need to be wearing both shoes to unlock this ending.", "Your character struggles with telling apart his lefts and rights.", "Walk to any destination while wearing both shoes on the wrong feet."])
+unlockingHintCosts = Array[int]([1, 2, 2])
+avoidingHints = Array[String](["Your character may not know his right from his left, but hopefully you do!", "Give very specific instructions when putting on your shoes.
+E.g., put right shoe on right foot."])
+avoidingHintCosts = Array[int]([1, 3])

@@ -18,6 +18,7 @@ func getCerealCoins() -> int:
 func _checkShortcutUnlock(endingSceneID: SceneManager.SceneID):
 
 	if endingSceneID == SceneManager.SceneID.MAIN_MENU or endingSceneID == SceneManager.SceneID.KITCHEN: return
+	if not _endingsSaveData.isSceneBeaten[endingSceneID]: return
 	var nextScene: SceneManager.SceneID
 
 	match endingSceneID:
@@ -72,6 +73,7 @@ func onSceneBeaten(sceneID: SceneManager.SceneID):
 			var endingSaveData := _getEndingSaveData(endingID)
 			if endingSaveData.unlocked:
 				endingSaveData.boughtAvoidingHints = _getEndingData(endingID).avoidingHints.size()
+		_checkShortcutUnlock(sceneID)
 		saveData()
 
 
@@ -119,7 +121,7 @@ func buyHint(endingID: SceneManager.EndingID, unlockingOrAvoiding) -> String:
 		hintIndex = endingSaveData.boughtUnlockingHints
 		endingSaveData.boughtUnlockingHints += 1
 	elif unlockingOrAvoiding == AVOIDING:
-		_endingsSaveData.cerealCoins -= getHintCost(endingID, UNLOCKING, endingSaveData.boughtAvoidingHints)
+		_endingsSaveData.cerealCoins -= getHintCost(endingID, AVOIDING, endingSaveData.boughtAvoidingHints)
 		hintIndex = endingSaveData.boughtAvoidingHints
 		endingSaveData.boughtAvoidingHints += 1
 	saveData()

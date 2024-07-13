@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_muyrj")
-endingID = 0
+endingID = 60
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["My daddy used to always say: Treat every tube of toothpaste like it's loaded!", "When the key is visible, make sure to aim the tube of toothpaste at yourself before squeezing it hard."])

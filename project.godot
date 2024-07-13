@@ -8,12 +8,22 @@
 
 config_version=5
 
+[addons]
+
+resources_spreadsheet_view/array_color_tint=100.0
+resources_spreadsheet_view/color_rows=true
+resources_spreadsheet_view/array_min_width=128.0
+resources_spreadsheet_view/resource_preview_size=32.0
+resources_spreadsheet_view/clip_headers=false
+resources_spreadsheet_view/dupe_arrays=true
+resources_spreadsheet_view/context_menu_on_leftclick=false
+
 [application]
 
 config/name="Don't Burn Your Breakfast"
 config/description="A silly little game about the inherent dangers of the most important meal of the day.
 Inspired by the timeless classic, \"Don't Shit Your Pants\"."
-config/version="0.1.1"
+config/version="0.2.1"
 run/main_scene="res://scenes/main_scenes/main_menu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 boot_splash/show_image=false
@@ -44,6 +54,10 @@ window/stretch/aspect="expand"
 [dotnet]
 
 project/assembly_name="dont_burn_your_breakfast"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/resources_spreadsheet_view/plugin.cfg")
 
 [filesystem]
 

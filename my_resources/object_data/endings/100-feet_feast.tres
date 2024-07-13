@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://denxa3nskp74e"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_614mg"]
+
+[resource]
+script = ExtResource("1_614mg")
+endingID = 100
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["The termites in the third step don't eat wood.", "The termites in the third step are carnivores.", "While barefoot, walk on the third step."])
+unlockingHintCosts = Array[int]([2, 2, 1])
+avoidingHints = Array[String](["Avoid putting bare skin on the third step.", "You'll need to be wearing shoes when you move to the third step."])
+avoidingHintCosts = Array[int]([2, 2])

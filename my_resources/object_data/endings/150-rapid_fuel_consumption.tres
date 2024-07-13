@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://bs4ilkhinihe3"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_cxkg7"]
+
+[resource]
+script = ExtResource("1_cxkg7")
+endingID = 150
+sceneID = 8
+coinsRewarded = 3
+unlockingHints = Array[String](["Your mower runs quite violently and tends to throw out sparks in its general vicinity.", "Remove the gas cap while the mower is running."])
+unlockingHintCosts = Array[int]([2, 3])
+avoidingHints = Array[String](["You'll need to protect the fuel tank while the mower is running.", "Screw on the gas cap before starting the mower."])
+avoidingHintCosts = Array[int]([2, 2])

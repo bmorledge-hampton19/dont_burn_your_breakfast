@@ -35,7 +35,7 @@ func initParsableActions():
 	addParsableAction(ActionID.TURN_ON, ["turn on", "activate"])
 	addParsableAction(ActionID.SQUEEZE, ["squeeze", "pour", "extrude", "hug", "pump", "squirt"])
 	addParsableAction(ActionID.SHAMPOO, ["shampoo", "lather up", "lather", "lube up", "lube"])
-	addParsableAction(ActionID.ENTER, ["enter", "get in", "get back in", "reenter", "re-enter"])
+	addParsableAction(ActionID.ENTER, ["enter", "go in", "get in", "get back in", "reenter", "re-enter"])
 	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.EXIT, ["exit", "leave", "get out of"])
 	addParsableAction(ActionID.STAND_UP, ["stand up", "get up"])
@@ -67,7 +67,7 @@ func initParsableActions():
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "you"],
+	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "you", "body"],
 			[ActionID.INSPECT, ActionID.SHAMPOO, ActionID.SQUEEZE])
 	addParsableSubject(SubjectID.BATHROOM, ["bathroom", "room"],
 			[ActionID.INSPECT, ActionID.EXIT, ActionID.ENTER])
@@ -119,7 +119,7 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.ENTER, ActionID.EXIT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SHAMPOO,
 			["shampoo bottle", "bottle", "shampoo", "4-in-1 shampoo", "soap", "lotion", "lubricant"],
-			[ActionID.INSPECT, ActionID.USE, ActionID.SQUEEZE, ActionID.APPLY, ActionID.PUT, ActionID.SHAMPOO])
+			[ActionID.INSPECT, ActionID.USE, ActionID.SQUEEZE, ActionID.APPLY, ActionID.PUT, ActionID.SHAMPOO, ActionID.TAKE])
 	addParsableSubject(SubjectID.DOOR_HANDLE, ["doorknob", "door knob", "door handle"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TURN])
 	addParsableSubject(SubjectID.DOOR, ["door"],
@@ -134,7 +134,7 @@ func initParsableSubjects():
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.GARBAGE, ["garbage", "trashcan", "trash can", "trash"],
 			[ActionID.INSPECT])
-	addParsableSubject(SubjectID.MACHINE, ["machine", "juicer", "grapefruit juicer", "yuck"],
+	addParsableSubject(SubjectID.MACHINE, ["machine", "juicer", "grapefruit juicer", "grapefruit juice", "yuck"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN])
 	addParsableSubject(SubjectID.GRAPEFRUIT, ["grapefruits", "grapefruit"],
 			[ActionID.INSPECT, ActionID.EAT])
@@ -152,7 +152,7 @@ func initParsableModifiers():
 	addParsableModifier(ModifierID.TO_SELF, ["to self", "to yourself", "to me", "to you"],
 			[ActionID.APPLY])
 	addParsableModifier(ModifierID.ON_SELF, ["on self", "on yourself", "on me", "on you",
-			"onto self", "onto yourself", "onto me", "onto you"],
+			"onto self", "onto yourself", "onto me", "onto you", "onto body", "on body"],
 			[ActionID.SQUEEZE, ActionID.APPLY, ActionID.PUT, ActionID.SHAMPOO])
 	addParsableModifier(ModifierID.TO_FLOOR, ["to floor", "to ground"],
 			[ActionID.APPLY])
@@ -169,13 +169,15 @@ func initParsableModifiers():
 			[ActionID.PUT])
 	addParsableModifier(ModifierID.DOWN, ["down"],
 			[ActionID.PUT])
-	addParsableModifier(ModifierID.IN_SINK, ["in sink", "using sink", "with sink"],
+	addParsableModifier(ModifierID.IN_SINK,
+			["into sink", "in sink", "using sink", "with sink", "into grapefruit juice", "in grapefruit juice"],
 			[ActionID.SPIT, ActionID.RINSE, ActionID.POOP, ActionID.PLACE, ActionID.PUT])
-	addParsableModifier(ModifierID.IN_TOILET, ["in toilet bowl", "in toilet", "using toilet bowl", "using toilet"],
+	addParsableModifier(ModifierID.IN_TOILET,
+			["into toilet bowl", "in toilet bowl", "into toilet", "in toilet", "using toilet bowl", "using toilet"],
 			[ActionID.SPIT, ActionID.RINSE, ActionID.POOP, ActionID.PUT])
-	addParsableModifier(ModifierID.IN_GARBAGE, ["in garbage"],
+	addParsableModifier(ModifierID.IN_GARBAGE, ["in garbage", "into garbage",],
 			[ActionID.SPIT])
-	addParsableModifier(ModifierID.IN_TUB, ["in tub", "in bathtub"],
+	addParsableModifier(ModifierID.IN_TUB, ["into tub", "in tub", "into bathtub", "in bathtub"],
 			[ActionID.SPIT, ActionID.POOP, ActionID.PLACE])
 	addParsableModifier(ModifierID.IN_CABINET, ["in cabinet", "on shelf", "to cabinet", "to shelf"],
 			[ActionID.PLACE])
@@ -772,6 +774,23 @@ func parseItems() -> String:
 		ActionID.TAKE:
 			
 			match subjectID:
+
+				SubjectID.SHAMPOO:
+					if bathroom.playerInTub:
+						return (
+							"You try to pick up the bottle of shampoo, but it's firmly stuck in place. " +
+							"You vaguely remember supergluing it to the edge of the tub so that you " +
+							"wouldn't lose track of it... " +
+							"You should still be able to use it from here though."
+						)
+					elif bathroom.isPlayerBlockedByCabinet():
+						transitionToTripEnding("the shampoo")
+						return (
+							"You try to pick up the bottle of shampoo, but it's firmly stuck in place. " +
+							"You vaguely remember supergluing it to the edge of the tub so that you " +
+							"wouldn't lose track of it... " +
+							"Oh well! You don't really need it now that you're out of the tub."
+						)
 
 				SubjectID.CEREAL_BOX:
 					if bathroom.isCabinetOpen: return "You don't see a good reason to take these boxes of cereal with you."
@@ -1581,7 +1600,11 @@ func attemptRinseToothbrush(rinseModifierID: int) -> String:
 				elif bathroom.isToiletToothpasted:
 					return (
 						"The residue from your last brushing is still present in the toilet. You'll " +
-						"need fresh water to brush your teeth "
+						"need fresh water if you want to clean off your toothbrush again."
+					)
+				elif bathroom.isToothbrushRinsed:
+					return (
+						"There's no toothpaste on your brush right now, so you don't need to rinse it."
 					)
 				else:
 					bathroom.rinseToothbrush()

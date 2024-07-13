@@ -10,7 +10,7 @@ enum ActionID {
 }
 
 enum SubjectID {
-	SELF, BEN, NICK, SHIRLEY, CELLAR_DOOR_GAMES
+	SELF, BEN, NICK, CHARLIE, SHIRLEY, CELLAR_DOOR_GAMES
 }
 
 enum ModifierID {
@@ -38,6 +38,8 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.BEN, ["ben morledge-hampton", "benjamin", "ben"],
 			[ActionID.INSPECT, ActionID.THANK])
 	addParsableSubject(SubjectID.NICK, ["nicholas", "nick morledge-hampton", "nick"],
+			[ActionID.INSPECT, ActionID.THANK])
+	addParsableSubject(SubjectID.CHARLIE, ["charles", "charlie morledge-hampton", "charlie"],
 			[ActionID.INSPECT, ActionID.THANK])
 	addParsableSubject(SubjectID.SHIRLEY, ["shirley shirley", "shirley", "nanny"],
 			[ActionID.INSPECT, ActionID.THANK])
@@ -74,7 +76,13 @@ func parseItems() -> String:
 					)
 				SubjectID.NICK:
 					return (
-						"Nick was always so supportive of me and helped a lot with the early stages of testing."
+						"Nick was always so supportive of me and helped a lot with the early stages of testing. " +
+						"Thanks little brother!"
+					)
+				SubjectID.CHARLIE:
+					return (
+						"Charlie is another awesome, supportive brother and helped with testing " +
+						"when he wasn't busy doing Navy things."
 					)
 				SubjectID.SHIRLEY:
 					return (

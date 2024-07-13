@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_cdus1")
-endingID = 0
+endingID = 20
 sceneID = 7
 coinsRewarded = 2
 unlockingHints = Array[String](["The cereal in the tub reacts violently with water.", "What is the easiest way to get water in the tub?", "Turn on the bathtub faucet."])
