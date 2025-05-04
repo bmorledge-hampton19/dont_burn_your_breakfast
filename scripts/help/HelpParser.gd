@@ -62,7 +62,7 @@ func parseItems() -> String:
 
 				-1:
 					if actionAlias == "look":
-						return requestAdditionalSubjectContext("Where")
+						return requestAdditionalSubjectContext("Where", [], [], ["at "])
 					else:
 						return requestAdditionalSubjectContext()
 				SubjectID.QUAKER_MAN:
@@ -86,7 +86,7 @@ func parseItems() -> String:
 		ActionID.GO_TO:
 			match subjectID:
 				-1:
-					return requestAdditionalSubjectContext("Where")
+					return requestAdditionalSubjectContext("Where", [], [], ["to "])
 				SubjectID.NEXT_PAGE:
 					return changePage(modifierID)
 				SubjectID.PREVIOUS_PAGE:

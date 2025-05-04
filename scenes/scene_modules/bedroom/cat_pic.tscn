@@ -1,0 +1,67 @@
+[gd_scene load_steps=6 format=3 uid="uid://bi1u605fhupqs"]
+
+[ext_resource type="Texture2D" uid="uid://ceh266pil1b4b" path="res://sprites/computer_cleaning/windows_window.png" id="1_4vsot"]
+[ext_resource type="Script" path="res://scripts/bedroom/CatPic.gd" id="2_g835u"]
+[ext_resource type="PackedScene" uid="uid://c6gjxlsvcyubr" path="res://scenes/scene_modules/bedroom/laser_eye.tscn" id="3_u1eam"]
+[ext_resource type="Texture2D" uid="uid://0jakrglhaqi7" path="res://sprites/computer_cleaning/polite_cat.png" id="4_cf8gs"]
+[ext_resource type="FontFile" uid="uid://dlfp6jxnrsa3c" path="res://fonts/TREBUCBD.TTF" id="5_jnlrc"]
+
+[node name="CatPic" type="NinePatchRect" node_paths=PackedStringArray("catPicTextureRect", "laserEyesControl", "headerText")]
+offset_left = 92.0
+offset_top = 7.0
+offset_right = 442.0
+offset_bottom = 327.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_4vsot")
+region_rect = Rect2(10, 80, 700, 506)
+patch_margin_left = 100
+patch_margin_top = 60
+patch_margin_right = 200
+patch_margin_bottom = 10
+script = ExtResource("2_g835u")
+catPicTextureRect = NodePath("MarginContainer/CatPic")
+laserEyesControl = NodePath("MarginContainer/CatPic/LaserEyes")
+laserEyePrefab = ExtResource("3_u1eam")
+headerText = NodePath("HeaderText")
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 10.0
+offset_right = 48.0
+offset_bottom = 50.0
+texture = ExtResource("4_cf8gs")
+expand_mode = 1
+
+[node name="HeaderText" type="Label" parent="."]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 18.0
+offset_right = 194.0
+offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_jnlrc")
+theme_override_font_sizes/font_size = 24
+text = "HISSSS"
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CatPic" type="TextureRect" parent="MarginContainer"]
+clip_children = 2
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="LaserEyes" type="Control" parent="MarginContainer/CatPic"]
+anchors_preset = 0

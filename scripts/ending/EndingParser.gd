@@ -6,7 +6,7 @@ extends InputParser
 var firstParse = true
 const endingMessage = (
 	"Oh no! You burned your breakfast...\n\n" +
-	"Would you like to [retry] the current level or return to the [main menu]?"
+	"Would you like to [r]etry the current level or return to the [m]ain menu?"
 )
 
 enum ActionID {
@@ -25,10 +25,10 @@ enum ModifierID {
 func initParsableActions():
 	addParsableAction(ActionID.ENDINGS,
 			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
-	addParsableAction(ActionID.RETRY, ["retry level", "retry the current level", "retry", "replay level"])
 	addParsableAction(ActionID.MAIN_MENU,
 			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
-			"go back to main menu", "return to the main menu", "return to main menu"])
+			"go back to main menu", "return to the main menu", "return to main menu", "m"])
+	addParsableAction(ActionID.RETRY, ["retry level", "retry the current level", "retry", "replay level", "r"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
 	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
@@ -45,10 +45,10 @@ func initParsableModifiers():
 
 func receiveInputFromTerminal(input: String):
 	if firstParse:
-		if input.to_lower() == "replay" or input.to_lower() == "replay message":
+		if input.to_lower() in replayPrompts:
 			terminal.initMessage(
 				lastMessage +
-				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT \"replay\" or \"replay message\" " +
+				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT one that replays the last message " +
 				"to continue.)"
 				)
 		elif input.to_lower() in ["retry level", "retry the current level", "retry", "replay level"]:

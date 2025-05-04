@@ -1,0 +1,25 @@
+[remap]
+
+importer="font_data_image"
+type="FontFile"
+uid="uid://c2x63d2ppgqki"
+path="res://.godot/imported/wingdings.png-5283294241c59ce29ed126e0a06c60bb.fontdata"
+
+[deps]
+
+source_file="res://fonts/wingdings.png"
+dest_files=["res://.godot/imported/wingdings.png-5283294241c59ce29ed126e0a06c60bb.fontdata"]
+
+[params]
+
+character_ranges=PackedStringArray("32-126")
+kerning_pairs=PackedStringArray()
+columns=19
+rows=5
+image_margin=Rect2i(0, 0, 0, 0)
+character_margin=Rect2i(0, 0, 0, 0)
+ascent=0
+descent=0
+fallbacks=[]
+compress=true
+scaling_mode=2

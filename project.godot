@@ -25,7 +25,7 @@ config/description="A silly little game about the inherent dangers of the most i
 Inspired by the timeless classic, \"Don't Shit Your Pants\"."
 config/version="0.2.1"
 run/main_scene="res://scenes/main_scenes/main_menu.tscn"
-config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://sprites/misc/app_icon.png"
 config/windows_native_icon="res://sprites/misc/app_icon.ico"
@@ -65,7 +65,7 @@ import/blender/enabled=false
 
 [gui]
 
-theme/custom_font="res://other_resources/kongtext.ttf"
+theme/custom_font="res://fonts/kongtext.ttf"
 
 [rendering]
 

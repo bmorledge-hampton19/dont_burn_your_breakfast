@@ -5,7 +5,7 @@ extends InputParser
 
 enum ActionID {
 	INSPECT,
-	UNLOCK, LOCK, COLLECT_COINS, ENDING, BUY, PREVIOUS, NEXT, GO_BACK,
+	UNLOCK, LOCK, COLLECT_COINS, ENDING, BUY, USE, PREVIOUS, NEXT, GO_BACK, TAKE_SHORTCUT,
 	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY,
 }
 
@@ -26,24 +26,26 @@ func initParsableActions():
 	addParsableAction(ActionID.MAIN_MENU,
 			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
 			"go back to main menu", "return to the main menu", "return to main menu"])
+	addParsableAction(ActionID.TAKE_SHORTCUT, ["take shortcut", "use shortcut", "shortcut"])
 	addParsableAction(ActionID.UNLOCK, ["unlock"])
 	addParsableAction(ActionID.LOCK, ["lock"])
 	addParsableAction(ActionID.COLLECT_COINS,
 			["collect coins", "collect all coins", "collect cereal coins", "collect cc", "collect all", "collect"])
 	addParsableAction(ActionID.ENDING, ["ending", "end"], true)
 	addParsableAction(ActionID.BUY, ["buy", "purchase"], true)
+	addParsableAction(ActionID.USE, ["use"], true)
 	addParsableAction(ActionID.PREVIOUS,
 			["previous page", "previous level", "previous", "prev", "got to previous page", "go to previous level", "<"])
 	addParsableAction(ActionID.NEXT, ["next page", "next level", "next", "go to next page", "go to next level", ">"])
 	addParsableAction(ActionID.GO_BACK,
-			["go back to endings", "go back", "back", "return to endings", "return", "close ending", "close", "exit"])
+			["go back to endings", "go back", "back", "return to endings", "return", "close ending", "close", "exit", "leave"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.SHORTCUT, ["shortcut", "short cut", "lock"],
+	addParsableSubject(SubjectID.SHORTCUT, ["shortcut", "lock"],
 			[ActionID.INSPECT, ActionID.LOCK, ActionID.UNLOCK])
 	addParsableSubject(SubjectID.COINS, ["coins", "coin", "cc", "cereal coins", "cereal coin", "money"],
 			[ActionID.INSPECT])
@@ -56,13 +58,13 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.LEVEL, ["level", "background"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.UNLOCKING_HINT,
-			["unlocking hints", "unlocking hint", "hint for unlocking", "hint to unlock", "unlocking", "unlock"],
-			[ActionID.INSPECT, ActionID.BUY])
+			["unlocking hints", "unlocking hint", "hint for unlocking", "hint to unlock", "unlocking", "unlock hint", "unlock"],
+			[ActionID.INSPECT, ActionID.BUY, ActionID.USE])
 	addParsableSubject(SubjectID.AVOIDING_HINT,
-			["avoiding hints", "avoiding hint", "hint for avoiding", "hint to avoid", "avoiding", "avoid"],
-			[ActionID.INSPECT, ActionID.BUY])
+			["avoiding hints", "avoiding hint", "hint for avoiding", "hint to avoid", "avoiding", "avoid hint", "avoid"],
+			[ActionID.INSPECT, ActionID.BUY, ActionID.USE])
 	addParsableSubject(SubjectID.AMBIGUOUS_HINT, ["hints", "hint"],
-			[ActionID.INSPECT, ActionID.BUY])
+			[ActionID.INSPECT, ActionID.BUY, ActionID.USE])
 	
 
 func initParsableModifiers():
@@ -86,7 +88,7 @@ func parseItems() -> String:
 				-1:
 					if not wildCard:
 						if actionAlias == "look":
-							return requestAdditionalSubjectContext("Where")
+							return requestAdditionalSubjectContext("Where", [], [], ["at "])
 						else:
 							return requestAdditionalSubjectContext()
 					elif not endings.viewingEnding:
@@ -194,6 +196,10 @@ func parseItems() -> String:
 					return "Yup. This shortcut is indeed locked."
 
 
+		ActionID.TAKE_SHORTCUT:
+			return "You have to be at the main menu to use a shortcut."
+
+
 		ActionID.COLLECT_COINS:
 			if endings.viewingEnding: return "You need to [go back] to the endings first."
 			else:
@@ -251,7 +257,25 @@ func parseItems() -> String:
 				
 				-1:
 					return requestAdditionalSubjectContext()
-		
+
+
+		ActionID.USE:
+			match subjectID:
+				SubjectID.UNLOCKING_HINT:
+					if not endings.viewingEnding: return wrongContextParse()
+					return attemptViewHint(EndingsManager.UNLOCKING)
+				
+				SubjectID.AVOIDING_HINT:
+					if not endings.viewingEnding: return wrongContextParse()
+					return attemptViewHint(EndingsManager.AVOIDING)
+				
+				SubjectID.AMBIGUOUS_HINT:
+					if not endings.viewingEnding: return wrongContextParse()
+					return requestAdditionalContextCustom(
+						"Are you trying to view an [unlocking hint] or an [avoiding hint]?",
+						REQUEST_SUBJECT
+					)
+
 
 		ActionID.PREVIOUS:
 			if endings.viewingEnding: return "You need to [go back] to the endings first."
@@ -328,7 +352,10 @@ func parseItems() -> String:
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.QUIT
-				return requestConfirmation()
+				return (
+					requestConfirmation() + " The endings and shortcuts you've unlocked will be saved, " +
+					"but any progress in the current level will be lost."
+				)
 	
 		ActionID.AFFIRM:
 			if parseEventsSinceLastConfirmation <= 1:

@@ -8,7 +8,7 @@ extends Node
 enum SceneID {
 	UNINITIALIZED, LAST_SCENE, MAIN_MENU, HELP, ACHIEVEMENTS, OPTIONS, ENDING,
 	BATHROOM, FRONT_YARD, BEDROOM, KITCHEN,
-	CREDITS, 
+	CREDITS, SPLASH_SCREEN, COMPUTER_CLEANING
 }
 
 enum EndingID {
@@ -59,9 +59,11 @@ var currentScene := SceneID.UNINITIALIZED
 var lastScene := SceneID.UNINITIALIZED
 var preloadedScenes: Array[SceneID] ### Would be nice to swap this out for a set if it ever gets implemented.
 
-var preloadedEndingsScreen: PackedScene
+var preloadedEndingsScene: PackedScene
 var openEndingsScene: Endings
-var scenePausedForEndings: Scene
+var preloadedComputerScene: PackedScene
+var openComputerScene
+var pausedScene: Scene
 
 var customStartingMessage := ""
 var endingID := EndingID.NONE
@@ -71,7 +73,8 @@ func _ready():
 	var sceneName := get_tree().current_scene.name.to_upper()
 	if sceneName == "OPTIONS_SCENE": currentScene = SceneID.OPTIONS
 	else: currentScene = SceneID[sceneName]
-	preloadedEndingsScreen = load(_getScenePath(SceneID.ACHIEVEMENTS))
+	preloadedEndingsScene = load(_getScenePath(SceneID.ACHIEVEMENTS))
+	preloadedComputerScene = load(_getScenePath(SceneID.COMPUTER_CLEANING))
 	# print("Starting scene: " + str(currentScene))
 	# var root = get_tree().root
 	# currentScene = root.get_child(root.get_child_count() - 1) # May be unnecessary?
@@ -147,14 +150,28 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 	
 func openEndings(openingScene: Scene):
 	openingScene.pause()
-	scenePausedForEndings = openingScene
-	openEndingsScene = preloadedEndingsScreen.instantiate()
-	scenePausedForEndings.add_sibling(openEndingsScene)
+	pausedScene = openingScene
+	openEndingsScene = preloadedEndingsScene.instantiate()
+	pausedScene.add_sibling(openEndingsScene)
 	openEndingsScene.initFromExistingTerminal(openingScene.terminal)
 	if currentScene in endingsByScene:
 		openEndingsScene.changeLevel(currentScene)
 
 func closeEndings():
 	openEndingsScene.inputParser.disconnectTerminal()
-	scenePausedForEndings.resume()
+	pausedScene.resume()
 	openEndingsScene.queue_free()
+
+func openComputerCleaning(openingScene: Scene):
+	openingScene.pause()
+	pausedScene = openingScene
+	openComputerScene = preloadedEndingsScene.instantiate()
+	pausedScene.add_sibling(openComputerScene)
+	openComputerScene.initFromExistingTerminal(openingScene.terminal)
+	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+
+func closeComputerCleaning():
+	openComputerScene.inputParser.disconnectTerminal()
+	pausedScene.resume()
+	openComputerScene.queue_free()
+	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT

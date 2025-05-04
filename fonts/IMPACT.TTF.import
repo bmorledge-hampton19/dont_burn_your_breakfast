@@ -2,19 +2,20 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bfil6chyhkmlf"
-path="res://.godot/imported/kongtext.ttf-4ba5502686db17cbb789ad92a2f946b5.fontdata"
+uid="uid://bkaf8rrh0a0ux"
+path="res://.godot/imported/IMPACT.TTF-6acd4af2c290954c8c37121aa170f42c.fontdata"
 
 [deps]
 
-source_file="res://other_resources/kongtext.ttf"
-dest_files=["res://.godot/imported/kongtext.ttf-4ba5502686db17cbb789ad92a2f946b5.fontdata"]
+source_file="res://fonts/IMPACT.TTF"
+dest_files=["res://.godot/imported/IMPACT.TTF-6acd4af2c290954c8c37121aa170f42c.fontdata"]
 
 [params]
 
 Rendering=null
 antialiasing=1
 generate_mipmaps=false
+disable_embedded_bitmaps=true
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48

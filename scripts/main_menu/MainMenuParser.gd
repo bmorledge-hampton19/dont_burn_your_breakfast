@@ -5,7 +5,7 @@ extends InputParser
 
 enum ActionID {
 	INSPECT, SELECT,
-	PLAY, ENDINGS, HELP, OPTIONS, CREDITS,
+	PLAY, TAKE_SHORTCUT, ENDINGS, HELP, OPTIONS, CREDITS,
 	MAIN_MENU, POOP, QUIT, AFFIRM, DENY,
 }
 
@@ -28,6 +28,7 @@ func initParsableActions():
 			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.SELECT, ["select", "click", "choose", "go to"])
 	addParsableAction(ActionID.PLAY, ["play game", "play", "start", "begin"])
+	addParsableAction(ActionID.TAKE_SHORTCUT, ["take shortcut", "use shortcut", "shortcut"])
 	addParsableAction(ActionID.HELP, ["help me", "help", "get help", "--help", "-h"])
 	addParsableAction(ActionID.OPTIONS, ["options", "settings"])
 	addParsableAction(ActionID.CREDITS, ["credits", "acknowledgements"])
@@ -65,19 +66,19 @@ func initParsableSubjects():
 
 
 func initParsableModifiers():
-	addParsableModifier(ModifierID.BATHROOM, ["bathroom", "at bathroom", "from bathroom", "on bathroom"],
-			[ActionID.PLAY, ActionID.SELECT])
+	addParsableModifier(ModifierID.BATHROOM, ["bathroom", "at bathroom", "from bathroom", "on bathroom", "to bathroom"],
+			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
 	addParsableModifier(ModifierID.FRONT_YARD,
 			[
-				"yard", "at yard", "on yard", "from yard",
-				"front yard", "at front yard", "on front yard", "from front yard",
-				"outside", "at outside", "on outside", "from outside"
+				"yard", "at yard", "on yard", "from yard", "to yard",
+				"front yard", "at front yard", "on front yard", "from front yard", "to front yard",
+				"outside", "at outside", "on outside", "from outside", "to outside"
 			],
-			[ActionID.PLAY, ActionID.SELECT])
-	addParsableModifier(ModifierID.BEDROOM, ["bedroom", "at bedroom", "on bedroom", "from bedroom"],
-			[ActionID.PLAY, ActionID.SELECT])
-	addParsableModifier(ModifierID.KITCHEN, ["kitchen", "at kitchen", "on kitchen", "from kitchen"],
-			[ActionID.PLAY, ActionID.SELECT])
+			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
+	addParsableModifier(ModifierID.BEDROOM, ["bedroom", "at bedroom", "on bedroom", "from bedroom", "to bedroom"],
+			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
+	addParsableModifier(ModifierID.KITCHEN, ["kitchen", "at kitchen", "on kitchen", "from kitchen", "to kitchen"],
+			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
 
 
 func parseItems() -> String:
@@ -91,7 +92,7 @@ func parseItems() -> String:
 
 				-1:
 					if actionAlias == "look":
-						return requestAdditionalSubjectContext("Where")
+						return requestAdditionalSubjectContext("Where", [], [], ["at "])
 					else:
 						return requestAdditionalSubjectContext()
 			
@@ -173,7 +174,7 @@ func parseItems() -> String:
 					return requestAdditionalContextCustom("Which button would you like to select?", REQUEST_SUBJECT)
 
 
-		ActionID.PLAY:
+		ActionID.PLAY, ActionID.TAKE_SHORTCUT:
 			return attemptStartGame(modifierID)
 
 		ActionID.HELP:

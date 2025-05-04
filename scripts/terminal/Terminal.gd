@@ -120,6 +120,7 @@ func initMessage(message: String):
 
 
 func fastTrackCurrentMessage():
+	if currentMessageChunkIndex == 0: scrollTerminalLines()
 	terminalLines[lineCount-1].text = currentMessageChunk
 	while remainingMessage:
 		getNextMessageChunk()

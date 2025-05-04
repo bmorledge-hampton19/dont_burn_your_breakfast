@@ -67,7 +67,7 @@ func initParsableActions():
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "you", "body"],
+	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you", "body"],
 			[ActionID.INSPECT, ActionID.SHAMPOO, ActionID.SQUEEZE])
 	addParsableSubject(SubjectID.BATHROOM, ["bathroom", "room"],
 			[ActionID.INSPECT, ActionID.EXIT, ActionID.ENTER])
@@ -221,7 +221,7 @@ func parseItems() -> String:
 
 				-1:
 					if actionAlias == "look":
-						return requestAdditionalSubjectContext("Where")
+						return requestAdditionalSubjectContext("Where", [], [], ["at "])
 					else:
 						return requestAdditionalSubjectContext()
 				SubjectID.SELF:
@@ -948,7 +948,7 @@ func parseItems() -> String:
 						return "You move over to the toilet."
 
 					-1:
-						return requestAdditionalSubjectContext("Where")
+						return requestAdditionalSubjectContext("Where", [], [], ["on ", "to "])
 
 
 		ActionID.OPEN:
@@ -1330,7 +1330,10 @@ func parseItems() -> String:
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.QUIT
-				return requestConfirmation()
+				return (
+					requestConfirmation() + " The endings and shortcuts you've unlocked will be saved, " +
+					"but any progress in the current level will be lost."
+				)
 
 
 		ActionID.AFFIRM:

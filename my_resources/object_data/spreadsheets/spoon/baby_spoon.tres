@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SpoonData" load_steps=2 format=3 uid="uid://bpgbxpq5p1gnb"]
+
+[ext_resource type="Script" path="res://my_resources/object_data/spreadsheets/spoon/SpoonData.gd" id="1_fyf7r"]
+
+[resource]
+script = ExtResource("1_fyf7r")
+name = "Baby Spoon"
+size = "Teeny Tiny"
+length = "10 cm"
+focalPoint = "1.25 cm"
+minorAxis = "1.25 cm"
+majorAxis = "1.5 cm"
+depth = "0.2 cm"
+flexuralStrength = "30 N"

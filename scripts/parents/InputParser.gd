@@ -14,6 +14,11 @@ const omittedArticlesAndAdjectives: Array[String] = [
 	"the", "a", "an", "it", "this", "that", "these", "those", "your", "his", "my"
 ]
 
+const replayPrompts: Array[String] = [
+	"replay", "replay message", "replay last message",
+	"repeat", "repeat message", "repeat last message"
+]
+
 var parsableActions: Array[_ParsableItem]
 var actionsWithWildcards: Array[int]
 var parsableSubjects: Dictionary
@@ -49,6 +54,8 @@ var requestingModifier := false
 var requestingWildCard := false
 var requestingHelperPrefixes: Array
 var requestingHelperSuffixes: Array
+var requestingExtraneousPrefixes: Array
+var requestingExtraneousSuffixes: Array
 
 var storeThisMessage: bool
 var lastMessage: String
@@ -164,7 +171,7 @@ func testParsables():
 
 func receiveInputFromTerminal(input: String):
 	storeThisMessage = true
-	if input.to_lower() == "replay" or input.to_lower() == "replay message":
+	if input.to_lower() in replayPrompts:
 		terminal.initMessage(lastMessage)
 	elif input:
 		var message := parseInput(input)
@@ -199,7 +206,14 @@ func parseInput(input: String) -> String:
 		for suffix in requestingHelperSuffixes:
 			subjectID = checkForRequestedSubject("", suffix)
 			if subjectID != -1: return parseItems()
+		for prefix in requestingExtraneousPrefixes:
+			subjectID = checkForRequestedSubject("", "", prefix)
+			if subjectID != -1: return parseItems()
+		for suffix in requestingExtraneousSuffixes:
+			subjectID = checkForRequestedSubject("", "", "", suffix)
+			if subjectID != -1: return parseItems()
 		if previousActionID in actionsWithWildcards: requestingWildCard = true
+		else: return unrecognizedResponseParse(input)
 
 	if requestingModifier:
 		recallLastParse()
@@ -212,7 +226,14 @@ func parseInput(input: String) -> String:
 		for suffix in requestingHelperSuffixes:
 			modifierID = checkForRequestedModifier("", suffix)
 			if modifierID != -1: return parseItems()
+		for prefix in requestingExtraneousPrefixes:
+			modifierID = checkForRequestedModifier("", "", prefix)
+			if modifierID != -1: return parseItems()
+		for suffix in requestingExtraneousSuffixes:
+			modifierID = checkForRequestedModifier("", "", "", suffix)
+			if modifierID != -1: return parseItems()
 		if previousActionID in actionsWithWildcards: requestingWildCard = true
+		else: return unrecognizedResponseParse(input)
 
 	if requestingWildCard:
 		recallLastParse()
@@ -229,6 +250,7 @@ func parseInput(input: String) -> String:
 			wildCard = workingInput.strip_edges() + suffix
 			parseResult = parseItems()
 			if validWildCard: return parseResult
+		return unrecognizedResponseParse(input)
 
 	actionID = -1
 	actionAlias = ""
@@ -242,7 +264,7 @@ func parseInput(input: String) -> String:
 	wildCard = ""
 
 	actionID = findAction()
-	if actionID == -1: return unknownParse()
+	if actionID == -1: return unrecognizedActionParse()
 	if not workingInput: return parseItems()
 
 	subjectID = findSubject()
@@ -252,7 +274,7 @@ func parseInput(input: String) -> String:
 	if not workingInput or actionID in actionsWithWildcards:
 		wildCard = workingInput.strip_edges()
 		return parseItems()
-	else: return unknownParse()
+	else: return unrecognizedEndingParse()
 
 
 func recallLastParse():
@@ -299,7 +321,7 @@ func findSubject() -> int:
 				return subject.id
 	return -1
 
-func checkForRequestedSubject(helperPrefix := "", helperSuffix := "") -> int:
+func checkForRequestedSubject(helperPrefix := "", helperSuffix := "", extraneousPrefix := "", extraneousSuffix := "") -> int:
 	for subject in parsableSubjects[actionID]:
 		for alias: String in subject.aliases:
 
@@ -308,6 +330,10 @@ func checkForRequestedSubject(helperPrefix := "", helperSuffix := "") -> int:
 				alias = alias.right(-len(helperPrefix)).strip_edges()
 			if helperSuffix and alias.ends_with(helperSuffix):
 				alias = alias.left(-len(helperSuffix)).strip_edges()
+			if extraneousPrefix:
+				alias = extraneousPrefix + alias
+			if extraneousSuffix:
+				alias = alias + extraneousSuffix
 
 			if actionID in actionsWithWildcards:
 				if workingInput.to_lower().begins_with(alias):
@@ -331,7 +357,7 @@ func findModifier() -> int:
 				return modifier.id
 	return -1
 
-func checkForRequestedModifier(helperPrefix := "", helperSuffix := "") -> int:
+func checkForRequestedModifier(helperPrefix := "", helperSuffix := "", extraneousPrefix := "", extraneousSuffix := "") -> int:
 	for modifier in parsableModifiers[actionID]:
 		for alias: String in modifier.aliases:
 
@@ -340,6 +366,10 @@ func checkForRequestedModifier(helperPrefix := "", helperSuffix := "") -> int:
 				alias = alias.right(-len(helperPrefix)).strip_edges()
 			if helperSuffix and alias.ends_with(helperSuffix):
 				alias = alias.left(-len(helperSuffix)).strip_edges()
+			if extraneousPrefix:
+				alias = extraneousPrefix + alias
+			if extraneousSuffix:
+				alias = alias + extraneousSuffix
 
 			if actionID in actionsWithWildcards:
 				if workingInput.to_lower().begins_with(alias):
@@ -360,41 +390,70 @@ func parseItems() -> String:
 	return unknownParse()
 
 
-func unknownParse() -> String:
-	storeThisMessage = false
-	return "You're not sure how to " + _originalInputSansPunct + "."
-
 func reconstructCommand() -> String:
 	var reconstructedCommand = actionAlias
 	if subjectAlias: reconstructedCommand += " " + subjectAlias
 	if modifierAlias: reconstructedCommand += " " + modifierAlias
 	if wildCard: reconstructedCommand += " " + wildCard
 	return reconstructedCommand
-	
+
+func unknownParse() -> String:
+	storeThisMessage = false
+	return "You're not sure how to " + _originalInputSansPunct + "."
 
 func wrongContextParse() -> String:
 	storeThisMessage = false
 	return "You can't " + reconstructCommand() + " right now."
 
-func requestAdditionalSubjectContext(questionStart := "What", prefixes := [], suffixes := []) -> String:
+func unrecognizedActionParse() -> String:
+	return unknownParse() + " (This command does not start with a recognized action.)"
+
+func unrecognizedEndingParse() -> String:
+	return (
+		unknownParse() + " (It's clear that you want to \"" + reconstructCommand() + "\", " +
+		"but the end of your command, \"" + workingInput + "\", is not recognized."
+	)
+
+func unrecognizedResponseParse(input: String) -> String:
+	var result := parseInput(input)
+	if result.begins_with(unknownParse()) or result.begins_with(wrongContextParse()):
+		return(
+			"Your response is not recognized. " +
+			"Also, y" + result.substr(1)
+		)
+	else: return result
+
+func requestAdditionalSubjectContext(
+	questionStart := "What", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
+) -> String:
 	requestingSubject = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
+	requestingExtraneousPrefixes = extraneousPrefixes
+	requestingExtraneousSuffixes = extraneousSuffixes
 	return questionStart.capitalize() + " would you like to " + reconstructCommand() + "?"
 
-func requestAdditionalModifierContext(questionStart := "How", questionEnd := "", prefixes := [], suffixes := []) -> String:
+func requestAdditionalModifierContext(
+	questionStart := "How", questionEnd := "", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
+) -> String:
 	requestingModifier = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
+	requestingExtraneousPrefixes = extraneousPrefixes
+	requestingExtraneousSuffixes = extraneousSuffixes
 	if questionEnd and not questionEnd.begins_with(' '): questionEnd = ' ' + questionEnd
 	return questionStart.capitalize() + " would you like to " + reconstructCommand() + questionEnd + "?"
 
-func requestAdditionalContextCustom(question: String, requestType: int, prefixes := [], suffixes := []) -> String:
+func requestAdditionalContextCustom(
+	question: String, requestType: int, prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
+) -> String:
 	if requestType == REQUEST_SUBJECT: requestingSubject = true
 	if requestType == REQUEST_MODIFIER: requestingModifier = true
 	if requestType == REQUEST_WILDCARD: requestingWildCard = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
+	requestingExtraneousPrefixes = extraneousPrefixes
+	requestingExtraneousSuffixes = extraneousSuffixes
 	return question
 
 func requestSpecificAction() -> String:

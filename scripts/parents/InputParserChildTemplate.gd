@@ -31,7 +31,7 @@ func initParsableActions():
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "you"],
+	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you"],
 			[ActionID.INSPECT])
 
 
@@ -50,7 +50,7 @@ func parseItems() -> String:
 
 				-1:
 					if actionAlias == "look":
-						return requestAdditionalSubjectContext("Where")
+						return requestAdditionalSubjectContext("Where", [], [], ["at "])
 					else:
 						return requestAdditionalSubjectContext()
 
@@ -78,7 +78,10 @@ func parseItems() -> String:
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.QUIT
-				return requestConfirmation()
+				return (
+					requestConfirmation() + " The endings and shortcuts you've unlocked will be saved, " +
+					"but any progress in the current level will be lost."
+				)
 	
 		ActionID.AFFIRM:
 			if parseEventsSinceLastConfirmation <= 1:

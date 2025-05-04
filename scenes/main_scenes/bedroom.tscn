@@ -1,10 +1,237 @@
-[gd_scene load_steps=4 format=3 uid="uid://dncanrypgsjkb"]
+[gd_scene load_steps=55 format=3 uid="uid://dncanrypgsjkb"]
 
 [ext_resource type="Script" path="res://scripts/bedroom/Bedroom.gd" id="1_1p8ji"]
 [ext_resource type="Script" path="res://scripts/bedroom/BedroomParser.gd" id="2_5s0ke"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_bhk7c"]
+[ext_resource type="Texture2D" uid="uid://cce42h8cbbnrl" path="res://sprites/backgrounds/bedroom.png" id="3_vd4sq"]
+[ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="4_j8vpu"]
+[ext_resource type="Texture2D" uid="uid://dw6u3027vb17o" path="res://sprites/movable_objects/bedroom_movable_objects.png" id="5_3qhgj"]
+[ext_resource type="Script" path="res://scripts/bedroom/ClothingDatabase.gd" id="5_7xt0r"]
+[ext_resource type="PackedScene" uid="uid://dk6ql0mn18gp3" path="res://scenes/scene_modules/bedroom/clothing.tscn" id="6_q0dtj"]
+[ext_resource type="Texture2D" uid="uid://dydgedqdxu5mp" path="res://sprites/movable_objects/bedroom_clothing.png" id="7_lccva"]
+[ext_resource type="Shader" path="res://scenes/scene_modules/bedroom/clothing.gdshader" id="7_w8bov"]
 
-[node name="Bedroom" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2b4jv"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8uqo"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 224, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gdyi6"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1w35r"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 224, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j88dd"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqcrq"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 224, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vjkfq"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mk3mk"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 128, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pg24o"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l7e1n"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 128, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ymsjt"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqvm0"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 128, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rb54o"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q7qx8"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 64, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u1e43"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ae5xi"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 64, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bqaja"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ojfd6"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 64, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1unck"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fk502"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 0, 10, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbhmy"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cwq6x"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 0, 10, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j41a3"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45knu"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 0, 10, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xyxe4"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3hyt"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(0, 0, 10, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vncil"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wq6pj"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(0, 0, 10, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h1qw3"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h2qm5"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 0, 10, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_14ob5"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6p8uo"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(0, 64, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j8bto"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aqb4j"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(64, 64, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_11v1r"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ypdvf"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(0, 128, 20, 30)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xa1wy"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsuye"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 128, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l2da0"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1w11q"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(0, 224, 20, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fu8un"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qecfx"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(112, 224, 20, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lhmy6"]
+resource_local_to_scene = true
+shader = ExtResource("7_w8bov")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t4rtl"]
+resource_local_to_scene = true
+atlas = ExtResource("7_lccva")
+region = Rect2(128, 64, 20, 20)
+
+[node name="Bedroom" type="CenterContainer" node_paths=PackedStringArray("bedGridControls", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -18,6 +245,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_1p8ji")
+bedGridControls = [NodePath("VBoxContainer/Background/Clothes/Depth0"), NodePath("VBoxContainer/Background/Clothes/Depth1"), NodePath("VBoxContainer/Background/Clothes/Depth2")]
 inputParser = NodePath("BedroomParser")
 
 [node name="Borders" type="ColorRect" parent="."]
@@ -42,10 +270,656 @@ theme_override_constants/separation = 0
 [node name="Background" type="TextureRect" parent="VBoxContainer"]
 custom_minimum_size = Vector2(720, 400)
 layout_mode = 2
+texture = ExtResource("3_vd4sq")
 stretch_mode = 5
+
+[node name="Smokey" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="RackedAxe" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+position = Vector2(490, 105)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 16, 14, 29)
+
+[node name="RackedMachete" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+position = Vector2(517, 107)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(16, 16, 5, 25)
+
+[node name="RackedHat" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+position = Vector2(546, 92)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(48, 16, 20, 6)
+
+[node name="RackedFireExtinguisher" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+position = Vector2(540, 131)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(32, 16, 12, 21)
+
+[node name="SmokeyBra" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+visible = false
+position = Vector2(604, 57)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 0, 20, 13)
+
+[node name="SmokeyBeard" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+position = Vector2(604, 41)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(32, 0, 14, 9)
+
+[node name="SmokeyShavingCream" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+visible = false
+position = Vector2(604, 40)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(48, 32, 16, 10)
+
+[node name="SmokeyHair" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+position = Vector2(602, 17)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(48, 0, 18, 9)
+
+[node name="SmokeyHat" type="Sprite2D" parent="VBoxContainer/Background/Smokey"]
+visible = false
+position = Vector2(604, 14)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(48, 16, 20, 6)
+
+[node name="GamingStation" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="ClutteredScreen" type="Sprite2D" parent="VBoxContainer/Background/GamingStation"]
+position = Vector2(146, 101)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 48, 16, 11)
+
+[node name="Bed" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="LessMessyBed" type="Sprite2D" parent="VBoxContainer/Background/Bed"]
+visible = false
+position = Vector2(360, 232)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(80, 0, 100, 68)
+
+[node name="AlmostMadeBed" type="Sprite2D" parent="VBoxContainer/Background/Bed"]
+visible = false
+position = Vector2(360, 232)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(80, 80, 100, 68)
+
+[node name="MadeBed" type="Sprite2D" parent="VBoxContainer/Background/Bed"]
+visible = false
+position = Vector2(360, 232)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(80, 160, 100, 68)
+
+[node name="Clothes" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 280.0
+offset_top = 190.0
+offset_right = 440.0
+offset_bottom = 290.0
+
+[node name="Depth2" type="Control" parent="VBoxContainer/Background/Clothes"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Depth1" type="Control" parent="VBoxContainer/Background/Clothes"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Depth0" type="Control" parent="VBoxContainer/Background/Clothes"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Dresser" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="DresserTop" type="Sprite2D" parent="VBoxContainer/Background/Dresser"]
+position = Vector2(360, 296)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 240, 60, 8)
+
+[node name="BottomDrawer" type="Control" parent="VBoxContainer/Background/Dresser"]
+visible = false
+anchors_preset = 0
+offset_left = 300.0
+offset_top = 288.0
+offset_right = 300.0
+offset_bottom = 288.0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/Dresser/BottomDrawer"]
+position = Vector2(66, 84)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 112, 56, 24)
+
+[node name="Inside" type="Control" parent="VBoxContainer/Background/Dresser/BottomDrawer"]
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 60.0
+offset_right = 108.0
+offset_bottom = 80.0
+
+[node name="FoldedShirt" parent="VBoxContainer/Background/Dresser/BottomDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_2b4jv")
+layout_mode = 0
+offset_left = -2.0
+offset_top = 2.0
+offset_right = 38.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_s8uqo")
+
+[node name="FoldedShirt2" parent="VBoxContainer/Background/Dresser/BottomDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_gdyi6")
+layout_mode = 0
+offset_left = 28.0
+offset_top = 2.0
+offset_right = 68.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_1w35r")
+
+[node name="FoldedShirt3" parent="VBoxContainer/Background/Dresser/BottomDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_j88dd")
+layout_mode = 0
+offset_left = 58.0
+offset_top = 2.0
+offset_right = 98.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_vqcrq")
+
+[node name="Foreground" type="Sprite2D" parent="VBoxContainer/Background/Dresser/BottomDrawer"]
+position = Vector2(66, 80)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 144, 56, 24)
+
+[node name="MiddleDrawer" type="Control" parent="VBoxContainer/Background/Dresser"]
+visible = false
+anchors_preset = 0
+offset_left = 300.0
+offset_top = 288.0
+offset_right = 300.0
+offset_bottom = 288.0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/Dresser/MiddleDrawer"]
+position = Vector2(66, 62)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 112, 56, 24)
+
+[node name="Inside" type="Control" parent="VBoxContainer/Background/Dresser/MiddleDrawer"]
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 38.0
+offset_right = 108.0
+offset_bottom = 58.0
+
+[node name="FoldedPants" parent="VBoxContainer/Background/Dresser/MiddleDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_vjkfq")
+layout_mode = 0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_mk3mk")
+
+[node name="FoldedPants2" parent="VBoxContainer/Background/Dresser/MiddleDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_pg24o")
+layout_mode = 0
+offset_left = 28.0
+offset_top = 2.0
+offset_right = 68.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_l7e1n")
+
+[node name="FoldedPants3" parent="VBoxContainer/Background/Dresser/MiddleDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_ymsjt")
+layout_mode = 0
+offset_left = 56.0
+offset_top = 2.0
+offset_right = 96.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_fqvm0")
+
+[node name="Foreground" type="Sprite2D" parent="VBoxContainer/Background/Dresser/MiddleDrawer"]
+position = Vector2(66, 58)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 144, 56, 24)
+
+[node name="TopRightDrawer" type="Control" parent="VBoxContainer/Background/Dresser"]
+visible = false
+anchors_preset = 0
+offset_left = 300.0
+offset_top = 288.0
+offset_right = 300.0
+offset_bottom = 288.0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/Dresser/TopRightDrawer"]
+position = Vector2(86, 36)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(32, 64, 24, 16)
+
+[node name="Inside" type="Control" parent="VBoxContainer/Background/Dresser/TopRightDrawer"]
+anchors_preset = 0
+offset_left = 68.0
+offset_top = 20.0
+offset_right = 108.0
+offset_bottom = 40.0
+
+[node name="FoldedUnderwear" parent="VBoxContainer/Background/Dresser/TopRightDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_rb54o")
+layout_mode = 0
+offset_left = -2.0
+offset_top = 2.0
+offset_right = 38.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_q7qx8")
+
+[node name="FoldedUnderwear2" parent="VBoxContainer/Background/Dresser/TopRightDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_u1e43")
+layout_mode = 0
+offset_left = 8.0
+offset_top = 2.0
+offset_right = 48.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_ae5xi")
+
+[node name="FoldedUnderwear3" parent="VBoxContainer/Background/Dresser/TopRightDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_bqaja")
+layout_mode = 0
+offset_left = 18.0
+offset_top = 2.0
+offset_right = 58.0
+offset_bottom = 22.0
+texture = SubResource("AtlasTexture_ojfd6")
+
+[node name="Foreground" type="Sprite2D" parent="VBoxContainer/Background/Dresser/TopRightDrawer"]
+position = Vector2(86, 40)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(32, 80, 24, 24)
+
+[node name="TopLeftDrawer" type="Control" parent="VBoxContainer/Background/Dresser"]
+visible = false
+anchors_preset = 0
+offset_left = 300.0
+offset_top = 288.0
+offset_right = 300.0
+offset_bottom = 288.0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/Dresser/TopLeftDrawer"]
+position = Vector2(34, 36)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 64, 24, 16)
+
+[node name="Inside" type="Control" parent="VBoxContainer/Background/Dresser/TopLeftDrawer"]
+anchors_preset = 0
+offset_left = 14.0
+offset_top = 20.0
+offset_right = 54.0
+offset_bottom = 40.0
+
+[node name="FoldedSocks" parent="VBoxContainer/Background/Dresser/TopLeftDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_1unck")
+layout_mode = 0
+offset_top = -6.0
+offset_bottom = 34.0
+texture = SubResource("AtlasTexture_fk502")
+
+[node name="FoldedSocks2" parent="VBoxContainer/Background/Dresser/TopLeftDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_wbhmy")
+layout_mode = 0
+offset_left = 10.0
+offset_top = -6.0
+offset_right = 30.0
+offset_bottom = 34.0
+texture = SubResource("AtlasTexture_cwq6x")
+
+[node name="FoldedSocks3" parent="VBoxContainer/Background/Dresser/TopLeftDrawer/Inside" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_j41a3")
+layout_mode = 0
+offset_left = 20.0
+offset_top = -6.0
+offset_right = 40.0
+offset_bottom = 34.0
+texture = SubResource("AtlasTexture_45knu")
+
+[node name="Foreground" type="Sprite2D" parent="VBoxContainer/Background/Dresser/TopLeftDrawer"]
+position = Vector2(34, 40)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(0, 80, 24, 24)
+
+[node name="ScatteredFood" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="ScatteredPepperFlakes" type="Sprite2D" parent="VBoxContainer/Background/ScatteredFood"]
+visible = false
+position = Vector2(564, 246)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(192, 160, 40, 40)
+
+[node name="ScatteredFlintFlakes" type="Sprite2D" parent="VBoxContainer/Background/ScatteredFood"]
+visible = false
+position = Vector2(564, 246)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(192, 112, 40, 40)
+
+[node name="ScatteredBreadCrumbs" type="Sprite2D" parent="VBoxContainer/Background/ScatteredFood"]
+visible = false
+position = Vector2(564, 246)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(192, 64, 40, 40)
+
+[node name="ScatteredCharcoalPowder" type="Sprite2D" parent="VBoxContainer/Background/ScatteredFood"]
+visible = false
+position = Vector2(564, 246)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(192, 16, 40, 40)
+
+[node name="Zoomba" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="Zoomba" type="Sprite2D" parent="VBoxContainer/Background/Zoomba"]
+position = Vector2(679, 328)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(192, 0, 31, 16)
+
+[node name="ZoombaBedForeground" type="Sprite2D" parent="VBoxContainer/Background/Zoomba"]
+position = Vector2(686, 342)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(224, 0, 30, 2)
+
+[node name="PlayerControl" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 446.0
+offset_top = 138.0
+offset_right = 510.0
+offset_bottom = 298.0
+
+[node name="PlayerMachete" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(9, 95)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(16, 16, 5, 25)
+
+[node name="PlayerFireExtinguisher" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(6, 95)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(32, 16, 12, 21)
+
+[node name="Player" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+position = Vector2(32, 80)
+scale = Vector2(2, 2)
+texture = ExtResource("4_j8vpu")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 80)
+
+[node name="Clothes" type="Control" parent="VBoxContainer/Background/PlayerControl"]
+anchors_preset = 0
+
+[node name="RightSock" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_xyxe4")
+layout_mode = 0
+offset_left = -2.0
+offset_top = 64.0
+offset_right = 18.0
+offset_bottom = 104.0
+texture = SubResource("AtlasTexture_d3hyt")
+
+[node name="LeftSock" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_vncil")
+layout_mode = 0
+offset_left = 46.0
+offset_top = 64.0
+offset_right = 66.0
+offset_bottom = 104.0
+texture = SubResource("AtlasTexture_wq6pj")
+
+[node name="FoldedSocks" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_h1qw3")
+layout_mode = 0
+offset_left = -2.0
+offset_top = 64.0
+offset_right = 18.0
+offset_bottom = 104.0
+texture = SubResource("AtlasTexture_h2qm5")
+
+[node name="UnfoldedUnderwear" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_14ob5")
+layout_mode = 0
+offset_left = 14.0
+offset_top = 62.0
+offset_right = 54.0
+offset_bottom = 82.0
+texture = SubResource("AtlasTexture_6p8uo")
+
+[node name="FoldedUnderwear" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_j8bto")
+layout_mode = 0
+offset_left = -6.0
+offset_top = 74.0
+offset_right = 34.0
+offset_bottom = 94.0
+texture = SubResource("AtlasTexture_aqb4j")
+
+[node name="UnfoldedPants" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_11v1r")
+layout_mode = 0
+offset_left = -12.0
+offset_top = 70.0
+offset_right = 28.0
+offset_bottom = 130.0
+texture = SubResource("AtlasTexture_ypdvf")
+
+[node name="FoldedPants" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_xa1wy")
+layout_mode = 0
+offset_left = 12.0
+offset_top = 56.0
+offset_right = 52.0
+offset_bottom = 76.0
+texture = SubResource("AtlasTexture_wsuye")
+
+[node name="UnfoldedShirt" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_l2da0")
+layout_mode = 0
+offset_left = -10.0
+offset_top = 70.0
+offset_right = 30.0
+offset_bottom = 110.0
+texture = SubResource("AtlasTexture_1w11q")
+
+[node name="FoldedShirt" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_fu8un")
+layout_mode = 0
+offset_left = 12.0
+offset_top = 56.0
+offset_right = 52.0
+offset_bottom = 76.0
+texture = SubResource("AtlasTexture_qecfx")
+
+[node name="Bra" parent="VBoxContainer/Background/PlayerControl/Clothes" instance=ExtResource("6_q0dtj")]
+visible = false
+material = SubResource("ShaderMaterial_lhmy6")
+layout_mode = 0
+offset_left = 10.0
+offset_top = 56.0
+offset_right = 50.0
+offset_bottom = 96.0
+texture = SubResource("AtlasTexture_t4rtl")
+
+[node name="HandForeground" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(9, 75)
+scale = Vector2(2, 2)
+texture = ExtResource("4_j8vpu")
+region_enabled = true
+region_rect = Rect2(2, 34, 5, 7)
+
+[node name="SmokeyHat" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(32, 4)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(48, 16, 20, 6)
+
+[node name="PlayerFlintFlakes" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(17, 53)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 112, 13, 19)
+
+[node name="PlayerBreadCrumbs" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(51, 53)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 64, 13, 21)
+
+[node name="PlayerPepperFlakes" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(13, 62)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 160, 9, 10)
+
+[node name="PlayerCharcoalPowder" type="Sprite2D" parent="VBoxContainer/Background/PlayerControl"]
+visible = false
+position = Vector2(49, 61)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 16, 13, 9)
+
+[node name="ZoombaTable" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="ZoombaFoodTable" type="Sprite2D" parent="VBoxContainer/Background/ZoombaTable"]
+position = Vector2(537, 367)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(192, 208, 61, 33)
+
+[node name="PepperFlakesOnTable" type="Sprite2D" parent="VBoxContainer/Background/ZoombaTable"]
+position = Vector2(489, 346)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 160, 9, 10)
+
+[node name="FlintFlakesOnTable" type="Sprite2D" parent="VBoxContainer/Background/ZoombaTable"]
+position = Vector2(515, 341)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 112, 13, 19)
+
+[node name="BreadCrumbsOnTable" type="Sprite2D" parent="VBoxContainer/Background/ZoombaTable"]
+position = Vector2(543, 343)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 64, 13, 21)
+
+[node name="CharcoalPowderOnTable" type="Sprite2D" parent="VBoxContainer/Background/ZoombaTable"]
+position = Vector2(573, 353)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(240, 16, 13, 9)
 
 [node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
 layout_mode = 2
 
 [node name="BedroomParser" type="Node" parent="."]
 script = ExtResource("2_5s0ke")
+
+[node name="ClothingDatabase" type="Node" parent="."]
+script = ExtResource("5_7xt0r")

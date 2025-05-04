@@ -8,7 +8,7 @@ enum {AMBIGUOUS, RIGHT, LEFT, PLURAL}
 enum ActionID {
 	INSPECT, USE,
 	TURN_ON, TURN_OFF, TURN, MOVE_TO, ASCEND, DESCEND, STEP_GENTLY, OPEN, CLOSE, ENTER,
-	TAKE, REMOVE, REPLACE, PUT,
+	TAKE, EAT, REMOVE, REPLACE, PUT,
 	WEAR, TIE, UNTIE, 
 	REFUEL, POUR, MOW,
 	FIRE, LIGHT, 
@@ -47,6 +47,7 @@ func initParsableActions():
 	addParsableAction(ActionID.ENTER, ["enter", "go inside", "go in", "walk inside", "walk in"])
 	addParsableAction(ActionID.REMOVE, ["remove", "take off", "unscrew", "pull off"])
 	addParsableAction(ActionID.TAKE, ["take", "get", "obtain", "hold", "pick up", "grab"])
+	addParsableAction(ActionID.EAT, ["eat"])
 	addParsableAction(ActionID.REPLACE,
 			["place", "replace", "return", "put back", "put down", "put away", "set down", "screw on", "screw"])
 	addParsableAction(ActionID.WEAR, ["wear", "slip on", "put on"])
@@ -59,12 +60,16 @@ func initParsableActions():
 	addParsableAction(ActionID.LIGHT, ["light", "strike", "burn"])
 	addParsableAction(ActionID.PUT, ["put"])
 	addParsableAction(ActionID.STEP_GENTLY,
-			["step gently on", "gently step on", "step gently up to", "gently step up to",
-			"move gently to", "gently move to", "go gently to", "gently go to",
-			"walk gently on", "gently walk on", "walk gently to", "gently walk to",])
+			["step gently on", "step gently up to", "step gently",
+			"gently step on", "gently step up to", "gently step",
+			"move gently to", "move gently",
+			"gently move to", "gently move",
+			"go gently to", "gently go to",
+			"walk gently on", "gently walk on", "walk gently to", "gently walk to",
+			"tiptoe on", "tiptoe to", "tiptoe"])
 	addParsableAction(ActionID.DESCEND,
 			["descend to", "descend on", "descend", "go down to", "go down on", "go down",
-			"climb down to", "climb down on", "climb down", "step down to", "step down"])
+			"climb down to", "climb down on", "climb down", "step down to", "step down", "step off"])
 	addParsableAction(ActionID.ASCEND,
 			["ascend to", "ascend on", "ascend", "go up to", "go up on", "go up",
 			"climb up to", "climb up on", "climb up", "climb", "step up to", "step up"])
@@ -78,13 +83,13 @@ func initParsableActions():
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "you"],
+	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.BATHROOM, ["bathroom door", "bathroom", "brown door", "lower door", "downstairs door"],
 			[ActionID.INSPECT, ActionID.OPEN, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ENTER, ActionID.DESCEND])
 	addParsableSubject(SubjectID.BEDROOM,
 			["bedroom door", "bedroom", "blue door", "upper door", "upstairs door",
-			"top of steps", "last step", "top step", "landing"],
+			"top of steps", "last step", "top step", "step 6", "step six", "sixth step", "landing", ],
 			[ActionID.INSPECT, ActionID.OPEN, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ENTER, ActionID.ASCEND])
 	addParsableSubject(SubjectID.AMBIGUOUS_DOOR, ["door"],
 			[ActionID.INSPECT, ActionID.OPEN, ActionID.MOVE_TO, ActionID.STEP_GENTLY,ActionID.ENTER,
@@ -109,7 +114,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.STEP_5, ["step 5", "step five", "fifth step", "5th step"],
 			[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ASCEND, ActionID.DESCEND])
 	addParsableSubject(SubjectID.AMBIGUOUS_STEP, ["steps", "step", "wood"],
-			[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ASCEND, ActionID.DESCEND])
+			[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.MOW, ActionID.ASCEND, ActionID.DESCEND])
 	addParsableSubject(SubjectID.NEXT_STEP, ["next step"],
 			[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ASCEND])
 	addParsableSubject(SubjectID.PREVIOUS_STEP, ["previous step"],
@@ -122,36 +127,37 @@ func initParsableSubjects():
 			 ActionID.OPEN, ActionID.CLOSE])
 	addParsableSubject(SubjectID.GAS, ["gasoline", "gas can", "gas", "fuel"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.REPLACE, ActionID.POUR, ActionID.PUT])
-	addParsableSubject(SubjectID.SHOES, ["shoes", "pair of shoes", "both shoes"],
+	addParsableSubject(SubjectID.SHOES, ["shoes", "pair of shoes", "both shoes", "sneakers", "pair of sneakers", "both sneakers"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE,
 			ActionID.WEAR, ActionID.PUT, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE])
-	addParsableSubject(SubjectID.RIGHT_SHOE, ["right shoe", "r shoe"],
+	addParsableSubject(SubjectID.RIGHT_SHOE, ["right shoe", "r shoe", "right sneaker", "r sneaker"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE,
 			ActionID.WEAR, ActionID.PUT, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE])
-	addParsableSubject(SubjectID.LEFT_SHOE, ["left shoe", "l shoe"],
+	addParsableSubject(SubjectID.LEFT_SHOE, ["left shoe", "l shoe", "left sneaker", "l sneaker"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE,
 			ActionID.WEAR, ActionID.PUT, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE])
-	addParsableSubject(SubjectID.SHOE_ON_RIGHT_FOOT, ["shoe on right foot", "shoe on r foot"],
+	addParsableSubject(SubjectID.SHOE_ON_RIGHT_FOOT, ["shoe on right foot", "shoe on r foot", "sneaker on right foot"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE, ActionID.TAKE])
-	addParsableSubject(SubjectID.SHOE_ON_LEFT_FOOT, ["shoe on left foot", "shoe on l foot"],
+	addParsableSubject(SubjectID.SHOE_ON_LEFT_FOOT, ["shoe on left foot", "shoe on l foot", "sneaker on left foot"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE, ActionID.TAKE])
-	addParsableSubject(SubjectID.AMBIGUOUS_SHOE, ["shoe"],
+	addParsableSubject(SubjectID.AMBIGUOUS_SHOE, ["shoe", "sneaker"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE,
 			ActionID.WEAR, ActionID.PUT, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE])
 	addParsableSubject(SubjectID.FLAMETHROWER, ["flamethrower", "flame thrower", "gun"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.FIRE, ActionID.TAKE])
 	addParsableSubject(SubjectID.CEREAL, ["boxes of cereal", "boxes", "box", "cereal", "top shelf", "cocoa puffs"],
-			[ActionID.INSPECT, ActionID.TAKE])
+			[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
 	addParsableSubject(SubjectID.BIRDFEEDER, ["bird feeder", "birdfeeder", "feeder"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.FAUCET, ["faucet", "spigot"],
 			[ActionID.INSPECT, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN])
 	addParsableSubject(SubjectID.LAWN,
 			["lawn of matchsticks", "lawn of matches", "lawn",
-			"matches", "matchsticks", "match sticks", "matchstick lawn", "match"],
+			"matches", "matchsticks", "match sticks", "matchstick lawn", "match",
+			"yard", "front yard",],
 			[ActionID.INSPECT, ActionID.MOW, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.LIGHT])
 	addParsableSubject(SubjectID.WEEDS, ["weeds", "weed", "the bane of my homeowner existence"],
-			[ActionID.INSPECT])
+			[ActionID.INSPECT, ActionID.MOW])
 	addParsableSubject(SubjectID.STUMP, ["stump", "tree stump"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.WINDOW, ["windows", "window", "curtains", "curtain"],
@@ -176,10 +182,10 @@ func initParsableModifiers():
 			[ActionID.PUT, ActionID.POUR])
 	addParsableModifier(ModifierID.WITH_GAS, ["with gasoline", "with gas", "with fuel"], [ActionID.REFUEL])
 	addParsableModifier(ModifierID.ON_RIGHT_FOOT,
-			["on right foot", "on right", "on r"],
+			["on right foot", "on r foot", "on right", "on r"],
 			[ActionID.PUT, ActionID.WEAR])
 	addParsableModifier(ModifierID.ON_LEFT_FOOT,
-			["on left foot", "on left", "on l"],
+			["on left foot", "on l foot", "on left", "on l"],
 			[ActionID.PUT, ActionID.WEAR])
 	addParsableModifier(ModifierID.ON_AMBIGUOUS_FOOT, ["on foot"],
 			[ActionID.INSPECT, ActionID.PUT, ActionID.WEAR])
@@ -223,7 +229,7 @@ func parseItems() -> String:
 
 				-1:
 					if actionAlias == "look":
-						return requestAdditionalSubjectContext("Where")
+						return requestAdditionalSubjectContext("Where", [], [], ["at "])
 					else:
 						return requestAdditionalSubjectContext()
 
@@ -366,7 +372,7 @@ func parseItems() -> String:
 
 				SubjectID.STUMP:
 					return (
-						"You used to have a large willow tree here, but you had it cut down so that the matches below " +
+						"You used to have a large cottonwood tree here, but you had it cut down so that the matches below " +
 						"it would get enough sunlight."
 					)
 
@@ -398,7 +404,7 @@ func parseItems() -> String:
 			elif subjectID == SubjectID.MOWER:
 				if frontYard.isMowerRunning:
 					return (
-						"You're actually not sure how to turn off the mower. It's okay though; it'll run out " +
+						"You're actually not sure how to turn off the mower. It's okay though; it'll run out of " +
 						"gas eventually and turn itself off."
 					)
 				else:
@@ -429,7 +435,7 @@ func parseItems() -> String:
 			match subjectID:
 
 				-1:
-					return requestAdditionalSubjectContext("Where")
+					return requestAdditionalSubjectContext("Where", [], [], ["on ", "to "])
 
 				SubjectID.LAWN:
 					SceneManager.transitionToScene(
@@ -730,6 +736,19 @@ func parseItems() -> String:
 				SubjectID.SHOES, SubjectID.RIGHT_SHOE, SubjectID.LEFT_SHOE, SubjectID.AMBIGUOUS_SHOE,\
 				SubjectID.SHOE_ON_RIGHT_FOOT, SubjectID.SHOE_ON_LEFT_FOOT:
 					return "You don't see a need to carry your shoes anywhere when you can just put them on instead."
+
+
+		ActionID.EAT:
+			match subjectID:
+
+				-1:
+					return requestAdditionalSubjectContext()
+
+				SubjectID.CEREAL:
+					return (
+						"These Cocoa Puffs would make for a good breakfast, but you don't have any milk. " +
+						"It's best if you leave them for the birds."
+					)
 
 
 		ActionID.REMOVE:
@@ -1098,12 +1117,14 @@ func parseItems() -> String:
 
 				-1: return requestAdditionalSubjectContext()
 
-				SubjectID.STEP_1:
+				SubjectID.STEP_1, SubjectID.AMBIGUOUS_STEP:
 					return attemptMowGrass(false)
 				SubjectID.LAWN when subjectAlias.to_lower() == "lawn":
 					return attemptMowGrass(true)
 				SubjectID.LAWN when subjectAlias.to_lower() != "lawn":
 					return attemptMowGrass(false, true)
+				SubjectID.WEEDS:
+					return attemptMowGrass(false, true, true)
 
 
 		ActionID.FIRE:
@@ -1148,7 +1169,10 @@ func parseItems() -> String:
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.QUIT
-				return requestConfirmation()
+				return (
+					requestConfirmation() + " The endings and shortcuts you've unlocked will be saved, " +
+					"but any progress in the current level will be lost."
+				)
 	
 		ActionID.AFFIRM:
 			if parseEventsSinceLastConfirmation <= 1:
@@ -1293,18 +1317,7 @@ func attemptMovePlayer(movingTo: FrontYard.SpritePos, gently := false) -> String
 					return ""
 				else:
 					frontYard.movePlayer(movingTo)
-					if not frontYard.isPlayerWearingRightShoe or not frontYard.isPlayerWearingLeftShoe:
-						SceneManager.transitionToScene(
-							SceneManager.SceneID.ENDING,
-							"Your bare feet settle onto step #3, and you can immediately feel it humming with activity. " +
-							"The flesh-eating termites that call this step home have picked up the pungent scent of your " +
-							"feet and waste no time in surfacing to enjoy the tasty meal you have presented to them.\n" +
-							"Frantically, you stomp up and down to try and dissuade the termites from feasting on your " +
-							"exposed skin. They remain undeterred, however, and in a panic, you leap into the matchstick " +
-							"lawn.\nHopefully those termites like their steak cooked well-done.",
-							SceneManager.EndingID.FEET_FEAST
-						)
-						return ""
+					if checkForFootFetish(): return ""
 					if movingFrom == SpritePos.STEP_2:
 						return (
 							"You ascend to the third step with your trusty shoes. You can feel the termites " +
@@ -1501,6 +1514,7 @@ func attemptRemoveShoe(whichShoe: int) -> String:
 				if checkForFall(frontYard.SpritePos.IN_FRONT_OF_SHELF): return ""
 				else: frontYard.movePlayer(frontYard.SpritePos.IN_FRONT_OF_SHELF)
 			frontYard.takeOffRightShoe()
+			if checkForFootFetish(): return ""
 			if frontYard.rightShoePos == frontYard.SpritePos.ON_SHELF:
 				return "You pull off your shoe and place it back on the supply shelf for safe keeping."
 			else:
@@ -1521,6 +1535,7 @@ func attemptRemoveShoe(whichShoe: int) -> String:
 				if checkForFall(frontYard.SpritePos.IN_FRONT_OF_SHELF): return ""
 				else: frontYard.movePlayer(frontYard.SpritePos.IN_FRONT_OF_SHELF)
 			frontYard.takeOffLeftShoe()
+			if checkForFootFetish(): return ""
 			if frontYard.leftShoePos == frontYard.SpritePos.ON_SHELF:
 				return "You pull off your shoe and place it back on the supply shelf for safe keeping."
 			else:
@@ -1540,6 +1555,7 @@ func attemptRemoveShoe(whichShoe: int) -> String:
 				else: frontYard.movePlayer(frontYard.SpritePos.IN_FRONT_OF_SHELF)
 			frontYard.takeOffRightShoe()
 			frontYard.takeOffLeftShoe()
+			if checkForFootFetish(): return ""
 			if frontYard.leftShoePos == frontYard.SpritePos.ON_SHELF:
 				return "You take off both shoes and place them back on the supply shelf for safe keeping."
 			else:
@@ -1784,7 +1800,7 @@ func attemptStartMower() -> String:
 	return "You start up the mower, and it lets out a low, steady rumbling noise. It must be hungry for grass!"
 
 
-func attemptMowGrass(ambiguous: bool, intentionalDestruction := false) -> String:
+func attemptMowGrass(ambiguous: bool, intentionalDestruction := false, mowingWeeds := false) -> String:
 
 	var endingMessage := ""
 
@@ -1793,6 +1809,11 @@ func attemptMowGrass(ambiguous: bool, intentionalDestruction := false) -> String
 		return "You can't reach the mower right now."
 	if not frontYard.isMowerRunning:
 		return "You need to start the mower before you can " + reconstructCommand() + "."
+	elif mowingWeeds:
+		endingMessage = (
+			"You know the matchstick lawn is meant to be low-maintenance, but you can't help but feel like " +
+			"it would look a little nicer if the weeds were cut down to size.\n"
+		)
 	elif intentionalDestruction:
 		endingMessage = (
 			"You know the matchstick lawn is meant to be low-maintenance, but you can't help but feel like " +
@@ -1898,6 +1919,35 @@ func checkForFall(destination: int) -> bool:
 	else:
 		return false
 
+
+func checkForFootFetish():
+	if not frontYard.playerPos == frontYard.SpritePos.STEP_3: return
+	elif not frontYard.isPlayerWearingRightShoe and not frontYard.isPlayerWearingLeftShoe:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"Your bare feet settle onto step #3, and you can immediately feel it humming with activity. " +
+			"The flesh-eating termites that call this step home have picked up the pungent scent of your " +
+			"feet and waste no time in surfacing to enjoy the tasty meal you have presented to them.\n" +
+			"Frantically, you stomp up and down to try and dissuade the termites from feasting on your " +
+			"exposed skin. They remain undeterred, however, and in a panic, you leap into the matchstick " +
+			"lawn.\nHopefully those termites like their steak cooked well-done.",
+			SceneManager.EndingID.FEET_FEAST
+		)
+		return true
+	elif not frontYard.isPlayerWearingRightShoe or not frontYard.isPlayerWearingLeftShoe:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"Your bare foot settles onto step #3, and you can immediately feel it humming with activity. " +
+			"The flesh-eating termites that call this step home have picked up the pungent scent of your " +
+			"feet and waste no time in surfacing to enjoy the tasty meal you have presented to them.\n" +
+			"Frantically, you stomp up and down to try and dissuade the termites from feasting on your " +
+			"exposed skin. They remain undeterred, however, and in a panic, you leap into the matchstick " +
+			"lawn.\nHopefully those termites like their steak cooked well-done.",
+			SceneManager.EndingID.FEET_FEAST
+		)
+		return true
+	else:
+		return false
 
 func getNextStep():
 

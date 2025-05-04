@@ -1,0 +1,23 @@
+[gd_scene load_steps=6 format=3 uid="uid://dk6ql0mn18gp3"]
+
+[ext_resource type="Shader" path="res://scenes/scene_modules/bedroom/clothing.gdshader" id="1_7s5by"]
+[ext_resource type="Texture2D" uid="uid://dydgedqdxu5mp" path="res://sprites/movable_objects/bedroom_clothing.png" id="1_k6pse"]
+[ext_resource type="Script" path="res://scripts/bedroom/Clothing.gd" id="3_an07a"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cpjif"]
+resource_local_to_scene = true
+shader = ExtResource("1_7s5by")
+shader_parameter/buriedDepth = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4bt6i"]
+resource_local_to_scene = true
+atlas = ExtResource("1_k6pse")
+region = Rect2(0, 0, 10, 20)
+
+[node name="clothing" type="TextureRect"]
+material = SubResource("ShaderMaterial_cpjif")
+offset_right = 20.0
+offset_bottom = 40.0
+texture = SubResource("AtlasTexture_4bt6i")
+stretch_mode = 4
+script = ExtResource("3_an07a")
