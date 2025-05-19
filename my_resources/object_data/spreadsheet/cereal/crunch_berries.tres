@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://b630558gim0"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_6uupd"]
+
+[resource]
+script = ExtResource("1_6uupd")
+name = "Crunch Berries"
+servingSize = "37g"
+sugar = "16g"
+sugarClass = "Sugary"
+fiber = "<1g"
+protein = "2g"
+geometry = "Irregular"
+company = "Quaker"
+mascot = "Cpt. Crunch"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

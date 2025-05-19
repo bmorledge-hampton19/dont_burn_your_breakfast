@@ -50,7 +50,7 @@ func _ready():
 
 func initFromExistingTerminal(existingTerminal):
 	terminal = existingTerminal
-	inputParser.connectTerminal(existingTerminal, defaultStartingMessage)
+	inputParser.connectTerminal(existingTerminal)
 
 func _process(delta):
 	timeSinceLastCerealCoinUpdate += delta

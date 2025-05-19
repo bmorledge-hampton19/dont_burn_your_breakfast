@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://b2kyka6kdpn4m"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_j0dxq"]
+
+[resource]
+script = ExtResource("1_j0dxq")
+name = "Oreo O's"
+servingSize = "40g"
+sugar = "17g"
+sugarClass = "Sugary"
+fiber = "1g"
+protein = "1g"
+geometry = "Torus"
+company = "Post"
+mascot = "None"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

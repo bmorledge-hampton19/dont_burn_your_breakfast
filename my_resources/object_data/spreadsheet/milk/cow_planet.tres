@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://cdikiqjy6lm3g"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_b1o63"]
+
+[resource]
+script = ExtResource("1_b1o63")
+caloriesPerServing = "999.99 kcal"
+color = "Chartreuse"
+absorbance = "4.16 AU"
+viscosity = "0.56 mPA*s"
+specificGravity = "1.91 kg/L"
+meltingPoint = "-84.4 °C"
+costPerGallon = "$???"
+name = "Cow Planet"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

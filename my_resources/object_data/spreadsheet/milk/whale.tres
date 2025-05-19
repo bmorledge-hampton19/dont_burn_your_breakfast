@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://cfeycrbmkaqyc"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_eflxg"]
+
+[resource]
+script = ExtResource("1_eflxg")
+caloriesPerServing = "443 kcal"
+color = "Seashell"
+absorbance = "2.11 AU"
+viscosity = "43.26 mPA*s"
+specificGravity = "1.012 kg/L"
+meltingPoint = "-1.12 °C"
+costPerGallon = "$8,644.21"
+name = "Whale"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

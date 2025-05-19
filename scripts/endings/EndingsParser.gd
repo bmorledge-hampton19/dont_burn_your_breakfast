@@ -81,7 +81,7 @@ func parseItems() -> String:
 
 			if wildCard and subjectID not in [
 				SubjectID.ENDING, SubjectID.UNLOCKING_HINT, SubjectID.AVOIDING_HINT, SubjectID.AMBIGUOUS_HINT, -1
-			]: return unknownParse()
+			]: return unrecognizedEndingParse()
 
 			match subjectID:
 

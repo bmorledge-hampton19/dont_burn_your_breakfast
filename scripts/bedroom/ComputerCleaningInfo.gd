@@ -1,5 +1,5 @@
 class_name ComputerCleaningInfo
-extends Node
+extends NinePatchRect
 
 @export var clippy: TextureRect
 @export var speechBubble: Panel
@@ -14,9 +14,11 @@ var clippyAskingForSpeed: bool
 var clippyAwaitingCommand: bool
 var clippyTextTween: Tween
 
+signal finished()
+
 func _ready():
-    clippy.scale = Vector2(0.01,0.01)
-    speechBubble.modulate.a = 0
+    clippy.scale = Vector2.ZERO
+    speechBubble.scale = Vector2.ZERO
     speechBubbleText.visible_characters = 0
     infoBoxText.position.y = 500
     summonClippy()
@@ -25,7 +27,7 @@ func _process(delta):
     if infoTextState == SLOW_SCROLL:
         infoBoxText.position.y -= 5 * delta
     elif infoTextState == FAST_SCROLL:
-        infoBoxText.position.y -= 200 * delta
+        infoBoxText.position.y -= 300 * delta
     
     if infoBoxText.position.y < -infoBoxText.size.y:
         infoBoxText.position.y = -infoBoxText.size.y
@@ -37,31 +39,31 @@ func _process(delta):
 func summonClippy():
     var tween = create_tween()
     tween.tween_interval(1)
-    tween.tween_property(clippy, "scale", Vector2(1,1), 2).set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
-    tween.tween_property(speechBubble, "modulate", Color(speechBubble.modulate, 1), 1)
+    tween.tween_property(clippy, "scale", Vector2.ONE, 2).set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
+    tween.tween_property(speechBubble, "scale", Vector2.ONE, 1).set_trans(Tween.TRANS_CUBIC)
     tween.tween_interval(1)
     tween.tween_callback(displayFirstClippyMessage)
 
 func displayFirstClippyMessage():
     speechBubbleText.text = (
-        "Hey! It looks like you're trying to clean up this mess of a desktop!\n\n" +
+        "Hey! It looks like you're trying to clean up this mess of a desktop!\n        \n" +
         "I guess you're not as lazy as you look!"
     )
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
-    clippyTextTween.tween_interval(5)
+    clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(displaySecondClippyMessage)
 
 func displaySecondClippyMessage():
     speechBubbleText.text = (
-        "But... Yikes! Things are in pretty bad shape...\n\n" +
+        "But... Yikes! Things are in pretty bad shape...\n        \n" +
         "Let's be real. With the state things are in, you're gonna need some help..."
     )
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
-    clippyTextTween.tween_interval(5)
+    clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(displayThirdClippyMessage)
 
 func displayThirdClippyMessage():
@@ -77,6 +79,7 @@ func displayThirdClippyMessage():
 
 func beginSlowInfoScroll():
     infoTextState = SLOW_SCROLL
+    infoBoxText.size.y = 0
     get_tree().create_timer(10).timeout.connect(displayClippyAskForSpeedPreamble)
 
 func displayClippyAskForSpeedPreamble():
@@ -88,7 +91,7 @@ func displayClippyAskForSpeedPreamble():
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
-    clippyTextTween.tween_interval(5)
+    clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(displayClippyAskForSpeed)
 
 func displayClippyAskForSpeed():
@@ -137,7 +140,7 @@ func displayClippyDenySpeed():
 
 func displayClippyOutro():
     speechBubbleText.text = (
-        "I hope you got all that!\n\nBest of luck!"
+        "I hope you got all that!\n        \nBest of luck!"
     )
     speechBubbleText.visible_ratio = 0
     clippyAskingForSpeed = false
@@ -145,5 +148,9 @@ func displayClippyOutro():
     if clippyTextTween: clippyTextTween.kill()
     clippyTextTween = create_tween()
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
-    clippyTextTween.tween_interval(5)
-    clippyTextTween.tween_callback(queue_free)
+    clippyTextTween.tween_interval(3)
+    clippyTextTween.tween_callback(finish)
+
+func finish():
+    finished.emit()
+    queue_free()

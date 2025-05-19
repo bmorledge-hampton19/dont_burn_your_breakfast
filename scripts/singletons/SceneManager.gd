@@ -17,6 +17,9 @@ enum EndingID {
 	HEAD_OVER_HEELS_FOR_CEREAL = 65, FLAME_THROWING_THE_GAME = 70, OCCAMS_MATCHSTICK = 80, HOMEWRECKER = 90,
 	FEET_FEAST = 100, SHOE_SKILL_ISSUE = 110, PARBOARD_AND_STORT = 120, LAWN_CARE_KARMA = 130,
 	CAUTION_FLOOR_IS_SLIPPERY_WHEN_WET = 140, RAPID_FUEL_CONSUMPTION = 150, IMPROPER_LAWN_MAINTENANCE = 160, SHOEFFLE = 170,
+	ERRORS_SHOULD_NEVER_PASS_SILENTLY = 180, TWO_IN_ONE_SET_BED_AND_BLAZE = 190, WHY_IS_THERE_COOLANT_ALL_OVER_MY_FLOOR = 200,
+	ITS_NOT_A_BUG_ITS_A_FEATURE = 205, VACUUMING_ON_AN_EMPTY_STOMACH = 210, HAS_MINECRAFT_TAUGHT_YOU_NOTHING = 220,
+	HEARTBURN = 230, GUTBOMB = 240, HIGH_FIRE_BER_DIET = 250,
 }
 
 const endingsByScene := {
@@ -35,7 +38,9 @@ const endingsByScene := {
 		EndingID.SHOEFFLE
 	],
 	SceneID.BEDROOM : [
-
+		EndingID.ERRORS_SHOULD_NEVER_PASS_SILENTLY, EndingID.TWO_IN_ONE_SET_BED_AND_BLAZE, EndingID.WHY_IS_THERE_COOLANT_ALL_OVER_MY_FLOOR,
+		EndingID.ITS_NOT_A_BUG_ITS_A_FEATURE, EndingID.VACUUMING_ON_AN_EMPTY_STOMACH, EndingID.HAS_MINECRAFT_TAUGHT_YOU_NOTHING,
+		EndingID.HEARTBURN, EndingID.GUTBOMB, EndingID.HIGH_FIRE_BER_DIET,
 	],
 	SceneID.KITCHEN : [
 
@@ -47,6 +52,12 @@ const customEndingNames := {
 	EndingID.OCCAMS_MATCHSTICK:"Occam's Matchstick",
 	EndingID.PARBOARD_AND_STORT:"Parboard and Stort",
 	EndingID.CAUTION_FLOOR_IS_SLIPPERY_WHEN_WET:"Caution! Floor is Slippery When Wet",
+	EndingID.TWO_IN_ONE_SET_BED_AND_BLAZE:"2-in-1 Set: Bed and Blaze",
+	EndingID.WHY_IS_THERE_COOLANT_ALL_OVER_MY_FLOOR:"Why is There Coolant All Over My Floor?",
+	EndingID.ITS_NOT_A_BUG_ITS_A_FEATURE:"It's Not a Bug. It's a Feature.",
+	EndingID.VACUUMING_ON_AN_EMPTY_STOMACH:"Vacuuming on an Empty Stomach",
+	EndingID.HAS_MINECRAFT_TAUGHT_YOU_NOTHING:"Has Minecraft Taught You Nothing?",
+	EndingID.HIGH_FIRE_BER_DIET:"High Fire-ber Diet",
 }
 
 func getEndingName(p_endingID: EndingID) -> String:
@@ -62,7 +73,7 @@ var preloadedScenes: Array[SceneID] ### Would be nice to swap this out for a set
 var preloadedEndingsScene: PackedScene
 var openEndingsScene: Endings
 var preloadedComputerScene: PackedScene
-var openComputerScene
+var openComputerScene: ComputerCleaning
 var pausedScene: Scene
 
 var customStartingMessage := ""
@@ -122,6 +133,9 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 	if sceneID == SceneID.LAST_SCENE:
 		sceneID = lastScene
 
+	if is_instance_valid(openEndingsScene): openEndingsScene.queue_free()
+	if is_instance_valid(openComputerScene): openComputerScene.queue_free()
+
 	assert(sceneID in preloadedScenes or sceneID == currentScene,
 			"Attempting to transition to non-preloaded scene: " + str(sceneID))
 
@@ -165,7 +179,7 @@ func closeEndings():
 func openComputerCleaning(openingScene: Scene):
 	openingScene.pause()
 	pausedScene = openingScene
-	openComputerScene = preloadedEndingsScene.instantiate()
+	openComputerScene = preloadedComputerScene.instantiate()
 	pausedScene.add_sibling(openComputerScene)
 	openComputerScene.initFromExistingTerminal(openingScene.terminal)
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
@@ -173,5 +187,6 @@ func openComputerCleaning(openingScene: Scene):
 func closeComputerCleaning():
 	openComputerScene.inputParser.disconnectTerminal()
 	pausedScene.resume()
+	(pausedScene as Bedroom).cleanComputer()
 	openComputerScene.queue_free()
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT

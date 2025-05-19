@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://57aaw4gtihgk"]
 
-[ext_resource type="Script" path="res://scripts/credits/Credits.gd" id="1_3o8rp"]
+[ext_resource type="Script" uid="uid://byenjenua0gtn" path="res://scripts/credits/Credits.gd" id="1_3o8rp"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_prnla"]
-[ext_resource type="Script" path="res://scripts/credits/CreditsParser.gd" id="3_1tw88"]
+[ext_resource type="Script" uid="uid://b17ai31genc3j" path="res://scripts/credits/CreditsParser.gd" id="3_1tw88"]
 
 [node name="credits" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
 anchors_preset = 8

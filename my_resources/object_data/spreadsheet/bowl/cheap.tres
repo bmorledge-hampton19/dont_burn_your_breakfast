@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BowlData" load_steps=2 format=3 uid="uid://bf721fvboqm6o"]
+
+[ext_resource type="Script" uid="uid://75u0vqg4c6cb" path="res://my_resources/object_data/spreadsheet/bowl/BowlData.gd" id="1_5h7p2"]
+
+[resource]
+script = ExtResource("1_5h7p2")
+shape = "Square"
+slope = "90°"
+depth = "4.8 cm"
+material = "Plastic"
+topEdge = "Flush"
+milkDrinkingDifficulty = "Easy"
+name = "Cheap"
+metadata/_custom_type_script = "uid://75u0vqg4c6cb"

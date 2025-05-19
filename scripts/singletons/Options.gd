@@ -46,15 +46,17 @@ func loadOptions():
 				FileAccess.open(filePath, FileAccess.READ).get_as_text()
 			)
 			return
-		var maybeFontSize = config.get_value("terminal", "fontSize")
-		if maybeFontSize != null: _fontSize = maybeFontSize
-		var maybeFontSpeed = config.get_value("terminal", "fontSpeed")
-		if maybeFontSpeed != null: _fontSpeed = maybeFontSpeed
-		var maybeDisplayMode = config.get_value("display", "mode")
-		if maybeDisplayMode != null: _displayMode = maybeDisplayMode
+		fontSize = config.get_value("terminal", "fontSize", fontSize)
+		fontSpeed = config.get_value("terminal", "fontSpeed", fontSpeed)
+		displayMode = config.get_value("display", "mode", displayMode)
 	else:
 		print(filePath, " not found. Using default values.")
-
+		config.set_value("terminal", "fontSize", fontSize)
+		config.save(_getOptionsFilePath())
+		config.set_value("terminal", "fontSpeed", fontSpeed)
+		config.save(_getOptionsFilePath())
+		config.set_value("display", "mode", displayMode)
+		config.save(_getOptionsFilePath())
 
 func _getOptionsFilePath(malformed = false) -> String:
 	var filePath := "user://options"

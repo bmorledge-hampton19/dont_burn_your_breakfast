@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://c17qosvdmhnub"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_nxo4i"]
+
+[resource]
+script = ExtResource("1_nxo4i")
+caloriesPerServing = "273 kcal"
+color = "Bone"
+absorbance = "1.56 AU"
+viscosity = "3.04 mPA*s"
+specificGravity = "1.039 kg/L"
+meltingPoint = "-0.754 °C"
+costPerGallon = "$399.80"
+name = "Grizzly"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

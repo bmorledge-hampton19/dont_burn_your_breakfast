@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://c1rikvfubakfo"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_87bfw"]
+
+[resource]
+script = ExtResource("1_87bfw")
+name = "Fruity Pebbles"
+servingSize = "36g"
+sugar = "12g"
+sugarClass = "Sugary"
+fiber = "0g"
+protein = "1g"
+geometry = "Mini-flake"
+company = "Post"
+mascot = "Flintstones"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

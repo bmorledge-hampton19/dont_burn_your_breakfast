@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://coxqpcn7uqwiq"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_345oa"]
+
+[resource]
+script = ExtResource("1_345oa")
+name = "PB Chex"
+servingSize = "41g"
+sugar = "9g"
+sugarClass = "Sugary"
+fiber = "2g"
+protein = "3g"
+geometry = "Ravioli"
+company = "General Mills"
+mascot = "None"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

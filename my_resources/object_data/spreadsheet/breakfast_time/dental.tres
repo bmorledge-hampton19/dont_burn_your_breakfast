@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BreakfastTimeData" load_steps=2 format=3 uid="uid://bje7cwqnqnpbc"]
+
+[ext_resource type="Script" uid="uid://h7i4mnwjlss4" path="res://my_resources/object_data/spreadsheet/breakfast_time/BreakfastTimeData.gd" id="1_wfufb"]
+
+[resource]
+script = ExtResource("1_wfufb")
+name = "Dental"
+time = "2:30 PM"
+alertness = "Anticipatory"
+hunger = "Irrelevant"
+rarity = "Biannual"
+notes = "Dad joke"
+idealCereal = "Wheaties"
+metadata/_custom_type_script = "uid://h7i4mnwjlss4"

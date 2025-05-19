@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CerealBoxData" load_steps=2 format=3 uid="uid://dbvh7deg6pgl3"]
+
+[ext_resource type="Script" uid="uid://bffwjgpgnawas" path="res://my_resources/object_data/spreadsheet/cereal_box/CerealBoxData.gd" id="1_xal8u"]
+
+[resource]
+script = ExtResource("1_xal8u")
+name = "Costco Double"
+width = "19 cm"
+height = "29.5 cm"
+depth = "12.4 cm"
+volume = "7.0 L"
+servings = "24"
+saleFrequency = "Perpetual"
+metadata/_custom_type_script = "uid://bffwjgpgnawas"

@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmssmkmtldj4w"]
 
-[ext_resource type="Script" path="res://scripts/ending/Ending.gd" id="1_7odxc"]
+[ext_resource type="Script" uid="uid://i42nlbk4rm47" path="res://scripts/ending/Ending.gd" id="1_7odxc"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_7lxtk"]
-[ext_resource type="Script" path="res://scripts/ending/EndingParser.gd" id="3_xc0cu"]
+[ext_resource type="Script" uid="uid://bodf8xu0lvmpn" path="res://scripts/ending/EndingParser.gd" id="3_xc0cu"]
 
 [node name="Ending" type="CenterContainer" node_paths=PackedStringArray("backgroundTextureRect", "inputParser")]
 anchors_preset = 8

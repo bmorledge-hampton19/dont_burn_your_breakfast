@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://cvye72rkbvog8"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_oiuey"]
+
+[resource]
+script = ExtResource("1_oiuey")
+name = "Hny Bnch Oats"
+servingSize = "41g"
+sugar = "9g"
+sugarClass = "Medium"
+fiber = "2g"
+protein = "3g"
+geometry = "Irregular"
+company = "Post"
+mascot = "A honey dipper?"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

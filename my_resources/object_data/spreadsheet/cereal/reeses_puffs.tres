@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://uube2qc8sdbf"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_afcgt"]
+
+[resource]
+script = ExtResource("1_afcgt")
+name = "Reese's Puffs"
+servingSize = "29g"
+sugar = "9g"
+sugarClass = "Sugary"
+fiber = "1g"
+protein = "2g"
+geometry = "Spherical"
+company = "General Mills"
+mascot = "Angel Reese"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

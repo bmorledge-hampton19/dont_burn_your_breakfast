@@ -19,15 +19,15 @@ var jitterTime: float
 var jitterPos: Vector2
 var positionAnchor: Vector2
 var jitterOffset: Vector2
-var jitterStrength: float = 1
-var jitterSpeed: float = 4
+var jitterStrength: float = 5
+var jitterSpeed: float = 6
 
 var exploding: bool
-signal onExplosion()
+var beingEaten: bool
+signal onDestroy()
 
 var edible: bool:
-	get: return not jittering and not exploding
-
+	get: return not jittering and not exploding and not beingEaten
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -46,8 +46,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float):
 
-	if exploding: return
-
+	if exploding or beingEaten: return
 
 	if jittering:
 
@@ -63,10 +62,9 @@ func _process(delta: float):
 		if jitterTime <= 0:
 			jittering = false
 			exploding = true
-			onExplosion.emit()
 			textureRect.hide()
 			explosionAnimation.play()
-			explosionAnimation.animation_finished.connect(queue_free)
+			explosionAnimation.animation_finished.connect(destroy)
 		
 		return
 
@@ -106,8 +104,20 @@ func _process(delta: float):
 		onReproduction.emit()
 		reproductionTimer = randf_range(10,20)
 
+
 func exposeToAntimatter():
 	positionAnchor = position
 	jittering = true
 	jitterTime = randf_range(3,5)
 	jitterPos = Vector2(randf()*50, randf()*50)
+
+func exposeToHungryCat():
+	beingEaten = true
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color.RED, 0.25)
+	tween.tween_property(self, "modulate", Color(modulate, 0), 2)
+	tween.tween_callback(destroy)
+
+func destroy():
+	onDestroy.emit()
+	queue_free()

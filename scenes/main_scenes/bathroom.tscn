@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://djsgoo6pmga6k"]
 
 [ext_resource type="Texture2D" uid="uid://cvkcvyv67te5x" path="res://sprites/backgrounds/bathroom.png" id="1_67bnv"]
-[ext_resource type="Script" path="res://scripts/bathroom/Bathroom.gd" id="1_p4c17"]
+[ext_resource type="Script" uid="uid://dj7gih0vtdavb" path="res://scripts/bathroom/Bathroom.gd" id="1_p4c17"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_snu0w"]
 [ext_resource type="Texture2D" uid="uid://bi7u64ci57n62" path="res://sprites/movable_objects/bathroom_movable_objects.png" id="2_tqea7"]
-[ext_resource type="Script" path="res://scripts/bathroom/BathroomParser.gd" id="6_ch1kd"]
+[ext_resource type="Script" uid="uid://dft5dpnhgvnq3" path="res://scripts/bathroom/BathroomParser.gd" id="6_ch1kd"]
 [ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="6_g0ou1"]
 
 [node name="Bathroom" type="CenterContainer" node_paths=PackedStringArray("playerControl", "player", "toothpastedPlayer", "playersToothpaste", "playersToothbrush", "playerInTub", "lubedPlayerInTub", "spilledShampoo", "openedCabinet", "toothpaste", "openedTopDrawer", "openedMiddleDrawer", "openedBottomDrawer", "toothbrush", "openedToiletSeat", "keyInLock", "openedDoor", "inputParser")]

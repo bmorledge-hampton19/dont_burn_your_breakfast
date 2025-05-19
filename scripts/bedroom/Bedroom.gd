@@ -74,14 +74,14 @@ extends Scene
 
 enum PlayerPos {
 	FRONT_YARD_DOOR, KITCHEN_DOOR,
-	COMPUTER_DESK,
+	COMPUTER_DESK, LEGO_TABLE,
 	BED_LEFT_SIDE, BED_RIGHT_SIDE, DRESSER,
 	SMOKEY_TOOLS, SMOKEY,
 	ZOOMBA, ZOOMBA_FOOD_TABLE, SCATTERING_FOOD
 }
 const PLAYER_SPRITE_POSITIONS := {
 	PlayerPos.FRONT_YARD_DOOR : Vector2(32,80), PlayerPos.KITCHEN_DOOR : Vector2(614,100),
-	PlayerPos.COMPUTER_DESK : Vector2(168,70),
+	PlayerPos.COMPUTER_DESK : Vector2(168,70), PlayerPos.LEGO_TABLE : Vector2(54, 236),
 	PlayerPos.BED_LEFT_SIDE : Vector2(210,138), PlayerPos.BED_RIGHT_SIDE : Vector2(446,138), PlayerPos.DRESSER : Vector2(244,244),
 	PlayerPos.SMOKEY_TOOLS : Vector2(444,30), PlayerPos.SMOKEY : Vector2(526,28),
 	PlayerPos.ZOOMBA : Vector2(638,152), PlayerPos.ZOOMBA_FOOD_TABLE : Vector2(500,240), PlayerPos.SCATTERING_FOOD : Vector2(470, 138),
@@ -107,7 +107,14 @@ var heldSecondSock: Clothing
 var isPlayerWearingHat: bool
 
 var clothesByDepth := {0 : [], 1 : [], 2 : []} # 0 is highest; 2 is lowest
-var isbedClear: bool:
+var accessibleClothing: Array[Clothing]:
+	get():
+		accessibleClothing.clear()
+		for depth in clothesByDepth:
+			for clothing in clothesByDepth[depth]:
+				if clothing.isAccessible: accessibleClothing.append(clothing)
+		return accessibleClothing
+var isBedClear: bool:
 	get:
 		for depth in clothesByDepth:
 			if clothesByDepth[depth]: return false
@@ -148,10 +155,10 @@ func removeClothingFromBed(clothing: Clothing):
 
 enum SearchResult {NONEXISTANT, BURIED, AMBIGUOUS, FOUND}
 var clothingSearchResult: SearchResult
-var otherSockSearchResult: Clothing
+var foundSecondSock: Clothing
 func findClothing(type, color, pattern) -> Clothing:
 	clothingSearchResult = SearchResult.NONEXISTANT
-	otherSockSearchResult = null
+	foundSecondSock = null
 	var foundClothing: Clothing
 	for depth in range(3):
 		for clothing in clothesByDepth[depth]:
@@ -163,16 +170,16 @@ func findClothing(type, color, pattern) -> Clothing:
 			if pattern == Clothing.AMBIGUOUS or pattern == clothing.pattern: pass
 			else: continue
 
-			if clothing.isAccessible:
+			if clothing.isAccessible and clothingSearchResult != SearchResult.AMBIGUOUS:
 				if clothingSearchResult == SearchResult.FOUND:
 					@warning_ignore("unassigned_variable")
-					if type != Clothing.SOCK or foundClothing.color != clothing.color or foundClothing.pattern != clothing.pattern:
-						clothingSearchResult = SearchResult.AMBIGUOUS
-						otherSockSearchResult = null
-						return null
+					if type == Clothing.SOCK and foundClothing.color == clothing.color and foundClothing.pattern == clothing.pattern:
+						assert(not foundSecondSock, "Looks like we found three matching socks!?")
+						foundSecondSock = clothing
 					else:
-						otherSockSearchResult = clothing
-
+						clothingSearchResult = SearchResult.AMBIGUOUS
+						foundSecondSock = null
+						return null
 				else:
 					clothingSearchResult = SearchResult.FOUND
 					foundClothing = clothing
@@ -222,7 +229,7 @@ func _addClothesToDresser(clothing: Clothing):
 			clothing.position = Vector2(-2 + 30*(clothesInBottomDrawer%3), 2-2*(clothesInBottomDrawer/3))
 			clothesInBottomDrawer += 1
 
-var dresserPatience := 3
+var dresserPatience := 6
 
 
 var isSmokeysHairCut: bool
@@ -230,6 +237,8 @@ var isSmokeysBeardShavingCreamed: bool
 var isSmokeysBeardTrimmed: bool
 var isSmokeyWearingHat: bool
 var isSmokeyWearingBra: bool
+var isSmokeyComplete: bool:
+	get(): return isSmokeysHairCut and isSmokeysBeardTrimmed and isSmokeyWearingHat and isSmokeyWearingBra
 
 
 enum Scattered {AMBIGUOUS = -1, PEPPER_FLAKES, FLINT_FLAKES, BREAD_CRUMBS, CHARCOAL_POWDER,}
@@ -388,6 +397,22 @@ func putAwayClothing(clothing: Clothing):
 	handForeground.hide()
 	setPlayerTexture(RELAXED)
 
+
+func toggleTopLeftDrawer():
+	movePlayer(PlayerPos.DRESSER)
+	topLeftDrawerControl.visible = not topLeftDrawerControl.visible
+
+func toggleTopRightDrawer():
+	movePlayer(PlayerPos.DRESSER)
+	topRightDrawerControl.visible = not topRightDrawerControl.visible
+
+func toggleMiddleDrawer():
+	movePlayer(PlayerPos.DRESSER)
+	middleDrawerControl.visible = not middleDrawerControl.visible
+
+func toggleBottomDrawer():
+	movePlayer(PlayerPos.DRESSER)
+	bottomDrawerControl.visible = not bottomDrawerControl.visible
 
 func angerDresser():
 	movePlayer(PlayerPos.DRESSER)
@@ -567,6 +592,7 @@ func feedZoomba():
 	scatteredFlintFlakes.hide()
 	scatteredBreadCrumbs.hide()
 	scatteredCharcoalPowder.hide()
+	roombaSatisfied = true
 
 
 func accessComputer():

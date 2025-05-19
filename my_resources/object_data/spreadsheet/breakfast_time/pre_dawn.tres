@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BreakfastTimeData" load_steps=2 format=3 uid="uid://mn42pfgpqs6s"]
+
+[ext_resource type="Script" uid="uid://h7i4mnwjlss4" path="res://my_resources/object_data/spreadsheet/breakfast_time/BreakfastTimeData.gd" id="1_wup4f"]
+
+[resource]
+script = ExtResource("1_wup4f")
+name = "Pre-dawn"
+time = "5:00 AM"
+alertness = "Near-death"
+hunger = "Contractual"
+rarity = "Rare"
+notes = "Truly cruel"
+idealCereal = "Grape Nuts"
+metadata/_custom_type_script = "uid://h7i4mnwjlss4"

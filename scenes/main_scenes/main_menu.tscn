@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dnu48bem3t508"]
 
-[ext_resource type="Script" path="res://scripts/main_menu/MainMenu.gd" id="1_5vyrw"]
+[ext_resource type="Script" uid="uid://dc6huo2qh1h3j" path="res://scripts/main_menu/MainMenu.gd" id="1_5vyrw"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_c6pnt"]
 [ext_resource type="Texture2D" uid="uid://cuco0kwfdox22" path="res://sprites/backgrounds/main_menu.png" id="2_q1rol"]
-[ext_resource type="Script" path="res://scripts/main_menu/MainMenuParser.gd" id="3_7srbg"]
+[ext_resource type="Script" uid="uid://bdkn4w3uj3n15" path="res://scripts/main_menu/MainMenuParser.gd" id="3_7srbg"]
 
 [node name="Main_Menu" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
 anchors_preset = 8

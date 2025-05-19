@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://1jr4whpctqs6"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_nbxxf"]
+
+[resource]
+script = ExtResource("1_nbxxf")
+name = "F. Mini Wheats"
+servingSize = "60g"
+sugar = "12g"
+sugarClass = "Medium"
+fiber = "6g"
+protein = "5g"
+geometry = "Ravioli"
+company = "Kellogg's"
+mascot = "Mini"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

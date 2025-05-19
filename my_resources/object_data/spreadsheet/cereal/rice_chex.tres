@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://kimy1d4mbs64"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_mrpyh"]
+
+[resource]
+script = ExtResource("1_mrpyh")
+name = "Rice Chex"
+servingSize = "40g"
+sugar = "3g"
+sugarClass = "Non-sugar"
+fiber = "2g"
+protein = "3g"
+geometry = "Ravioli"
+company = "General Mills"
+mascot = "None"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

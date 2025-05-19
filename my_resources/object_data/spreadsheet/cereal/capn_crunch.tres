@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://dl4eeip2sveur"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_kowhu"]
+
+[resource]
+script = ExtResource("1_kowhu")
+name = "Cap'n Crunch"
+servingSize = "38g"
+sugar = "16g"
+sugarClass = "Sugary"
+fiber = "<1g"
+protein = "2g"
+geometry = "Irregular"
+company = "Quaker"
+mascot = "Cpt. Crunch"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

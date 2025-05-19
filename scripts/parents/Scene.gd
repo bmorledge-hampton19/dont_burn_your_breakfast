@@ -39,11 +39,11 @@ func _ready():
 	$VBoxContainer/PlaceholderTerminal.queue_free()
 	$VBoxContainer.add_child(terminal)
 	if SceneManager.customStartingMessage:
-		inputParser.connectTerminal(terminal, SceneManager.customStartingMessage)
-		terminal.initMessage(SceneManager.customStartingMessage)
+		inputParser.connectTerminal(terminal)
+		terminal.initMessage(SceneManager.customStartingMessage, true)
 	else:
-		inputParser.connectTerminal(terminal, defaultStartingMessage)
-		terminal.initMessage(defaultStartingMessage)
+		inputParser.connectTerminal(terminal)
+		terminal.initMessage(defaultStartingMessage, true)
 
 func pause():
 	inputParser.disconnectTerminal()
@@ -55,5 +55,5 @@ func resetTerminal():
 	terminal.queue_free()
 	terminal = _getTerminal()
 	$VBoxContainer.add_child(terminal)
-	inputParser.connectTerminal(terminal, SceneManager.customStartingMessage)
+	inputParser.connectTerminal(terminal)
 	#terminal.initMessage("Font size changed to " + Options.FontSize.keys()[Options.fontSize].to_lower().replace('_', ' ') + ".")

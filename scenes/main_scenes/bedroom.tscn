@@ -1,15 +1,15 @@
 [gd_scene load_steps=55 format=3 uid="uid://dncanrypgsjkb"]
 
-[ext_resource type="Script" path="res://scripts/bedroom/Bedroom.gd" id="1_1p8ji"]
-[ext_resource type="Script" path="res://scripts/bedroom/BedroomParser.gd" id="2_5s0ke"]
+[ext_resource type="Script" uid="uid://qya75rs47qh0" path="res://scripts/bedroom/Bedroom.gd" id="1_1p8ji"]
+[ext_resource type="Script" uid="uid://b23fynfrqbd2l" path="res://scripts/bedroom/BedroomParser.gd" id="2_5s0ke"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_bhk7c"]
 [ext_resource type="Texture2D" uid="uid://cce42h8cbbnrl" path="res://sprites/backgrounds/bedroom.png" id="3_vd4sq"]
 [ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="4_j8vpu"]
 [ext_resource type="Texture2D" uid="uid://dw6u3027vb17o" path="res://sprites/movable_objects/bedroom_movable_objects.png" id="5_3qhgj"]
-[ext_resource type="Script" path="res://scripts/bedroom/ClothingDatabase.gd" id="5_7xt0r"]
+[ext_resource type="Script" uid="uid://ciln5bqb30x3o" path="res://scripts/bedroom/ClothingDatabase.gd" id="5_7xt0r"]
 [ext_resource type="PackedScene" uid="uid://dk6ql0mn18gp3" path="res://scenes/scene_modules/bedroom/clothing.tscn" id="6_q0dtj"]
 [ext_resource type="Texture2D" uid="uid://dydgedqdxu5mp" path="res://sprites/movable_objects/bedroom_clothing.png" id="7_lccva"]
-[ext_resource type="Shader" path="res://scenes/scene_modules/bedroom/clothing.gdshader" id="7_w8bov"]
+[ext_resource type="Shader" uid="uid://bidtdw6me1k4y" path="res://scenes/scene_modules/bedroom/clothing.gdshader" id="7_w8bov"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2b4jv"]
 resource_local_to_scene = true
@@ -434,7 +434,6 @@ offset_right = 108.0
 offset_bottom = 80.0
 
 [node name="FoldedShirt" parent="VBoxContainer/Background/Dresser/BottomDrawer/Inside" instance=ExtResource("6_q0dtj")]
-visible = false
 material = SubResource("ShaderMaterial_2b4jv")
 layout_mode = 0
 offset_left = -2.0

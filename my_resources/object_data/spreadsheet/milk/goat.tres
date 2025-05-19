@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://djsly0dlc3kvy"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_l1gd7"]
+
+[resource]
+script = ExtResource("1_l1gd7")
+caloriesPerServing = "148.1 kcal"
+color = "Dutch White"
+absorbance = "1.17 AU"
+viscosity = "2.81 mPA*s"
+specificGravity = "1.034 kg/L"
+meltingPoint = "-0.569 °C"
+costPerGallon = "$27.96"
+name = "Goat"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://bxec0pg5b6gm1"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_ne86v"]
+
+[resource]
+script = ExtResource("1_ne86v")
+servingSize = "37g"
+sugar = "12"
+sugarClass = "Sugary"
+fiber = "3g"
+protein = "3g"
+geometry = "Torus"
+company = "General Mills"
+mascot = "Buzz"
+name = "H.N. Cheerios"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

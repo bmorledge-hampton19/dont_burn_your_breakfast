@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://bejcqnelqw3qd"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_enlar"]
+
+[resource]
+script = ExtResource("1_enlar")
+caloriesPerServing = "237 kcal"
+color = "Ivory"
+absorbance = "1.84 AU"
+viscosity = "2.25 mPA*s"
+specificGravity = "1.034 kg/L"
+meltingPoint = "-0.588 °C"
+costPerGallon = "$55.98"
+name = "Buffalo"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

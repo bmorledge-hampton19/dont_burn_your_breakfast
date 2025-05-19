@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CerealBoxData" load_steps=2 format=3 uid="uid://bs4salb0x208y"]
+
+[ext_resource type="Script" uid="uid://bffwjgpgnawas" path="res://my_resources/object_data/spreadsheet/cereal_box/CerealBoxData.gd" id="1_pf3rw"]
+
+[resource]
+script = ExtResource("1_pf3rw")
+width = "3.22 m"
+height = "4.52 m"
+depth = "1.26 m"
+volume = "18.3 ML"
+servings = "64,286"
+saleFrequency = "N/A"
+name = "DIFCO WR"
+metadata/_custom_type_script = "uid://bffwjgpgnawas"

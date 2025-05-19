@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://0a7xwk7ocoy0"]
 
-[ext_resource type="Script" path="res://scripts/help/Help.gd" id="1_jbrcu"]
+[ext_resource type="Script" uid="uid://bkryo1u3dhw12" path="res://scripts/help/Help.gd" id="1_jbrcu"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_p7q7u"]
 [ext_resource type="Texture2D" uid="uid://7gbhb5a7hoj" path="res://sprites/movable_objects/peeping_quaker.png" id="3_najwc"]
-[ext_resource type="Script" path="res://scripts/help/HelpParser.gd" id="4_dfhw7"]
+[ext_resource type="Script" uid="uid://cctq1r5sanca5" path="res://scripts/help/HelpParser.gd" id="4_dfhw7"]
 
 [node name="Help" type="CenterContainer" node_paths=PackedStringArray("pages", "peepingQuaker", "inputParser")]
 anchors_preset = 8

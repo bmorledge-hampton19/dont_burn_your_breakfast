@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://u80whbbp3aek"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_pqnjt"]
+
+[resource]
+script = ExtResource("1_pqnjt")
+name = "Apple Jacks"
+servingSize = "40g"
+sugar = "15g"
+sugarClass = "Sugary"
+fiber = "4g"
+protein = "2g"
+geometry = "Torus"
+company = "Kellogg's"
+mascot = "CinnaMon"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

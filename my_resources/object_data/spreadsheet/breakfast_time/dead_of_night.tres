@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BreakfastTimeData" load_steps=2 format=3 uid="uid://dtmhy00y1gtd3"]
+
+[ext_resource type="Script" uid="uid://h7i4mnwjlss4" path="res://my_resources/object_data/spreadsheet/breakfast_time/BreakfastTimeData.gd" id="1_fltvu"]
+
+[resource]
+script = ExtResource("1_fltvu")
+name = "Dead of Night"
+time = "2:00 AM"
+alertness = "Delirious"
+hunger = "???"
+rarity = "Exotic"
+notes = "Party hard"
+idealCereal = "Oreo O's"
+metadata/_custom_type_script = "uid://h7i4mnwjlss4"

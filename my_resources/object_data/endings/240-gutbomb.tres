@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://bk02tmkl6rpl1"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_tngqp"]
+
+[resource]
+script = ExtResource("1_tngqp")
+endingID = 240
+sceneID = 9
+coinsRewarded = 4
+unlockingHints = Array[String](["This ending involves Zoomba.", "This ending involves one of the food items on the table.", "Scatter ONLY the bread crumbs on the ground, and then turn on Zoomba."])
+unlockingHintCosts = Array[int]([2, 4, 5])
+avoidingHints = Array[String](["Zoomba needs some help getting a balanced diet.", "The bread crumbs are great for their caloric value, but Zoomba needs something additional to appease his digestive system.", "Scatter both the bread crumbs and charcoal powder, and then turn on Zoomba."])
+avoidingHintCosts = Array[int]([3, 3, 4])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

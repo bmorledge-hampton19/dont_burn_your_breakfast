@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://drkpe5w8uue0o"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_slwte"]
+
+[resource]
+script = ExtResource("1_slwte")
+name = "Raisin Bran"
+servingSize = "59g"
+sugar = "17g"
+sugarClass = "Medium"
+fiber = "7g"
+protein = "5g"
+geometry = "Irregular"
+company = "Kellogg's"
+mascot = "Sunny"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

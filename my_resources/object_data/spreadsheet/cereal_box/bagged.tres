@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CerealBoxData" load_steps=2 format=3 uid="uid://bxv751a7x04ua"]
+
+[ext_resource type="Script" uid="uid://bffwjgpgnawas" path="res://my_resources/object_data/spreadsheet/cereal_box/CerealBoxData.gd" id="1_jlcer"]
+
+[resource]
+script = ExtResource("1_jlcer")
+name = "Generic Bag"
+width = "ERR"
+height = "ERR"
+depth = "ERR"
+volume = "10.2 L"
+servings = "42"
+saleFrequency = "Rare"
+metadata/_custom_type_script = "uid://bffwjgpgnawas"

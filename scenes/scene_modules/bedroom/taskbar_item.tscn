@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://bytjuo0cchptn"]
+
+[ext_resource type="Texture2D" uid="uid://ciljfwwcc2srf" path="res://sprites/computer_cleaning/taskbar_item_background.png" id="1_w4isa"]
+[ext_resource type="Script" uid="uid://n2nqiax8ang1" path="res://scripts/bedroom/TaskbarItem.gd" id="2_vddim"]
+[ext_resource type="Texture2D" uid="uid://0jakrglhaqi7" path="res://sprites/computer_cleaning/polite_cat.png" id="3_vxpw2"]
+[ext_resource type="FontFile" uid="uid://wefnqrorb2r" path="res://fonts/TAHOMA.TTF" id="4_ueha6"]
+
+[node name="TaskbarItem" type="TextureRect" node_paths=PackedStringArray("icon", "label")]
+offset_right = 160.0
+offset_bottom = 25.0
+texture = ExtResource("1_w4isa")
+stretch_mode = 4
+script = ExtResource("2_vddim")
+icon = NodePath("Icon")
+label = NodePath("Label")
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 3.03031
+offset_top = 1.54546
+offset_right = 25.0303
+offset_bottom = 23.5455
+texture = ExtResource("3_vxpw2")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 155.0
+offset_bottom = 20.0
+theme_override_fonts/font = ExtResource("4_ueha6")
+theme_override_font_sizes/font_size = 12
+text = "Resource Monitor"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3

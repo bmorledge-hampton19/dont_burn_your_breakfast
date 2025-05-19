@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://d3l1a3t2xox5v"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_w5b6y"]
+
+[resource]
+script = ExtResource("1_w5b6y")
+servingSize = "41g"
+sugar = "12g"
+sugarClass = "Sugary"
+fiber = "2g"
+protein = "2g"
+geometry = "Square"
+company = "General Mills"
+mascot = "Crazy Squares"
+name = "Cnm Tst Crnch"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

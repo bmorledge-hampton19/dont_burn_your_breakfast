@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dme7uv23dbpfi"]
 
-[ext_resource type="Script" path="res://scripts/parents/Scene.gd" id="1_1eldq"]
-[ext_resource type="Script" path="res://scripts/parents/InputParser.gd" id="2_27ir5"]
+[ext_resource type="Script" uid="uid://cojgykirj6vwe" path="res://scripts/parents/Scene.gd" id="1_1eldq"]
+[ext_resource type="Script" uid="uid://ckvc0bbanh1dv" path="res://scripts/parents/InputParser.gd" id="2_27ir5"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_t1jq3"]
 
 [node name="TemplateScene" type="CenterContainer"]

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://ce5p54o4gnqdm"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_4j17s"]
+
+[resource]
+script = ExtResource("1_4j17s")
+endingID = 180
+sceneID = 9
+coinsRewarded = 4
+unlockingHints = Array[String](["This ending involves the clothes on your bed.", "This ending also involves the dresser at the foot of your bed.", "Perform three actions which are considered \"errors\" by the dresser. This can be easily achieved by putting unfolded clothes in the dresser."])
+unlockingHintCosts = Array[int]([2, 2, 3])
+avoidingHints = Array[String](["ALL clothes that are placed in the dresser MUST be folded.", "The dresser does not care about the color or patterning on clothes.", "The bra cannot be placed in the dresser.", "Fold clothes before putting them in the dresser and make sure that they are put in the drawer of the corresponding clothing type. (E.g., Put socks in the top left drawer).
+Put the bra on Smokey."])
+avoidingHintCosts = Array[int]([2, 2, 3, 4])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

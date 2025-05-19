@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SpoonData" load_steps=2 format=3 uid="uid://tltkt71gjhvr"]
+
+[ext_resource type="Script" uid="uid://vy4aswmu7r7s" path="res://my_resources/object_data/spreadsheet/spoon/SpoonData.gd" id="1_4swsa"]
+
+[resource]
+script = ExtResource("1_4swsa")
+name = "Wide"
+length = "15 cm"
+focalPoint = "1.2 cm"
+minorAxis = "2.1 cm"
+majorAxis = "2.4 cm"
+depth = "0.8 cm"
+flexuralStrength = "43 N"
+personality = "Greedy"

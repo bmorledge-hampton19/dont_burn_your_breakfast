@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://cpvi8vdsq6a8a"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_sfma4"]
+
+[resource]
+script = ExtResource("1_sfma4")
+caloriesPerServing = "146 kcal"
+color = "Milky White"
+absorbance = "1.13 AU"
+viscosity = "2.72 mPA*s"
+specificGravity = "1.033 kg/L"
+meltingPoint = "-0.564 °C"
+costPerGallon = "$3.69"
+name = "Cow (Whole)"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

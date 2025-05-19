@@ -22,6 +22,8 @@ var fastUpdateThreshold = 0.05
 var slowUpdateThreshold = 0.4
 var newlineUpdateThreshold = 2
 
+var lastReplayableMessage: String
+
 
 func setFontSpeed():
 	match Options.fontSpeed:
@@ -111,9 +113,10 @@ func receiveInput(input: String):
 	sendInputForParsing.emit(input)
 
 
-func initMessage(message: String):
+func initMessage(message: String, storeMessageForReplay: bool):
 	currentMessage = message
 	remainingMessage = message
+	if storeMessageForReplay: lastReplayableMessage = message
 	timeSinceLastUpdate = 0
 	nextUpdateThreshold = fastUpdateThreshold
 	getNextMessageChunk()
@@ -121,9 +124,9 @@ func initMessage(message: String):
 
 func fastTrackCurrentMessage():
 	if currentMessageChunkIndex == 0: scrollTerminalLines()
-	terminalLines[lineCount-1].text = currentMessageChunk
+	terminalLines[lineCount-1].text = currentMessageChunk.strip_edges()
 	while remainingMessage:
 		getNextMessageChunk()
 		scrollTerminalLines()
-		terminalLines[lineCount-1].text = currentMessageChunk
+		terminalLines[lineCount-1].text = currentMessageChunk.strip_edges()
 	currentMessageChunk = ""

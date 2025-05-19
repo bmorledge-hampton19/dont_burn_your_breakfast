@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://db2h0swgmao7f"]
 
-[ext_resource type="Script" path="res://scripts/endings/EndingPreview.gd" id="1_h2tjp"]
+[ext_resource type="Script" uid="uid://i83ke2dy5tsx" path="res://scripts/endings/EndingPreview.gd" id="1_h2tjp"]
 [ext_resource type="Texture2D" uid="uid://qf2j1pald6as" path="res://sprites/movable_objects/cereal_coin.png" id="2_obo71"]
 
 [node name="EndingPreview" type="MarginContainer" node_paths=PackedStringArray("preview", "obfuscator", "endingNumber", "cerealCoin")]

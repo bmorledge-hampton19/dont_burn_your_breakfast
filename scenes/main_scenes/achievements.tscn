@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://diwikhab7cyls"]
 
-[ext_resource type="Script" path="res://scripts/endings/Endings.gd" id="1_ndbwb"]
+[ext_resource type="Script" uid="uid://bkim1yp61fvmv" path="res://scripts/endings/Endings.gd" id="1_ndbwb"]
 [ext_resource type="Texture2D" uid="uid://cuco0kwfdox22" path="res://sprites/backgrounds/main_menu.png" id="3_wbmg4"]
 [ext_resource type="PackedScene" uid="uid://db2h0swgmao7f" path="res://scenes/scene_modules/endings/ending_preview.tscn" id="4_uew22"]
 [ext_resource type="Texture2D" uid="uid://568p6p1ky1qc" path="res://sprites/movable_objects/lock.png" id="5_q6cla"]
 [ext_resource type="Texture2D" uid="uid://qf2j1pald6as" path="res://sprites/movable_objects/cereal_coin.png" id="6_4v7rk"]
-[ext_resource type="Script" path="res://scripts/endings/EndingsParser.gd" id="7_ysavo"]
+[ext_resource type="Script" uid="uid://supsvs8j3ey5" path="res://scripts/endings/EndingsParser.gd" id="7_ysavo"]
 
 [node name="Achievements" type="CenterContainer" node_paths=PackedStringArray("background", "grayFilter", "lockedEnding", "shortcutText", "lockedSprite", "unlockedSprite", "titleText", "cerealCoinCounter", "endingsGrid", "prevText", "nextText", "inputParser")]
 anchors_preset = 8

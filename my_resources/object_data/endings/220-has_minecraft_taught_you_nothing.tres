@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://7l0l45ew5q2o"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_ly8sj"]
+
+[resource]
+script = ExtResource("1_ly8sj")
+endingID = 220
+sceneID = 9
+coinsRewarded = 4
+unlockingHints = Array[String](["This ending involves Zoomba.", "This ending involves one of the food items on the table.", "Scatter the flint flakes on the ground, and then turn on Zoomba."])
+unlockingHintCosts = Array[int]([2, 4, 4])
+avoidingHints = Array[String](["Flint flakes are inherently dangerous when Zoomba is turned on.", "The solution to satisfying Zoomba does not involve flint flakes. They will always result in catastrophe."])
+avoidingHintCosts = Array[int]([3, 3])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

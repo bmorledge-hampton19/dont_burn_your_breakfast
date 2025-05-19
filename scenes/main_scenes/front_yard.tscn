@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://dp0rm30g5p4qa"]
 
-[ext_resource type="Script" path="res://scripts/front_yard/FrontYard.gd" id="1_nmpaj"]
+[ext_resource type="Script" uid="uid://tb8bsqisv3mm" path="res://scripts/front_yard/FrontYard.gd" id="1_nmpaj"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_3ru3b"]
-[ext_resource type="Script" path="res://scripts/front_yard/FrontYardParser.gd" id="3_a11s1"]
+[ext_resource type="Script" uid="uid://bf8x1vwyiks6j" path="res://scripts/front_yard/FrontYardParser.gd" id="3_a11s1"]
 [ext_resource type="Texture2D" uid="uid://cvd4vx7sikaha" path="res://sprites/backgrounds/front_yard.png" id="3_qsp4k"]
 [ext_resource type="Texture2D" uid="uid://cu1tofntibdve" path="res://sprites/movable_objects/front_yard_movable_objects.png" id="4_oyxk4"]
 [ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="5_mr33o"]

@@ -20,6 +20,9 @@ var heat: float
 
 var progressBarColors: Dictionary
 
+var allTargetsBelowOne: bool:
+	get(): return targetRamUsage < 1 and targetCpuUsage < 1 and targetHeat < 1
+
 func _ready():
 	progressBarColors[ramProgressBarContainer] = RAM_PIP_COLOR
 	progressBarColors[cpuProgressBarContainer] = CPU_PIP_COLOR
@@ -27,7 +30,18 @@ func _ready():
 
 
 func manual_process(delta: float):
-	
+
+	if Input.is_physical_key_pressed(KEY_R):
+		print("Ram: ")
+		print("  Current: ", ramUsage)
+		print("  Target: ", targetRamUsage)
+		print("CPU: ")
+		print("  Current: ", cpuUsage)
+		print("  Target: ", targetCpuUsage)
+		print("Heat: ")
+		print("  Current: ", heat)
+		print("  Target: ", targetHeat)
+
 	ramUsage = clampf(lerp(ramUsage, targetRamUsage, delta/5),0.0,1.0)
 	cpuUsage = clampf(lerp(cpuUsage, targetCpuUsage, delta/5),0.0,1.0)
 	heat = clampf(lerp(heat, targetHeat, delta/5),0.0,1.0)

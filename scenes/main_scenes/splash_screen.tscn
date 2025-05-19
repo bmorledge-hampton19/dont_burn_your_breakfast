@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://d20cc824v4s0y"]
 
-[ext_resource type="Script" path="res://scripts/splash_screen/SplashScreen.gd" id="1_l8gqt"]
-[ext_resource type="Script" path="res://scripts/splash_screen/SplashScreenParser.gd" id="2_n1w0c"]
+[ext_resource type="Script" uid="uid://dfy1p4vfcgf78" path="res://scripts/splash_screen/SplashScreen.gd" id="1_l8gqt"]
+[ext_resource type="Script" uid="uid://cq8c4vtcq5828" path="res://scripts/splash_screen/SplashScreenParser.gd" id="2_n1w0c"]
 
 [node name="Splash_Screen" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
 anchors_preset = 8

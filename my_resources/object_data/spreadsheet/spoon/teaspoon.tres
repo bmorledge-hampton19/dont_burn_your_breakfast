@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SpoonData" load_steps=2 format=3 uid="uid://61bjrianr2tw"]
+
+[ext_resource type="Script" uid="uid://vy4aswmu7r7s" path="res://my_resources/object_data/spreadsheet/spoon/SpoonData.gd" id="1_k4i5t"]
+
+[resource]
+script = ExtResource("1_k4i5t")
+name = "Teaspoon"
+length = "9 cm"
+focalPoint = "1.0 cm"
+minorAxis = "1.0 cm"
+majorAxis = "1.4 cm"
+depth = "0.6 cm"
+flexuralStrength = "32 N"
+personality = "Refined"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://1h18pxi372uj"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_so3vp"]
+
+[resource]
+script = ExtResource("1_so3vp")
+name = "Grape Nuts"
+servingSize = "58g"
+sugar = "5g"
+sugarClass = "Non-sugar"
+fiber = "7g"
+protein = "6g"
+geometry = "Irregular"
+company = "Post"
+mascot = "Old people"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

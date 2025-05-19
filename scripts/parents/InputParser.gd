@@ -58,7 +58,6 @@ var requestingExtraneousPrefixes: Array
 var requestingExtraneousSuffixes: Array
 
 var storeThisMessage: bool
-var lastMessage: String
 
 
 func _ready():
@@ -68,10 +67,9 @@ func _ready():
 	initParseSubs()
 	if OS.is_debug_build(): testParsables()
 
-func connectTerminal(p_terminal: Terminal, startingMessage: String):
+func connectTerminal(p_terminal: Terminal):
 	terminal = p_terminal
 	terminal.sendInputForParsing.connect(receiveInputFromTerminal)
-	lastMessage = startingMessage
 
 func disconnectTerminal():
 	terminal.sendInputForParsing.disconnect(receiveInputFromTerminal)
@@ -172,11 +170,11 @@ func testParsables():
 func receiveInputFromTerminal(input: String):
 	storeThisMessage = true
 	if input.to_lower() in replayPrompts:
-		terminal.initMessage(lastMessage)
+		terminal.initMessage(terminal.lastReplayableMessage, false)
 	elif input:
 		var message := parseInput(input)
-		if storeThisMessage: lastMessage = message
-		terminal.initMessage(message)
+		if not message: storeThisMessage = false
+		terminal.initMessage(message, storeThisMessage)
 
 func parseInput(input: String) -> String:
 
@@ -250,6 +248,12 @@ func parseInput(input: String) -> String:
 			wildCard = workingInput.strip_edges() + suffix
 			parseResult = parseItems()
 			if validWildCard: return parseResult
+		# This was a tricky bug...
+		# Since we can run parseItems without returning the result, it's possible to reset "requesting" flags unintentionally...
+		# Make sure to do it manually.
+		requestingSubject = false
+		requestingModifier = false
+		requestingWildCard = false
 		return unrecognizedResponseParse(input)
 
 	actionID = -1
@@ -357,6 +361,16 @@ func findModifier() -> int:
 				return modifier.id
 	return -1
 
+func extractModifierFromEndOfWildCard() -> int:
+	var inputForComparison = wildCard.to_lower()
+	for modifier in parsableModifiers[actionID]:
+		for alias in modifier.aliases:
+			if inputForComparison.begins_with(alias):
+				wildCard = wildCard.erase(0,alias.length()).strip_edges()
+				modifierAlias = alias
+				return modifier.id
+	return -1 
+
 func checkForRequestedModifier(helperPrefix := "", helperSuffix := "", extraneousPrefix := "", extraneousSuffix := "") -> int:
 	for modifier in parsableModifiers[actionID]:
 		for alias: String in modifier.aliases:
@@ -411,7 +425,7 @@ func unrecognizedActionParse() -> String:
 func unrecognizedEndingParse() -> String:
 	return (
 		unknownParse() + " (It's clear that you want to \"" + reconstructCommand() + "\", " +
-		"but the end of your command, \"" + workingInput + "\", is not recognized."
+		"but the end of your command, \"" + workingInput + "\", is not recognized for this action."
 	)
 
 func unrecognizedResponseParse(input: String) -> String:
@@ -431,7 +445,7 @@ func requestAdditionalSubjectContext(
 	requestingHelperSuffixes = suffixes
 	requestingExtraneousPrefixes = extraneousPrefixes
 	requestingExtraneousSuffixes = extraneousSuffixes
-	return questionStart.capitalize() + " would you like to " + reconstructCommand() + "?"
+	return questionStart + " would you like to " + reconstructCommand() + "?"
 
 func requestAdditionalModifierContext(
 	questionStart := "How", questionEnd := "", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
@@ -442,7 +456,7 @@ func requestAdditionalModifierContext(
 	requestingExtraneousPrefixes = extraneousPrefixes
 	requestingExtraneousSuffixes = extraneousSuffixes
 	if questionEnd and not questionEnd.begins_with(' '): questionEnd = ' ' + questionEnd
-	return questionStart.capitalize() + " would you like to " + reconstructCommand() + questionEnd + "?"
+	return questionStart + " would you like to " + reconstructCommand() + questionEnd + "?"
 
 func requestAdditionalContextCustom(
 	question: String, requestType: int, prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []

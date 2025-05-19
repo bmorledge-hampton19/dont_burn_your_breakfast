@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://bif22qjyo6nna"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_g7gmn"]
+
+[resource]
+script = ExtResource("1_g7gmn")
+name = "Oat Squares"
+servingSize = "56g"
+sugar = "9g"
+sugarClass = "Medium"
+fiber = "5g"
+protein = "6g"
+geometry = "Ravioli"
+company = "Quaker"
+mascot = "None"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

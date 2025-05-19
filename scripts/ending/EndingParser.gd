@@ -47,17 +47,16 @@ func receiveInputFromTerminal(input: String):
 	if firstParse:
 		if input.to_lower() in replayPrompts:
 			terminal.initMessage(
-				lastMessage +
+				terminal.lastReplayableMessage +
 				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT one that replays the last message " +
-				"to continue.)"
+				"to continue.)", false
 				)
-		elif input.to_lower() in ["retry level", "retry the current level", "retry", "replay level"]:
+		elif input.to_lower() in ["retry level", "retry the current level", "retry", "replay level", "r"]:
 			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
 		else:
 			firstParse = false
 			endingScene.setMainEndingTexture()
-			lastMessage = endingMessage
-			terminal.initMessage(endingMessage)
+			terminal.initMessage(endingMessage, true)
 	else: super(input)
 
 

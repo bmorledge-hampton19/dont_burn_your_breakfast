@@ -71,11 +71,17 @@ const LASER_EYE_POSITIONS := {
 
 var angry: bool
 var angryTimer: float
+signal onAngry()
+signal onCalm()
 func resetAngryTimer():
 	angry = false
 	headerText.text = defaultHeaderText
 	laserEyesControl.hide()
-	angryTimer = randf_range(10, 20)
+	angryTimer = randf_range(15, 35)
+func feed(mouseCenter: Vector2):
+	if angry: onCalm.emit()
+	resetAngryTimer()
+	position = mouseCenter - size*scale/2
 
 @export var headerText: Label
 var defaultHeaderText: String
@@ -91,15 +97,17 @@ func resetHeaderText():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	catPicTexture = CATS.pick_random()
 	resetAngryTimer()
 	resetHeaderText()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	
-	if angryTimer <= 0:
+func manualProcess(delta):
+
+	if angryTimer <= 0 and not angry:
 		angry = true
-		headerText.text = "HISSSS"
+		onAngry.emit()
+		headerText.text = "HISSSSSSSSSS"
 		laserEyesControl.show()
 	else: angryTimer -= delta

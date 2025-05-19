@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://dm7wwbsvdjhkf"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_n7rg8"]
+
+[resource]
+script = ExtResource("1_n7rg8")
+name = "Life"
+servingSize = "42g"
+sugar = "8g"
+sugarClass = "Medium"
+fiber = "3g"
+protein = "4g"
+geometry = "Square"
+company = "Quaker"
+mascot = "None"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

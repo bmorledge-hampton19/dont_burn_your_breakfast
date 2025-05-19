@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://b3nrte4w8eicv"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_meuv8"]
+
+[resource]
+script = ExtResource("1_meuv8")
+caloriesPerServing = "140 kcal"
+color = "Cornsilk"
+absorbance = "0.29 AU"
+viscosity = "2.04 mPA*s"
+specificGravity = "1.01 kg/L"
+meltingPoint = "-0.08 °C"
+costPerGallon = "$33.09"
+name = "Coconut"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

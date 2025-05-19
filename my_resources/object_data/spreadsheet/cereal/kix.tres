@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://mx10st3pibo8"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_ub7il"]
+
+[resource]
+script = ExtResource("1_ub7il")
+name = "Kix"
+servingSize = "40g"
+sugar = "4g"
+sugarClass = "Non-sugar"
+fiber = "3g"
+protein = "3g"
+geometry = "Spherical"
+company = "General Mills"
+mascot = "Some corn?"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

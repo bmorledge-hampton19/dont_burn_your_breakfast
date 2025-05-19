@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://c2hljl4ttrsnl"]
 
-[ext_resource type="Script" path="res://scripts/parents/Scene.gd" id="1_k5cdp"]
+[ext_resource type="Script" uid="uid://cojgykirj6vwe" path="res://scripts/parents/Scene.gd" id="1_k5cdp"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_abvx1"]
-[ext_resource type="Script" path="res://scripts/parents/InputParser.gd" id="3_uvju7"]
+[ext_resource type="Script" uid="uid://ckvc0bbanh1dv" path="res://scripts/parents/InputParser.gd" id="3_uvju7"]
 
 [node name="TemplateScene" type="CenterContainer"]
 anchors_preset = 8

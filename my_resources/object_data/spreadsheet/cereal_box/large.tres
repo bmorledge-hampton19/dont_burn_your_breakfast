@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CerealBoxData" load_steps=2 format=3 uid="uid://kltg8cv4gsgd"]
+
+[ext_resource type="Script" uid="uid://bffwjgpgnawas" path="res://my_resources/object_data/spreadsheet/cereal_box/CerealBoxData.gd" id="1_h2gv8"]
+
+[resource]
+script = ExtResource("1_h2gv8")
+width = "19 cm"
+height = "29.5 cm"
+depth = "6.2 cm"
+volume = "3.5 L"
+servings = "12"
+saleFrequency = "Medium"
+name = "Large"
+metadata/_custom_type_script = "uid://bffwjgpgnawas"

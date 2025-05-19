@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://cqjb20gd8poov"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_ao3y2"]
+
+[resource]
+script = ExtResource("1_ao3y2")
+name = "Wheaties"
+servingSize = "38g"
+sugar = "5g"
+sugarClass = "Non-sugar"
+fiber = "4g"
+protein = "3g"
+geometry = "Flake"
+company = "General Mills"
+mascot = "Var. Athletes"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

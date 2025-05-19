@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CerealData" load_steps=2 format=3 uid="uid://bjjjc4lmlyjeb"]
+
+[ext_resource type="Script" uid="uid://cif5kwilwg8oy" path="res://my_resources/object_data/spreadsheet/cereal/CerealData.gd" id="1_omm7t"]
+
+[resource]
+script = ExtResource("1_omm7t")
+name = "Cocoa Puffs"
+servingSize = "36g"
+sugar = "12g"
+sugarClass = "Sugary"
+fiber = "2g"
+protein = "2g"
+geometry = "Spherical"
+company = "General Mills"
+mascot = "Sonny Cuckoo"
+metadata/_custom_type_script = "uid://cif5kwilwg8oy"

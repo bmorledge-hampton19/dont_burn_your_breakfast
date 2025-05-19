@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://btmdheuvg0yhu"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_c64e7"]
+
+[resource]
+script = ExtResource("1_c64e7")
+caloriesPerServing = "158.1 kcal"
+color = "Parchment"
+absorbance = "1.20 AU"
+viscosity = "2.78 mPA*s"
+specificGravity = "1.035 kg/L"
+meltingPoint = "-0.590 °C"
+costPerGallon = "$516.91"
+name = "Human"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MilkData" load_steps=2 format=3 uid="uid://b2nrvcdw7ds5u"]
+
+[ext_resource type="Script" uid="uid://do2erw1ddqsok" path="res://my_resources/object_data/spreadsheet/milk/MilkData.gd" id="1_1hey5"]
+
+[resource]
+script = ExtResource("1_1hey5")
+caloriesPerServing = "40 kcal"
+color = "Vanilla"
+absorbance = "0.24 AU"
+viscosity = "1.94 mPA*s"
+specificGravity = "0.99 kg/L"
+meltingPoint = "0.0 °C"
+costPerGallon = "$3.99"
+name = "Almond"
+metadata/_custom_type_script = "uid://do2erw1ddqsok"

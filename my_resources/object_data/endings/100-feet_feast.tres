@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://denxa3nskp74e"]
 
-[ext_resource type="Script" path="res://my_resources/object_data/endings/EndingData.gd" id="1_614mg"]
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_614mg"]
 
 [resource]
 script = ExtResource("1_614mg")

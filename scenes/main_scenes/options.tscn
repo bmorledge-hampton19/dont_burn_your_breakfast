@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://cd27df5ltxigd"]
 
-[ext_resource type="Script" path="res://scripts/options/OptionsScene.gd" id="1_6rfhp"]
+[ext_resource type="Script" uid="uid://bg05hxff6e68v" path="res://scripts/options/OptionsScene.gd" id="1_6rfhp"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_4ll71"]
 [ext_resource type="Texture2D" uid="uid://c16j2frhibyjy" path="res://sprites/movable_objects/spoon_checkmark.png" id="3_0xxti"]
-[ext_resource type="Script" path="res://scripts/options/OptionsParser.gd" id="4_smppa"]
+[ext_resource type="Script" uid="uid://x3em0u44v7ht" path="res://scripts/options/OptionsParser.gd" id="4_smppa"]
 
 [node name="Options_Scene" type="CenterContainer" node_paths=PackedStringArray("smallFontSizeSpoon", "mediumFontSizeSpoon", "largeFontSizeSpoon", "painfullySmallFontSizeSpoon", "painfullyLargeFontSizeSpoon", "slowFontSpeedSpoon", "mediumFontSpeedSpoon", "fastFontSpeedSpoon", "windowedSpoon", "fullscreenSpoon", "painfullySmallFontSizeLabel", "painfullyLargeFontSizeLabel", "inputParser")]
 anchors_preset = 8
