@@ -248,7 +248,7 @@ func parseItems() -> String:
 				SubjectID.TUB_FAUCET:
 					return (
 						"You're pretty sure that water comes out of this, but you always hope that " +
-						"it might start producing Diet Mountian Dew Code Red instead. The faucet is flanked by two handles. "
+						"it might start producing Diet Mountain Dew Code Red instead. The faucet is flanked by two handles. "
 					)
 				SubjectID.SINK_FAUCET:
 					return (
@@ -423,7 +423,7 @@ func parseItems() -> String:
 						"These yellow spheres are an affront to mankind."
 					)
 				SubjectID.BATH_BOMB:
-					return "Luxurious, and nutritous!"
+					return "Luxurious, and nutritious!"
 				SubjectID.URINAL_CAKE:
 					if bathroom.isBottomDrawerOpen:
 						return (
@@ -443,7 +443,7 @@ func parseItems() -> String:
 					)
 				SubjectID.RUG:
 					return (
-						"Your bath mat is soft and absorbant."
+						"Your bath mat is soft and absorbent."
 					)
 				SubjectID.OUTSIDE:
 					if bathroom.isDoorOpen:
@@ -577,7 +577,7 @@ func parseItems() -> String:
 											SceneManager.SceneID.ENDING,
 											"Your face screws up in concentration as you stare down the toothpaste tube " +
 											"and wring it out as hard as you can. After an especially firm squeeze, the " +
-											"key is released from its toothepasty shackles at high velocity... directly " +
+											"key is released from its toothpasty shackles at high velocity... directly " +
 											"into your cornea.\n" +
 											"You begin flailing around your bathroom like a wounded animal, " +
 											"blood and tears flying every which way. It's not long before this moisture " +
@@ -1167,7 +1167,7 @@ func parseItems() -> String:
 								"steadily reaches maximum toothpaste capacity you begin to choke and sputter. You endeavor " +
 								"to continue brushing, but you can feel your vision darkening as your body attempts to " +
 								"replace much-needed oxygen with toothpaste fumes. Consciousness gradually slips away from " +
-								"you, and when you finally come to, you're covered in toothpaste and surroundned by ashes.",
+								"you, and when you finally come to, you're covered in toothpaste and surrounded by ashes.",
 								SceneManager.EndingID.IRRESPONSIBLE_BRUSHING
 							)
 						else:
@@ -1629,8 +1629,8 @@ func transitionToTripEnding(movingTo: String):
 	SceneManager.transitionToScene(
 		SceneManager.SceneID.ENDING,
 		"As you move across the bathroom to " + movingTo + ", you realize that you neglected to close up the cabinet. " +
-		"This catches you by surpise as your leg snags on the open door, throwing you off balance. Uncontrollably, you " +
-		"hurdle forward and fall towards the bathtub. Your gut strikes the edge of tub sharply, forcing saliva out " +
+		"This catches you by surprise as your leg snags on the open door, throwing you off balance. You hurdle forward " +
+		"uncontrollably and fall towards the bathtub. Your gut strikes the edge of tub sharply, forcing saliva out " +
 		"of your open mouth and into the cereal, which bursts into flames.",
 		SceneManager.EndingID.HEAD_OVER_HEELS_FOR_CEREAL
 	)

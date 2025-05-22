@@ -65,7 +65,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.DESKTOP, ["desktop", "computer", "screen"],
 		[ActionID.INSPECT])
 
-	addParsableSubject(SubjectID.AMBIGUOUS_WINDOWS, ["windows"],
+	addParsableSubject(SubjectID.AMBIGUOUS_WINDOWS, ["all windows", "windows"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE])
 	addParsableSubject(SubjectID.AMBIGUOUS_WINDOW, ["window"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.SKIP])
@@ -84,12 +84,16 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.RAM, ["ram"],
 		[ActionID.INSPECT])
 	
-	addParsableSubject(SubjectID.CAT_WINDOWS, ["cat windows", "cat pictures", "cat pics", "cats"],
+	addParsableSubject(SubjectID.CAT_WINDOWS,
+		["cat windows", "cat pictures", "cat pics", "cats",
+		"all cat windows", "all cat pictures", "all cat pics", "all cats"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.FEED])
 	addParsableSubject(SubjectID.CAT_WINDOW, ["cat window", "cat picture", "cat pic", "cat"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.FEED])
 
-	addParsableSubject(SubjectID.EXCEL_WINDOWS, ["excel windows", "spreadsheet windows", "spreadsheets"],
+	addParsableSubject(SubjectID.EXCEL_WINDOWS,
+		["excel windows", "spreadsheet windows", "spreadsheets",
+		"all excel windows", "all spreadsheet windows", "all spreadsheets"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE])
 	addParsableSubject(SubjectID.EXCEL_WINDOW, ["excel window", "spreadsheet window", "excel", "spreadsheet"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE])

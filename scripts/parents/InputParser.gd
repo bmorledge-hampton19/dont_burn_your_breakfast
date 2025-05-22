@@ -188,8 +188,9 @@ func parseInput(input: String) -> String:
 	previousModifierAlias = modifierAlias
 
 	previousWildCard = wildCard
+	validWildCard = false
 
-	_originalInputSansPunct = removePunctionation(input)
+	_originalInputSansPunct = removePunctuation(input)
 	workingInput = removeBlacklistedArticlesAndAdjectives(_originalInputSansPunct)
 	workingInput = invokeParseSubs(workingInput)
 
@@ -236,7 +237,6 @@ func parseInput(input: String) -> String:
 	if requestingWildCard:
 		recallLastParse()
 		requestingWildCard = false
-		validWildCard = false
 		wildCard = workingInput.strip_edges()
 		var parseResult := parseItems()
 		if validWildCard: return parseResult
@@ -291,7 +291,7 @@ func recallLastParse():
 	wildCard = previousWildCard
 
 
-func removePunctionation(input: String) -> String:
+func removePunctuation(input: String) -> String:
 	while input.length() > 1 and input[-1] in [',','.','!','?']:
 		input = input.left(-1)
 	return input
@@ -365,8 +365,8 @@ func extractModifierFromEndOfWildCard() -> int:
 	var inputForComparison = wildCard.to_lower()
 	for modifier in parsableModifiers[actionID]:
 		for alias in modifier.aliases:
-			if inputForComparison.begins_with(alias):
-				wildCard = wildCard.erase(0,alias.length()).strip_edges()
+			if inputForComparison.ends_with(alias):
+				wildCard = wildCard.erase(wildCard.length()-alias.length(),alias.length()).strip_edges()
 				modifierAlias = alias
 				return modifier.id
 	return -1 
@@ -408,7 +408,7 @@ func reconstructCommand() -> String:
 	var reconstructedCommand = actionAlias
 	if subjectAlias: reconstructedCommand += " " + subjectAlias
 	if modifierAlias: reconstructedCommand += " " + modifierAlias
-	if wildCard: reconstructedCommand += " " + wildCard
+	if wildCard and validWildCard: reconstructedCommand += " " + wildCard
 	return reconstructedCommand
 
 func unknownParse() -> String:

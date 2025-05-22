@@ -2,7 +2,7 @@ class_name TaskbarItem extends TextureRect
 
 const TASKBAR_WIDTH = 160.0
 
-enum IconType {INFO, RESOURCE_MONITOR, CAT_PIC, SPREADHSEET}
+enum IconType {INFO, RESOURCE_MONITOR, CAT_PIC, SPREADSHEET}
 
 const INFO_ICON = preload("res://sprites/computer_cleaning/info_icon.png")
 const INFO_ICON_SIZE = Vector2(40, 40)
@@ -46,7 +46,7 @@ func init(iconType: IconType, text: String, p_leftNeighbor: TaskbarItem = null):
 			icon.size = CAT_PIC_ICON_SIZE
 			icon.position = CAT_PIC_ICON_POS
 
-		IconType.SPREADHSEET:
+		IconType.SPREADSHEET:
 			icon.texture = SPREADSHEET_ICON
 			icon.size = SPREADSHEET_ICON_SIZE
 			icon.position = SPREADSHEET_ICON_POS
@@ -66,11 +66,11 @@ func manualProcess(delta: float):
 	if position.x > leftBoundary:
 		var distanceToMove = lerp(0.0, position.x - leftBoundary + 10.0, delta*5.0)
 		if position.x - distanceToMove < leftBoundary: distanceToMove = position.x - leftBoundary
-		propogateMovement(distanceToMove)
+		propagateMovement(distanceToMove)
 
-func propogateMovement(distance: float):
+func propagateMovement(distance: float):
 	position.x -= distance
-	if rightNeighbor: rightNeighbor.propogateMovement(distance)
+	if rightNeighbor: rightNeighbor.propagateMovement(distance)
 
 func destroy():
 	if leftNeighbor: leftNeighbor.rightNeighbor = rightNeighbor

@@ -80,7 +80,7 @@ enum PlayerPos {
 	ZOOMBA, ZOOMBA_FOOD_TABLE, SCATTERING_FOOD
 }
 const PLAYER_SPRITE_POSITIONS := {
-	PlayerPos.FRONT_YARD_DOOR : Vector2(32,80), PlayerPos.KITCHEN_DOOR : Vector2(614,100),
+	PlayerPos.FRONT_YARD_DOOR : Vector2(24,152), PlayerPos.KITCHEN_DOOR : Vector2(614,100),
 	PlayerPos.COMPUTER_DESK : Vector2(168,70), PlayerPos.LEGO_TABLE : Vector2(54, 236),
 	PlayerPos.BED_LEFT_SIDE : Vector2(210,138), PlayerPos.BED_RIGHT_SIDE : Vector2(446,138), PlayerPos.DRESSER : Vector2(244,244),
 	PlayerPos.SMOKEY_TOOLS : Vector2(444,30), PlayerPos.SMOKEY : Vector2(526,28),
@@ -106,7 +106,7 @@ var heldClothing: Clothing
 var heldSecondSock: Clothing
 var isPlayerWearingHat: bool
 
-var clothesByDepth := {0 : [], 1 : [], 2 : []} # 0 is highest; 2 is lowest
+var clothesByDepth: Dictionary[int, Array] = {0 : [], 1 : [], 2 : []} # 0 is highest; 2 is lowest
 var accessibleClothing: Array[Clothing]:
 	get():
 		accessibleClothing.clear()
@@ -131,7 +131,7 @@ func doesClothingIntersect(clothing1: Clothing, clothing2: Clothing):
 
 func addClothingToBed(clothing: Clothing):
 	for depth in range(3):
-		for otherClothing in clothesByDepth[depth]:
+		for otherClothing: Clothing in clothesByDepth[depth]:
 			if doesClothingIntersect(clothing, otherClothing):
 				clothing.overlappingClothes[depth] += 1
 				otherClothing.overlappingClothes[clothing.depth] += 1
@@ -146,18 +146,18 @@ func addClothingToBed(clothing: Clothing):
 func removeClothingFromBed(clothing: Clothing):
 	clothesByDepth[clothing.depth].erase(clothing)
 	for depth in range(3):
-		for otherClothing in clothesByDepth[depth]:
+		for otherClothing: Clothing in clothesByDepth[depth]:
 			if doesClothingIntersect(clothing, otherClothing):
 				otherClothing.overlappingClothes[clothing.depth] -= 1
 				otherClothing.updateBuriedDepth()
 		clothing.overlappingClothes[depth] = 0
 	clothing.updateBuriedDepth()
 
-enum SearchResult {NONEXISTANT, BURIED, AMBIGUOUS, FOUND}
+enum SearchResult {NONEXISTENT, BURIED, AMBIGUOUS, FOUND}
 var clothingSearchResult: SearchResult
 var foundSecondSock: Clothing
 func findClothing(type, color, pattern) -> Clothing:
-	clothingSearchResult = SearchResult.NONEXISTANT
+	clothingSearchResult = SearchResult.NONEXISTENT
 	foundSecondSock = null
 	var foundClothing: Clothing
 	for depth in range(3):
@@ -183,7 +183,7 @@ func findClothing(type, color, pattern) -> Clothing:
 				else:
 					clothingSearchResult = SearchResult.FOUND
 					foundClothing = clothing
-			elif clothingSearchResult == SearchResult.NONEXISTANT:
+			elif clothingSearchResult == SearchResult.NONEXISTENT:
 				clothingSearchResult = SearchResult.BURIED
 			
 	return foundClothing
@@ -287,7 +287,7 @@ func initClothes():
 			if braDepth == depth and not duplicateInclusionArray[i]:
 				braDepth = -1
 				var bra: Clothing = clothingPrefab.instantiate()
-				bra.init(Clothing.BRA, Clothing.PINK, patterns[0], rotations[0], depth)
+				bra.init(Clothing.BRA, Clothing.PINK, Clothing.PLAIN, rotations[0], depth)
 				bra.shuffleGridPos()
 				while not isValidClothesPlacement(bra): bra.shuffleGridPos()
 				addClothingToBed(bra)
@@ -298,16 +298,29 @@ func initClothes():
 				newClothing.shuffleGridPos()
 				while not isValidClothesPlacement(newClothing): newClothing.shuffleGridPos()
 				addClothingToBed(newClothing)
+				if newClothing.type == Clothing.SOCK:
+					newClothing = clothingPrefab.instantiate()
+					newClothing.init(clothingTypes[i], colorsByClothingType[clothingTypes[i]][depth], patterns[0], rotations[0], depth)
+					newClothing.shuffleGridPos()
+					while not isValidClothesPlacement(newClothing): newClothing.shuffleGridPos()
+					addClothingToBed(newClothing)
 				if duplicateInclusionArray[i]:
 					newClothing = clothingPrefab.instantiate()
 					newClothing.init(clothingTypes[i], colorsByClothingType[clothingTypes[i]][depth], patterns[1], rotations[1], depth)
 					newClothing.shuffleGridPos()
 					while not isValidClothesPlacement(newClothing): newClothing.shuffleGridPos()
 					addClothingToBed(newClothing)
+					if newClothing.type == Clothing.SOCK:
+						newClothing = clothingPrefab.instantiate()
+						newClothing.init(clothingTypes[i], colorsByClothingType[clothingTypes[i]][depth], patterns[1], rotations[1], depth)
+						newClothing.shuffleGridPos()
+						while not isValidClothesPlacement(newClothing): newClothing.shuffleGridPos()
+						addClothingToBed(newClothing)
 
 	for type in range(4):
-		var newClothing = clothingPrefab.instantiate()
+		var newClothing: Clothing = clothingPrefab.instantiate()
 		newClothing.init(type, colorsByClothingType[type][-1], patterns.pick_random(), 0, 0)
+		newClothing.fold()
 		_addClothesToDresser(newClothing)
 
 
@@ -585,6 +598,7 @@ func scatterZoombaFood(scattered: Scattered):
 		Scattered.BREAD_CRUMBS: scatteredBreadCrumbs.show()
 		Scattered.CHARCOAL_POWDER: scatteredCharcoalPowder.show()
 	scatteredOnFloor.append(scattered)
+	movePlayer(PlayerPos.SCATTERING_FOOD)
 
 func feedZoomba():
 	zoomba.position = Vector2(563,244)

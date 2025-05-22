@@ -1,13 +1,14 @@
 [gd_scene load_steps=6 format=3 uid="uid://dk6ql0mn18gp3"]
 
-[ext_resource type="Shader" uid="uid://bidtdw6me1k4y" path="res://scenes/scene_modules/bedroom/clothing.gdshader" id="1_7s5by"]
+[ext_resource type="Shader" uid="uid://b5jga1u6foxfd" path="res://shaders/clothing_depth.gdshader" id="1_0v083"]
 [ext_resource type="Texture2D" uid="uid://dydgedqdxu5mp" path="res://sprites/movable_objects/bedroom_clothing.png" id="1_k6pse"]
 [ext_resource type="Script" uid="uid://bolwnojb0i5ha" path="res://scripts/bedroom/Clothing.gd" id="3_an07a"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cpjif"]
 resource_local_to_scene = true
-shader = ExtResource("1_7s5by")
+shader = ExtResource("1_0v083")
 shader_parameter/buriedDepth = 0.0
+shader_parameter/darkeningPerDepth = 0.2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4bt6i"]
 resource_local_to_scene = true

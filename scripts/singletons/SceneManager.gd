@@ -1,6 +1,6 @@
 extends Node
 
-# NOTE: If scene initiailization takes longer than a frame, even with asynchronous loading through the ResourceLoader,
+# NOTE: If scene initialization takes longer than a frame, even with asynchronous loading through the ResourceLoader,
 #		consider adding loaded components to the active scene in a hidden and deactivated state. (The deactivated state
 #		will have to be coded manually somewhat, but the process_mode parameter should help). This will allow for full,
 #		custom initialization prior to use, similar to the multi-scene setup I used in Unity.

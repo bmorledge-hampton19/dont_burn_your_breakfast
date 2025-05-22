@@ -20,7 +20,7 @@ enum SubjectID {
 	STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, AMBIGUOUS_STEP, NEXT_STEP, PREVIOUS_STEP,
 	GAS, MOWER, GAS_CAP,
 	SHOES, AMBIGUOUS_SHOE, RIGHT_SHOE, LEFT_SHOE, SHOE_ON_RIGHT_FOOT, SHOE_ON_LEFT_FOOT,
-	FLAMETHROWER, CEREAL, BIRDFEEDER, FAUCET, LAWN, WEEDS, STUMP, WINDOW,
+	FLAMETHROWER, CEREAL, BIRD_FEEDER, FAUCET, LAWN, WEEDS, STUMP, WINDOW,
 }
 
 enum ModifierID {
@@ -147,7 +147,7 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.USE, ActionID.FIRE, ActionID.TAKE])
 	addParsableSubject(SubjectID.CEREAL, ["boxes of cereal", "boxes", "box", "cereal", "top shelf", "cocoa puffs"],
 			[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
-	addParsableSubject(SubjectID.BIRDFEEDER, ["bird feeder", "birdfeeder", "feeder"],
+	addParsableSubject(SubjectID.BIRD_FEEDER, ["bird feeder", "birdfeeder", "feeder"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.FAUCET, ["faucet", "spigot"],
 			[ActionID.INSPECT, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN])
@@ -330,7 +330,7 @@ func parseItems() -> String:
 				SubjectID.SHOES, SubjectID.AMBIGUOUS_SHOE, SubjectID.RIGHT_SHOE, SubjectID.LEFT_SHOE, \
 				SubjectID.SHOE_ON_LEFT_FOOT, SubjectID.SHOE_ON_RIGHT_FOOT:
 					return (
-						"You got these limited edition \"Air Kellogs\" by purchasing 100 boxes of Frosted Flakes."
+						"You got these limited edition \"Air Kellogg's\" by purchasing 100 boxes of Frosted Flakes."
 					)
 
 				SubjectID.FLAMETHROWER:
@@ -344,7 +344,7 @@ func parseItems() -> String:
 						"You use these boxes of Cocoa Puffs to fill up the bird feeder. The birds go cuckoo for them!"
 					)
 
-				SubjectID.BIRDFEEDER:
+				SubjectID.BIRD_FEEDER:
 					return (
 						"The bird feeder is chock full of cereal, just what a growing bird needs!"
 					)
@@ -1353,7 +1353,7 @@ func attemptMovePlayer(movingTo: FrontYard.SpritePos, gently := false) -> String
 							"The fifth step is home to termites with a very unique taste for athletic footwear, " +
 							"and your shoes are just their style! They eagerly scurry out of the step, and you watch " +
 							"in dismay as they begin to dig into your " +
-							"favorite pair of Air Kellogs.\nWell, if you can't have them, nobody can! " +
+							"favorite pair of Air Kellogg's.\nWell, if you can't have them, nobody can! " +
 							"You quickly remove the shoes, toss them defiantly into the lawn, and let the resulting " +
 							"fire claim them.",
 							SceneManager.EndingID.SHOEFFLE

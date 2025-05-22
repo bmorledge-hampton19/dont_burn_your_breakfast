@@ -58,16 +58,11 @@ func parseItems() -> String:
 			)
 
 		ActionID.MAIN_MENU:
-			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.MAIN_MENU:
-				SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
-			else:
-				parseEventsSinceLastConfirmation = 0
-				confirmingActionID = ActionID.MAIN_MENU
-				return "Are you sure you want to return to the main menu?"
+			SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+			return ""
 
 		ActionID.ENDINGS:
-			SceneManager.openEndings(scene)
-			return SceneManager.openEndingsScene.defaultStartingMessage
+			return "Be patient! You can look at the endings once the game starts."
 
 		ActionID.QUIT:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:

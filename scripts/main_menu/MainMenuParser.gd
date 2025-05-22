@@ -134,7 +134,7 @@ func parseItems() -> String:
 				SubjectID.CEREAL:
 					return (
 						"The cereal cascading behind the title and into the bowl is truly remarkable. It's natural " +
-						"beauty reminds you of Niagra Falls or perhaps the Mona Lisa."
+						"beauty reminds you of Niagara Falls or perhaps the Mona Lisa."
 					)
 				
 				SubjectID.GASOLINE:

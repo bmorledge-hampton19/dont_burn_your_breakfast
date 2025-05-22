@@ -5,7 +5,7 @@ const CLOSING_CAT_CPU_USAGE := 0.2
 const CLOSING_CAT_DECAY_RATE := 0.015
 
 const CLOSING_SPREADSHEET_RAM_USAGE := 0.15
-const CLOSING_SPREADHSEET_DECAY_RATE := 0.015
+const CLOSING_SPREADSHEET_DECAY_RATE := 0.015
 
 const MOUSE_RAM_USAGE := 0.02
 
@@ -83,7 +83,7 @@ func addTaskbarItem(window):
 	elif window is CatPic:
 		newTaskbarItem.init(TaskbarItem.IconType.CAT_PIC, (window as CatPic).headerText.text, lastAddedTaskbarItem)
 	elif window is Spreadsheet:
-		newTaskbarItem.init(TaskbarItem.IconType.SPREADHSEET, (window as Spreadsheet).headerText.text, lastAddedTaskbarItem)
+		newTaskbarItem.init(TaskbarItem.IconType.SPREADSHEET, (window as Spreadsheet).headerText.text, lastAddedTaskbarItem)
 	else:
 		print("Uh-oh!! I can't make a taskbar item from that!")
 		breakpoint
@@ -97,7 +97,6 @@ func removeTaskbarItem(window):
 
 
 func _ready():
-	super()
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 
 	addTaskbarItem(infoWindow)
@@ -179,7 +178,7 @@ func _process(delta: float):
 			catPicsBeingClosed.pop_at(i)
 		closedCatPicDecay *= 0.5
 
-	var closedSpreadsheetDecay := CLOSING_SPREADHSEET_DECAY_RATE*delta
+	var closedSpreadsheetDecay := CLOSING_SPREADSHEET_DECAY_RATE*delta
 	for i in range(len(spreadsheetsBeingClosed)-1,-1,-1):
 		if spreadsheetsBeingClosed[i] > closedSpreadsheetDecay:
 			spreadsheetsBeingClosed[i] -= closedSpreadsheetDecay

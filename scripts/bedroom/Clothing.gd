@@ -43,8 +43,8 @@ var buriedDepth: int:
 	get:
 		var p_buriedDepth = 0
 		for overlappingDepth in overlappingClothes:
-			if overlappingDepth <= depth: continue
-			if overlappingClothes[depth]: p_buriedDepth += 1
+			if overlappingDepth >= depth: continue
+			if overlappingClothes[overlappingDepth]: p_buriedDepth += 1
 		return p_buriedDepth
 var overlappingClothes := {0:0, 1:0, 2:0}
 var isAccessible: bool:
@@ -97,7 +97,7 @@ func setTexture():
 	size = CLOTHING_GRID_SIZE[type][folded]*BED_GRID_DIM*2
 
 func setBedPosition():
-	position = BED_ORIGIN + gridPos*BED_GRID_DIM
+	position = BED_ORIGIN + gridPos*BED_GRID_DIM*2
 	if bedRotation == PI/2:
 		position.x += BED_GRID_DIM*CLOTHING_GRID_SIZE[type][false].y*2
 	if bedRotation == PI:
