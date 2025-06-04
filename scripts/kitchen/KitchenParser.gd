@@ -1,20 +1,16 @@
-class_name EndingParser
+class_name KitchenParser
 extends InputParser
 
-@export var endingScene: Ending
-
-var firstParse = true
-const endingMessage = (
-	"Oh no! You burned your breakfast...\n\n" +
-	"Would you like to [r]etry the current level or return to the [m]ain menu?"
-)
+@export var kitchen: Kitchen
 
 enum ActionID {
-	POOP, QUIT, MAIN_MENU, ENDINGS, RETRY, AFFIRM, DENY
+	INSPECT,
+
+	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY
 }
 
 enum SubjectID {
-
+	SELF,
 }
 
 enum ModifierID {
@@ -25,39 +21,22 @@ enum ModifierID {
 func initParsableActions():
 	addParsableAction(ActionID.ENDINGS,
 			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
+	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
 	addParsableAction(ActionID.MAIN_MENU,
-			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
-			"go back to main menu", "return to the main menu", "return to main menu", "m"])
-	addParsableAction(ActionID.RETRY, ["retry level", "retry the current level", "retry", "replay level", "r"])
+			["main menu", "menu", "main", "go to main menu", "go back to main menu", "return to main menu"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
-	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
+	addParsableAction(ActionID.QUIT, ["quit game", "quit", "exit game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
 
 
 func initParsableSubjects():
-	pass
+	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you"],
+			[ActionID.INSPECT])
 
 
 func initParsableModifiers():
 	pass
-
-
-func receiveInputFromTerminal(input: String):
-	if firstParse:
-		if input.to_lower() in replayPrompts:
-			terminal.initMessage(
-				terminal.lastReplayableMessage +
-				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT one that replays the last message " +
-				"to continue.)", false
-				)
-		elif input.to_lower() in ["retry level", "retry the current level", "retry", "replay level", "r", "back"]:
-			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
-		else:
-			firstParse = false
-			endingScene.setMainEndingTexture()
-			terminal.initMessage(endingMessage, true)
-	else: super(input)
 
 
 func parseItems() -> String:
@@ -66,9 +45,16 @@ func parseItems() -> String:
 
 	match actionID:
 
-		ActionID.RETRY:
-			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
-	
+		ActionID.INSPECT:
+			match subjectID:
+
+				-1:
+					if actionAlias == "look":
+						return requestAdditionalSubjectContext("Where", [], [], ["at "])
+					else:
+						return requestAdditionalSubjectContext()
+
+
 		ActionID.POOP:
 			return (
 				"Nice try, but this isn't that game."
@@ -82,11 +68,9 @@ func parseItems() -> String:
 				confirmingActionID = ActionID.MAIN_MENU
 				return "Are you sure you want to return to the main menu?"
 
-
 		ActionID.ENDINGS:
-			SceneManager.openEndings(endingScene)
+			SceneManager.openEndings(kitchen)
 			return SceneManager.openEndingsScene.defaultStartingMessage
-
 
 		ActionID.QUIT:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:
@@ -94,7 +78,10 @@ func parseItems() -> String:
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.QUIT
-				return requestConfirmation()
+				return (
+					requestConfirmation() + " The endings and shortcuts you've unlocked will be saved, " +
+					"but any progress in the current level will be lost."
+				)
 	
 		ActionID.AFFIRM:
 			if parseEventsSinceLastConfirmation <= 1:

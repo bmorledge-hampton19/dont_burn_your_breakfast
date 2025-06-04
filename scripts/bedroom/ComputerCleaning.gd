@@ -44,11 +44,17 @@ var mice: Array[Mouse]
 @export var farewellClippy: FarewellClippy
 
 var infoTextState: int:
-	get: return infoWindow.infoTextState
+	get:
+		if not is_instance_valid(infoWindow): return -1
+		return infoWindow.infoTextState
 var clippyAskingForSpeed: bool:
-	get: return infoWindow.clippyAskingForSpeed
+	get:
+		if not is_instance_valid(infoWindow): return -1
+		return infoWindow.clippyAskingForSpeed
 var clippyAwaitingCommand: bool:
-	get: return infoWindow.clippyAwaitingCommand
+	get:
+		if not is_instance_valid(infoWindow): return -1
+		return infoWindow.clippyAwaitingCommand
 
 var ramUsage: float:
 	get: return resourceMonitor.ramUsage
@@ -106,6 +112,8 @@ func _ready():
 	massiveMouseMamaRect = Rect2(massiveMouseMama.position, massiveMouseMama.size)
 	antimatterCheeseRect = Rect2(antimatterCheese.position, antimatterCheese.size)
 
+	var windowPriorityList: Array
+
 	for i in range(randi_range(30, 35)):
 		if randi()%2:
 			var newCatPic: CatPic = catPicPrefab.instantiate()
@@ -114,14 +122,19 @@ func _ready():
 			newCatPic.onAngry.connect(increaseCatCpuLoad)
 			newCatPic.onCalm.connect(decreaseCatCpuLoad)
 			catPics.append(newCatPic)
-			addTaskbarItem(newCatPic)
+			windowPriorityList.append(newCatPic)
 
 		else:
 			var newSpreadsheet: Spreadsheet = spreadsheetPrefab.instantiate()
 			clutterControl.add_child(newSpreadsheet)
 			setRandomWindowPos(newSpreadsheet)
 			spreadsheets.append(newSpreadsheet)
-			addTaskbarItem(newSpreadsheet)
+			windowPriorityList.append(newSpreadsheet)
+
+	windowPriorityList.reverse()
+	for window in windowPriorityList:
+		addTaskbarItem(window)
+
 
 func startClutter():
 	spawnMice(randi_range(4,6))

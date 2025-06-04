@@ -292,8 +292,9 @@ func recallLastParse():
 
 
 func removePunctuation(input: String) -> String:
-	while input.length() > 1 and input[-1] in [',','.','!','?']:
+	while input.length() > 1 and input[-1] in ['.','!','?']:
 		input = input.left(-1)
+	input = input.replace(',', '')
 	return input
 
 
@@ -431,10 +432,11 @@ func unrecognizedEndingParse() -> String:
 func unrecognizedResponseParse(input: String) -> String:
 	var result := parseInput(input)
 	if result.begins_with(unknownParse()) or result.begins_with(wrongContextParse()):
-		return(
-			"Your response is not recognized. " +
-			"Also, y" + result.substr(1)
-		)
+		# return(
+		# 	"Your response is not recognized. " +
+		# 	"Also, y" + result.substr(1)
+		# )
+		return "Your response is not valid."
 	else: return result
 
 func requestAdditionalSubjectContext(

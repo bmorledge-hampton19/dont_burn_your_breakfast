@@ -31,16 +31,16 @@ func _ready():
 
 func manual_process(delta: float):
 
-	if Input.is_physical_key_pressed(KEY_R):
-		print("Ram: ")
-		print("  Current: ", ramUsage)
-		print("  Target: ", targetRamUsage)
-		print("CPU: ")
-		print("  Current: ", cpuUsage)
-		print("  Target: ", targetCpuUsage)
-		print("Heat: ")
-		print("  Current: ", heat)
-		print("  Target: ", targetHeat)
+	# if Input.is_physical_key_pressed(KEY_R):
+	# 	print("Ram: ")
+	# 	print("  Current: ", ramUsage)
+	# 	print("  Target: ", targetRamUsage)
+	# 	print("CPU: ")
+	# 	print("  Current: ", cpuUsage)
+	# 	print("  Target: ", targetCpuUsage)
+	# 	print("Heat: ")
+	# 	print("  Current: ", heat)
+	# 	print("  Target: ", targetHeat)
 
 	ramUsage = clampf(lerp(ramUsage, targetRamUsage, delta/5),0.0,1.0)
 	cpuUsage = clampf(lerp(cpuUsage, targetCpuUsage, delta/5),0.0,1.0)

@@ -172,10 +172,19 @@ func parseItems() -> String:
 					SceneManager.transitionToScene(SceneManager.SceneID.OPTIONS)
 				SubjectID.AMBIGUOUS_BUTTON:
 					return requestAdditionalContextCustom("Which button would you like to select?", REQUEST_SUBJECT)
+			
+			if modifierID in [ModifierID.BATHROOM, ModifierID.FRONT_YARD, ModifierID.BEDROOM, ModifierID.KITCHEN]:
+				return attemptStartGame(modifierID)
 
 
-		ActionID.PLAY, ActionID.TAKE_SHORTCUT:
+		ActionID.PLAY:
 			return attemptStartGame(modifierID)
+
+		ActionID.TAKE_SHORTCUT:
+			if modifierID == -1:
+				return requestAdditionalContextCustom("Where would you like to take a shortcut to?", REQUEST_MODIFIER)
+			else:
+				return attemptStartGame(modifierID)
 
 		ActionID.HELP:
 			SceneManager.transitionToScene(SceneManager.SceneID.HELP)

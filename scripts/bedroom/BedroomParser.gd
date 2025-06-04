@@ -16,7 +16,7 @@ enum ActionID {
 
 enum SubjectID {
 	SELF,
-	YARD_DOOR, BEDROOM, KITCHEN_DOOR, AMBIGUOUS_DOOR,
+	YARD_DOOR, BEDROOM, KITCHEN_DOOR, AMBIGUOUS_DOOR, FRONT_YARD, KITCHEN,
 	LEGO_BED, AMBIGUOUS_BED, PILLOWS, SHEET, COMFORTER, CLOTHES,
 	TOP_LEFT_DRAWER, TOP_RIGHT_DRAWER, MIDDLE_DRAWER, BOTTOM_DRAWER, AMBIGUOUS_TOP_DRAWER, AMBIGUOUS_DRAWER, DRESSER, STATS,
 	LEGO_TABLE, ZOOMBA_TABLE, AMBIGUOUS_TABLE,
@@ -89,14 +89,20 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you"],
 		[ActionID.INSPECT, ActionID.DRESS])
 	
-	addParsableSubject(SubjectID.YARD_DOOR, ["yard door", "front yard door", "blue door", "left door", "door to outside"],
+	addParsableSubject(SubjectID.YARD_DOOR,
+		["yard door", "front yard door", "blue door", "left door", "door to yard", "door to front yard", "door to outside"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.MOVE_TO, ActionID.ENTER])
 	addParsableSubject(SubjectID.BEDROOM, ["bedroom", "room", "around"],
 		[ActionID.INSPECT, ActionID.ENTER, ActionID.LEAVE])
-	addParsableSubject(SubjectID.KITCHEN_DOOR, ["kitchen door", "right door", "white door", "picket fence", "fence door", "fence", "door to kitchen"],
+	addParsableSubject(SubjectID.KITCHEN_DOOR,
+		["kitchen door", "right door", "white door", "picket fence", "fence door", "fence", "door to kitchen"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.MOVE_TO, ActionID.ENTER])
 	addParsableSubject(SubjectID.AMBIGUOUS_DOOR, ["door"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.MOVE_TO, ActionID.ENTER])
+	addParsableSubject(SubjectID.FRONT_YARD, ["front yard", "yard", "outside"],
+		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.ENTER])
+	addParsableSubject(SubjectID.KITCHEN, ["kitchen"],
+		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.ENTER])
 
 	addParsableSubject(SubjectID.LEGO_BED, ["fuego bed", "fuego set", "fuegos", "bed on table"],
 		[ActionID.INSPECT, ActionID.MAKE, ActionID.TAKE, ActionID.MOVE_TO])
@@ -158,7 +164,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.MACHETE, ["machete", "blade", "sword", "razor", "knife"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.USE])
 	addParsableSubject(SubjectID.FIRE_EXTINGUISHER, ["fire extinguisher", "extinguisher"],
-		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.USE])
+		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.USE, ActionID.LATHER])
 	addParsableSubject(SubjectID.HAT, ["hat", "ranger hat", "forest ranger hat", "smokey's hat", "smokey bear's hat"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.WEAR])
 	addParsableSubject(SubjectID.TOOLS, ["tools", "tool rack", "tool", "smokey's tools"],
@@ -179,20 +185,21 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.FLINT_FLAKES, ["flint flakes", "flint", "gray box", "gray cereal box", "gray cereal"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.EAT])
 	addParsableSubject(SubjectID.BREAD_CRUMBS,
-		["bread crumbs", "buttery bread crumbs", "butter", "bread", "yellow box", "yellow cereal box", "yellow cereal"],
+		["bread crumbs", "breadcrumbs", "buttery bread crumbs", "butter", "bread", "yellow box", "yellow cereal box", "yellow cereal", "crumbs"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.EAT])
 	addParsableSubject(SubjectID.CHARCOAL_POWDER, ["charcoal powder", "charcoal bowl", "charcoal", "cereal bowl", "bowl"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.EAT])
 	addParsableSubject(SubjectID.ZOOMBA_FOOD, ["food", "zoomba's food", "zoomba food", "cereal boxes", "cereal", "boxes"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.MOVE_TO, ActionID.EAT])
-	addParsableSubject(SubjectID.ZOOMBA, ["zoomba", "robot vacuum", "robot", "vacuum", "pizza", "pet"],
-		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.FEED, ActionID.TURN_ON, ActionID.TURN_OFF])
+	addParsableSubject(SubjectID.ZOOMBA,
+		["zoomba", "robot vacuum", "robot", "vacuum", "pizza", "pet", "sleepyhead", "sleepy head"],
+		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.FEED, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.WAKE])
 
 	addParsableSubject(SubjectID.CABLES, ["cables", "power strip", "power", "outlet", "wall outlet", "cable management"],
 		[ActionID.INSPECT])
 	addParsableSubject(SubjectID.COMPUTER,
 		["computer desktop", "computer desk", "wooden desk", "desktop", "desk", "computer", "pc", "tower", "gaming pc", "gaming rig", "rig"],
-		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.TIDY_UP, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN])
+		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.TIDY_UP, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.USE])
 	
 	addParsableSubject(SubjectID.CTC_POSTER,
 		["ctc poster", "ctc", "cinnamon toast crunch poster", "cinnamon toast crunch", "scary poster", "horror poster", "bloody poster",
@@ -246,11 +253,11 @@ func initParsableModifiers():
 
 	# Probably should have split this into smokey's relevant body parts... Oh well! String matching aliases should do.
 	addParsableModifier(ModifierID.ON_SMOKEY,
-		["on smokey bear", "to smokey bear", "back on smokey bear", "back to smokey bear",
+		["on smokey bear", "to smokey bear", "at smokey bear", "back on smokey bear", "back to smokey bear",
 		"on smokey's beard", "on smokey's hair", "on smokey's head",
 		"on smokey's breasts", "on smokey's pecs", "on smokey's boobs", "on smokey's chest", "on smokey's tits",
-		"on smokey", "to smokey", "back on smokey", "back to smokey",],
-		[ActionID.PUT, ActionID.REPLACE, ActionID.USE])
+		"on smokey", "to smokey", "at smokey", "back on smokey", "back to smokey",],
+		[ActionID.PUT, ActionID.REPLACE, ActionID.USE, ActionID.LATHER])
 	addParsableModifier(ModifierID.WITH_BRA, ["with bra", "in bra", "using bra"],
 		[ActionID.DRESS])
 	addParsableModifier(ModifierID.WITH_HAT,
@@ -432,6 +439,26 @@ func parseItems() -> String:
 
 
 	# Making bed
+	if actionID == ActionID.MAKE and subjectID in [SubjectID.LEGO_BED, SubjectID.AMBIGUOUS_BED]:
+		if actionAlias == "make" and subjectAlias == "bed" and not bedroom.isBedClear:
+			return "You need to clear off all the clothes on the bed before you can make it."
+		
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"Oh boy oh boy oh boy! You know that you should be focusing on getting your breakfast, but you've been itching to get started " +
+			"on a brand new Lego set for a while now! Unfortunately, Legos are like, REALLY expensive nowadays, so you sprang for an " +
+			"off-brand \"Fuego\" set instead. These knock-offs are much cheaper thanks to a recent class-action lawsuit against the company " +
+			"that sells them. You don't remember all the details, but how different could they possibly be?\n" +
+			"You start putting together the Fuegos, which are supposed to assemble into a model of your very own bed, and immediately " +
+			"notice something strange. Each connection between the building blocks sends a cascade of bright sparks flying across your room! " +
+			"This is more than a little concerning, but the Lego-building beast inside you is already hungering for more, MORE! You begin " +
+			"clicking pieces into place at frightening speed, and as the smell of burning carpet wafts up to your nostrils, you start to get " +
+			"the sense that you probably should have stuck to the trusted brand. Those Danes really know how to make a " +
+			"plastic brick that doesn't burn your house down!",
+			SceneManager.EndingID.TWO_IN_ONE_SET_BED_AND_BLAZE
+		)
+		return ""
+
 	if (
 		(actionID == ActionID.TIDY_UP or actionID == ActionID.PULL_UP or (actionID == ActionID.PULL and modifierID == ModifierID.UP) or
 		(actionID == ActionID.REPLACE and actionAlias in ["replace", "put back", "return"]) or
@@ -456,7 +483,7 @@ func parseItems() -> String:
 			SubjectID.SHEET:
 				if bedroom.bedState == bedroom.MESSY:
 					return "You need to tidy up the pillows before messing with the sheet."
-				elif bedroom.LESS_MESSY:
+				elif bedroom.bedState == bedroom.LESS_MESSY:
 					bedroom.pullUpSheet()
 					return "You pull up the bottom sheet, carefully smoothing out the wrinkles as you go."
 				else:
@@ -489,10 +516,13 @@ func parseItems() -> String:
 		else:
 			return "You're not wearing the hat right now."
 
-	if actionID == ActionID.USE and subjectID in [SubjectID.AXE, SubjectID.MACHETE, SubjectID.FIRE_EXTINGUISHER]:
+	if (
+		(actionID == ActionID.USE and subjectID in [SubjectID.AXE, SubjectID.MACHETE, SubjectID.FIRE_EXTINGUISHER]) or
+		(actionID == ActionID.LATHER and subjectID == SubjectID.FIRE_EXTINGUISHER)
+	):
 		if modifierID == -1:
-			requestAdditionalModifierContext("What", "on?", ["on "])
-		elif subjectID == SubjectID.AXE:
+			return requestAdditionalModifierContext("What", "on", ["on "])
+		elif subjectID == SubjectID.AXE and modifierID == ModifierID.ON_SMOKEY:
 			if bedroom.playerHeldItem != bedroom.PlayerHeldItem.AXE:
 				return "You're not holding the " + subjectAlias + " right now."
 			if modifierAlias == "on smokey's beard":
@@ -506,7 +536,7 @@ func parseItems() -> String:
 				else:
 					bedroom.giveSmokeyAHaircut()
 					return "With a few hearty swings of the axe, you cut back Smokey's unruly mane."
-		elif subjectID == SubjectID.MACHETE:
+		elif subjectID == SubjectID.MACHETE and modifierID == ModifierID.ON_SMOKEY:
 			if bedroom.playerHeldItem != bedroom.PlayerHeldItem.MACHETE:
 				return "You're not holding the " + subjectAlias + " right now."
 			if modifierAlias == "on smokey's hair" or modifierAlias == "on smokey's head":
@@ -525,7 +555,7 @@ func parseItems() -> String:
 				else:
 					bedroom.trimSmokeysBeard()
 					return "The machete glides smoothly over the fire extinguisher foam as you shave off Smokey's beard."
-		elif subjectID == SubjectID.FIRE_EXTINGUISHER:
+		elif subjectID == SubjectID.FIRE_EXTINGUISHER and modifierID == ModifierID.ON_SMOKEY:
 			if bedroom.playerHeldItem != bedroom.PlayerHeldItem.FIRE_EXTINGUISHER:
 				return "You're not holding the " + subjectAlias + " right now."
 			if modifierAlias == "on smokey's hair" or modifierAlias == "on smokey's head":
@@ -603,7 +633,7 @@ func parseItems() -> String:
 						"Sweeping the hose over the length of his beard until it's thoroughly coated in foam."
 					)
 			elif modifierID == -1:
-				return "You're not holding anything you could use to " + actionAlias + "Smokey's beard."
+				return "You're not holding anything you could use to " + actionAlias + " Smokey's beard."
 
 	if (
 		(subjectID == SubjectID.HAT and (actionID == ActionID.PUT or actionID == ActionID.REPLACE) and modifierID == ModifierID.ON_SMOKEY)
@@ -744,10 +774,15 @@ func parseItems() -> String:
 			)
 			return ""
 
+	if (actionID == ActionID.TURN_OFF or (actionID == ActionID.TURN and modifierID == ModifierID.OFF)) and subjectID == SubjectID.ZOOMBA:
+		if bedroom.roombaSatisfied:
+			return "Zoomba is still digesting his meal. It would be rude to interrupt him."
+		else:
+			return "Zoomba is already off. In fact, he's been off for a while now, and you're sure he's starving!"
 	
 	### Cleaning Computer
 	if (
-		(subjectID == SubjectID.COMPUTER and actionID == ActionID.TIDY_UP) or
+		(subjectID == SubjectID.COMPUTER and actionID in [ActionID.TIDY_UP, ActionID.USE]) or
 		(subjectID == SubjectID.GAMING_CHAIR and actionID == ActionID.SIT_IN)
 	): # Other applicable action, "INSPECT", is covered by the dedicated INSPECT block above.
 		if bedroom.isComputerCleaned:
@@ -776,9 +811,11 @@ func parseItems() -> String:
 
 	if (
 		(actionID in [ActionID.OPEN, ActionID.ENTER] and subjectID == SubjectID.KITCHEN_DOOR) or
-		(actionID == ActionID.LEAVE and subjectID == SubjectID.BEDROOM)
+		(actionID == ActionID.LEAVE and subjectID == SubjectID.BEDROOM) or
+		(actionID in [ActionID.MOVE_TO, ActionID.ENTER] and subjectID == SubjectID.KITCHEN)
 	):
 		if bedroom.isBedClear and bedroom.isSmokeyComplete and bedroom.roombaSatisfied and bedroom.isComputerCleaned:
+			EndingsManager.onSceneBeaten(SceneManager.SceneID.BEDROOM)
 			SceneManager.transitionToScene(SceneManager.SceneID.KITCHEN)
 			return ""
 		else:
@@ -788,11 +825,14 @@ func parseItems() -> String:
 			if not bedroom.isBedClear: output += "- Make your bed\n"
 			if not bedroom.isSmokeyComplete: output += "- Restore Smokey the Bear to his former glory\n"
 			if not bedroom.roombaSatisfied: output += "- Feed Zoomba\n"
-			if not bedroom.isComputerCleaned: output += "- Tidy up your computer desktop.\n"
+			if not bedroom.isComputerCleaned: output += "- Tidy up your computer desktop\n"
 			output += "Once these tasks are finished, you can proceed to the kitchen to make your breakfast!"
 			return output
 
-	if actionID in [ActionID.OPEN, ActionID.ENTER] and subjectID == SubjectID.YARD_DOOR:
+	if (
+		(actionID in [ActionID.OPEN, ActionID.ENTER] and subjectID == SubjectID.YARD_DOOR) or
+		(actionID in [ActionID.MOVE_TO, ActionID.ENTER] and subjectID == SubjectID.FRONT_YARD)
+	):
 		return "You don't see a good reason to go back outside. Your breakfast isn't out there!"
 
 	if actionID == ActionID.ENTER and subjectID == SubjectID.BEDROOM:
@@ -828,6 +868,9 @@ func parseItems() -> String:
 				SubjectID.YARD_DOOR:
 					return "This is the door that leads back out the front yard. You don't need to go back out there."
 
+				SubjectID.FRONT_YARD:
+					return "The door to the front yard is closed now."
+
 				SubjectID.BEDROOM:
 					return (
 						"This is your bedroom, where you sleep, game, and tend to your beloved pet Zoomba. " +
@@ -840,6 +883,9 @@ func parseItems() -> String:
 						"This white picket door is your assurance that you've fulfilled the American dream in your quaint little home. " +
 						"You're sure it must be the envy of the neighborhood. It leads to the kitchen, where your breakfast awaits."
 					)
+
+				SubjectID.KITCHEN:
+					return "The door to the kitchen is closed right now."
 
 				SubjectID.AMBIGUOUS_DOOR:
 					return requestAdditionalContextCustom(
@@ -1012,7 +1058,7 @@ func parseItems() -> String:
 
 				SubjectID.ZOOMBA_FOOD:
 					return (
-						"Zoomba has been having some digestive issues lately, so you've bought some new foods to have him try. " +
+						"Zoomba has been having some digestive issues lately, so you're having him try out some new foods. " +
 						"Right now, you've got a nice selection of crushed red pepper, flint flakes, buttery bread crumbs, and charcoal powder. " +
 						"If you scatter some of them on the floor and then wake up Zoomba, he should have no problem chowing down on the meal."
 					)
@@ -1432,7 +1478,7 @@ func parseItems() -> String:
 
 
 				SubjectID.ZOOMBA_FOOD, SubjectID.PEPPER_FLAKES, SubjectID.FLINT_FLAKES, SubjectID.BREAD_CRUMBS, SubjectID.CHARCOAL_POWDER when (
-					modifierID not in [-1, ModifierID.ON_TABLE, ModifierID.BACK, ModifierID.AWAY]
+					modifierID not in [-1, ModifierID.ON_TABLE, ModifierID.BACK, ModifierID.AWAY, ModifierID.DOWN]
 				):
 					assert(modifierID != ModifierID.ON_FLOOR, "This should have been handled earlier...")
 					return "Zoomba's food doesn't belong there."

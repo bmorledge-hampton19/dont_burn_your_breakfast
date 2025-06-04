@@ -27,7 +27,7 @@ enum ModifierID {
 	GENTLY, ON_GROUND, IN_MOWER, ON_MOWER, ON_FUEL_TANK, WITH_GAS,
 	ON_RIGHT_FOOT, ON_LEFT_FOOT, ON_AMBIGUOUS_FOOT, ON_BOTH_FEET,
 	ON_STEP, ON_FIRST_STEP,
-	ON, OFF, BACK, AWAY
+	ON, OFF, BACK, AWAY, DOWN,
 }
 
 
@@ -204,6 +204,8 @@ func initParsableModifiers():
 	addParsableModifier(ModifierID.BACK, ["back on", "back"],
 			[ActionID.PUT, ActionID.REPLACE])
 	addParsableModifier(ModifierID.AWAY, ["away"],
+			[ActionID.PUT])
+	addParsableModifier(ModifierID.DOWN, ["down"],
 			[ActionID.PUT])
 
 
@@ -593,6 +595,7 @@ func parseItems() -> String:
 			
 			elif subjectID == SubjectID.BEDROOM:
 				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
+					EndingsManager.onSceneBeaten(SceneManager.SceneID.FRONT_YARD)
 					SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
 					return ""
 				else:
@@ -600,6 +603,7 @@ func parseItems() -> String:
 			
 			elif subjectID == SubjectID.HOUSE:
 				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
+					EndingsManager.onSceneBeaten(SceneManager.SceneID.FRONT_YARD)
 					SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
 					return ""
 				else:
@@ -915,7 +919,7 @@ func parseItems() -> String:
 							return attemptFuelMower(true)
 						ModifierID.IN_MOWER:
 							return attemptFuelMower(false)
-						ModifierID.BACK, ModifierID.AWAY:
+						ModifierID.BACK, ModifierID.AWAY, ModifierID.DOWN:
 							if not frontYard.playerHasGasoline:
 								return "You're not holding the gasoline."
 							elif frontYard.isPlayerOnConcrete():

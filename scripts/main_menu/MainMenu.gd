@@ -9,7 +9,7 @@ func _init():
 	]
 	defaultStartingMessage = (
 		"Welcome to the epic survival adventure: Don't Burn Your Breakfast! " +
-		"If this is your first time playing, it's recommended that start by typing \"help\" and " +
+		"If this is your first time playing, you should start by typing \"help\" and " +
 		"pressing enter to get an idea of how the text commands work."
 	)
 

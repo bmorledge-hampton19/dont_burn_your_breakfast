@@ -101,7 +101,7 @@ func changeLevel(sceneID: SceneManager.SceneID):
 	else: prevText.show()
 
 	# CHANGE THIS WITH EACH DEMO
-	if sceneID == SceneManager.SceneID.FRONT_YARD: nextText.hide()
+	if sceneID == SceneManager.SceneID.BEDROOM: nextText.hide()
 	else: nextText.show()
 
 
@@ -156,7 +156,7 @@ func returnFromEnding():
 	if currentLevel == SceneManager.SceneID.MAIN_MENU: prevText.hide()
 	else: prevText.show()
 	# CHANGE THIS WITH EACH DEMO
-	if currentLevel == SceneManager.SceneID.FRONT_YARD: nextText.hide()
+	if currentLevel == SceneManager.SceneID.BEDROOM: nextText.hide()
 	else: nextText.show()
 
 	background.texture = getBackgroundTexture()

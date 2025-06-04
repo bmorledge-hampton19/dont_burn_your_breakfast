@@ -309,12 +309,12 @@ func parseItems() -> String:
 						endings.changeLevel(SceneManager.SceneID.FRONT_YARD)
 						return ""
 					SceneManager.SceneID.FRONT_YARD:
-						# endings.changeLevel(SceneManager.SceneID.BEDROOM)
+						endings.changeLevel(SceneManager.SceneID.BEDROOM)
+						return ""
+					SceneManager.SceneID.BEDROOM:
+						# endings.changeLevel(SceneManager.SceneID.KITCHEN)
 						# return ""
 						return "The next scene is not available in this demo."
-					SceneManager.SceneID.BEDROOM:
-						endings.changeLevel(SceneManager.SceneID.KITCHEN)
-						return ""
 					SceneManager.SceneID.KITCHEN:
 						return wrongContextParse()
 

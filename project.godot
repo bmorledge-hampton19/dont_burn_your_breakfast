@@ -23,7 +23,7 @@ resources_spreadsheet_view/context_menu_on_leftclick=false
 config/name="Don't Burn Your Breakfast"
 config/description="A silly little game about the inherent dangers of the most important meal of the day.
 Inspired by the timeless classic, \"Don't Shit Your Pants\"."
-config/version="0.2.1"
+config/version="0.3"
 run/main_scene="res://scenes/main_scenes/main_menu.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/show_image=false
@@ -70,3 +70,4 @@ theme/custom_font="res://fonts/kongtext.ttf"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+textures/vram_compression/import_etc2_astc=true

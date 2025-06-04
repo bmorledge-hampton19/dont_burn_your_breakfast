@@ -88,13 +88,21 @@ const PLAYER_SPRITE_POSITIONS := {
 }
 var playerPos: PlayerPos
 
-enum {RELAXED, ARMS_IN, ARMS_VERY_IN, HOLDING_AXE}
+enum {RELAXED, ARMS_IN, RIGHT_ARM_IN, LEFT_ARM_IN, ARMS_VERY_IN, HOLDING_AXE}
 func setPlayerTexture(texture: int):
 	match texture:
-		RELAXED: playerSprite.region_rect.position.x = 0
-		ARMS_IN: playerSprite.region_rect.position.x = 128
-		ARMS_VERY_IN: playerSprite.region_rect.position.x = 160
-		HOLDING_AXE: playerSprite.region_rect.position.x = 192
+		RELAXED:
+			playerSprite.region_rect.position = Vector2(0,0)
+		ARMS_IN:
+			playerSprite.region_rect.position = Vector2(128,0)
+		RIGHT_ARM_IN:
+			playerSprite.region_rect.position = Vector2(128,80)
+		LEFT_ARM_IN:
+			playerSprite.region_rect.position = Vector2(160,80)
+		ARMS_VERY_IN:
+			playerSprite.region_rect.position = Vector2(160,0)
+		HOLDING_AXE:
+			playerSprite.region_rect.position = Vector2(192,0)
 
 enum PlayerHeldItem {
 	NONE, AXE, MACHETE, FIRE_EXTINGUISHER,
@@ -536,7 +544,7 @@ func putHatOnSmokey():
 
 func pickUpPepperFlakes():
 	movePlayer(PlayerPos.ZOOMBA_FOOD_TABLE)
-	setPlayerTexture(ARMS_IN)
+	setPlayerTexture(RIGHT_ARM_IN)
 	tablePepperFlakes.hide()
 	playerPepperFlakes.show()
 	playerHeldItem = PlayerHeldItem.PEPPER_FLAKES
@@ -550,7 +558,7 @@ func replacePepperFlakes():
 
 func pickUpFlintFlakes():
 	movePlayer(PlayerPos.ZOOMBA_FOOD_TABLE)
-	setPlayerTexture(ARMS_IN)
+	setPlayerTexture(RIGHT_ARM_IN)
 	tableFlintFlakes.hide()
 	playerFlintFlakes.show()
 	playerHeldItem = PlayerHeldItem.FLINT_FLAKES
@@ -564,7 +572,7 @@ func replaceFlintFlakes():
 
 func pickUpBreadCrumbs():
 	movePlayer(PlayerPos.ZOOMBA_FOOD_TABLE)
-	setPlayerTexture(ARMS_IN)
+	setPlayerTexture(LEFT_ARM_IN)
 	tableBreadCrumbs.hide()
 	playerBreadCrumbs.show()
 	playerHeldItem = PlayerHeldItem.BREAD_CRUMBS
@@ -578,7 +586,7 @@ func replaceBreadCrumbs():
 
 func pickUpCharcoalPowder():
 	movePlayer(PlayerPos.ZOOMBA_FOOD_TABLE)
-	setPlayerTexture(ARMS_IN)
+	setPlayerTexture(LEFT_ARM_IN)
 	tableCharcoalPowder.hide()
 	playerCharcoalPowder.show()
 	playerHeldItem = PlayerHeldItem.CHARCOAL_POWDER
@@ -616,7 +624,3 @@ func accessComputer():
 func cleanComputer():
 	clutteredScreen.hide()
 	isComputerCleaned = true
-
-
-func openKitchenDoor():
-	SceneManager.transitionToScene(SceneManager.SceneID.KITCHEN)
