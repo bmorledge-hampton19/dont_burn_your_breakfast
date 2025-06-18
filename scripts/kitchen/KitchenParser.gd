@@ -39,7 +39,22 @@ func initParsableModifiers():
 	pass
 
 
+var eggParsing: bool
+var startingPlayerPos: Kitchen.PlayerPos
+func eggParse() -> String:
+	eggParsing = true
+	startingPlayerPos = kitchen.playerPos
+	var parseResult = parseItems()
+	if startingPlayerPos != kitchen.playerPos:
+		# Egg ending
+		return ""
+	else: return parseResult
+
+
 func parseItems() -> String:
+
+	if kitchen.isEggOnFloor and not eggParsing:
+		return eggParse()
 
 	parseEventsSinceLastConfirmation += 1
 

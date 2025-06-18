@@ -10,7 +10,7 @@ enum ActionID {
 }
 
 enum SubjectID {
-	NEXT_PAGE, PREVIOUS_PAGE, QUAKER_MAN
+	NEXT_PAGE, PREVIOUS_PAGE, QUAKER_MAN, RULE, TERMINAL
 }
 
 enum ModifierID {
@@ -40,7 +40,12 @@ func initParsableSubjects():
 			[ActionID.GO_TO])
 	addParsableSubject(SubjectID.PREVIOUS_PAGE, ["previous page", "previous", "last page", "page"],
 			[ActionID.GO_TO])
-	addParsableSubject(SubjectID.QUAKER_MAN, ["man", "quaker man", "quaker mascot", "quaker"],
+	addParsableSubject(SubjectID.QUAKER_MAN,
+			["man", "guy", "corner", "top right corner", "top-right corner", "quaker man", "quaker mascot", "quaker"],
+			[ActionID.INSPECT])
+	addParsableSubject(SubjectID.RULE, ["rules", "rule", "text", "how to play", "title"],
+			[ActionID.INSPECT])
+	addParsableSubject(SubjectID.TERMINAL, ["terminal", "typing area", "console", "bottom of screen", "bottom", "command prompt"],
 			[ActionID.INSPECT])
 
 
@@ -73,6 +78,10 @@ func parseItems() -> String:
 							"You can never have too many oats. Try proceeding 'with oats' this time.\" ;)"
 						)
 					else: return wrongContextParse()
+				SubjectID.RULE:
+					return "These rules are very important! Are you paying attention?"
+				SubjectID.TERMINAL:
+					return "Using the terminal makes you feel like a cool hacker from a 90s action movie."
 
 
 		ActionID.PROCEED:

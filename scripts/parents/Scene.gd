@@ -14,6 +14,8 @@ var sceneTransitions: Array[SceneManager.SceneID]
 var terminal: Terminal
 var defaultStartingMessage := ""
 
+var paused: bool
+
 
 func _getTerminal() -> Terminal:
 
@@ -46,9 +48,11 @@ func _ready():
 		terminal.initMessage(defaultStartingMessage, true)
 
 func pause():
+	paused = true
 	inputParser.disconnectTerminal()
 
 func resume():
+	paused = false
 	inputParser.reconnectTerminal()
 
 func resetTerminal():

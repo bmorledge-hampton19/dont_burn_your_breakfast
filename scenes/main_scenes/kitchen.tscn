@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dme7uv23dbpfi"]
+[gd_scene load_steps=8 format=3 uid="uid://dme7uv23dbpfi"]
 
 [ext_resource type="Script" uid="uid://ctiaswkiwl402" path="res://scripts/kitchen/Kitchen.gd" id="1_djsap"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_t1jq3"]
+[ext_resource type="Texture2D" uid="uid://cuuhaiake8wyv" path="res://sprites/backgrounds/kitchen.png" id="3_p3u8q"]
 [ext_resource type="Script" uid="uid://dveebrcqdn5g2" path="res://scripts/kitchen/KitchenParser.gd" id="3_s7ifh"]
+[ext_resource type="Texture2D" uid="uid://cpqap51ftq26y" path="res://sprites/movable_objects/kitchen_movable_objects.png" id="4_vskr0"]
+[ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="5_fkx3i"]
+[ext_resource type="FontFile" uid="uid://bevax8c07quhc" path="res://fonts/E1234.ttf" id="5_vskr0"]
 
 [node name="Kitchen" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
 anchors_preset = 8
@@ -42,7 +46,866 @@ theme_override_constants/separation = 0
 [node name="Background" type="TextureRect" parent="VBoxContainer"]
 custom_minimum_size = Vector2(720, 400)
 layout_mode = 2
+texture = ExtResource("3_p3u8q")
 stretch_mode = 5
+
+[node name="CupboardsAndDrawers" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="TopLeftCupboard" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers"]
+visible = false
+anchors_preset = 0
+
+[node name="Interior" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard"]
+position = Vector2(39, 89)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 288, 39, 45)
+
+[node name="CerealBoxes" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard"]
+anchors_preset = 0
+
+[node name="CerealBox1" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+position = Vector2(61, 70)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(48, 272, 17, 28)
+
+[node name="CerealBox2" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+position = Vector2(49, 76)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(79, 272, 17, 28)
+
+[node name="CerealBox3" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+position = Vector2(37, 82)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(48, 272, 17, 28)
+
+[node name="CerealBox4" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+position = Vector2(25, 88)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(79, 272, 17, 28)
+
+[node name="Exterior" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard"]
+position = Vector2(44, 72)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(48, 304, 44, 72)
+
+[node name="BottomLeftCupboard" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers"]
+visible = false
+anchors_preset = 0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard"]
+position = Vector2(43, 262)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 224, 43, 50)
+
+[node name="FirstNumber" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard"]
+position = Vector2(43, 265)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(48, 224, 3, 7)
+
+[node name="SecondNumber" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard"]
+position = Vector2(55, 261)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(64, 224, 3, 7)
+
+[node name="ThirdNumber" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard"]
+position = Vector2(67, 255)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(48, 240, 3, 7)
+
+[node name="FourthNumber" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard"]
+position = Vector2(79, 251)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(64, 240, 3, 7)
+
+[node name="Drawers" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers"]
+anchors_preset = 0
+
+[node name="BottomDrawer" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/Drawers"]
+visible = false
+position = Vector2(250, 244)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 192, 28, 18)
+
+[node name="MiddleDrawer" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/Drawers"]
+visible = false
+position = Vector2(250, 224)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(32, 192, 28, 18)
+
+[node name="Top Drawer" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/Drawers"]
+visible = false
+position = Vector2(250, 204)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(64, 192, 28, 18)
+
+[node name="MiddleLeftCupboard" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers"]
+visible = false
+anchors_preset = 0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/MiddleLeftCupboard"]
+position = Vector2(329, 226)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 128, 51, 38)
+
+[node name="HungryDemon" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/MiddleLeftCupboard"]
+position = Vector2(365, 206)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 176, 13, 16)
+
+[node name="SatisfiedDemon" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/MiddleLeftCupboard"]
+visible = false
+position = Vector2(352, 226)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(16, 176, 26, 16)
+
+[node name="MiddleRightCupboard" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers"]
+visible = false
+anchors_preset = 0
+
+[node name="Open" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/MiddleRightCupboard"]
+position = Vector2(435, 226)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 64, 51, 38)
+
+[node name="Fork" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/MiddleRightCupboard"]
+position = Vector2(423, 230)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 112, 9, 9)
+
+[node name="BottomRightCupboard" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers"]
+visible = false
+position = Vector2(656, 292)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(0, 0, 52, 54)
+
+[node name="Oven" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="Cereal" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+position = Vector2(555, 228)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 0, 17, 26)
+
+[node name="FrozenStrategyGuide" type="Control" parent="VBoxContainer/Background/Oven"]
+visible = false
+anchors_preset = 0
+
+[node name="StrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Oven/FrozenStrategyGuide"]
+position = Vector2(557, 228)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 144, 17, 18)
+
+[node name="IceBlock" type="Sprite2D" parent="VBoxContainer/Background/Oven/FrozenStrategyGuide"]
+position = Vector2(557, 228)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 112, 21, 24)
+
+[node name="ThawedStrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+visible = false
+position = Vector2(561, 234)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 176, 23, 14)
+
+[node name="DriedStrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+visible = false
+position = Vector2(561, 234)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 192, 23, 14)
+
+[node name="BurntStrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+visible = false
+position = Vector2(561, 232)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(178, 208, 19, 12)
+
+[node name="Flames" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+visible = false
+position = Vector2(548, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(160, 224, 36, 43)
+
+[node name="OpenDoor" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+visible = false
+position = Vector2(523, 245)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(96, 144, 65, 47)
+
+[node name="ClosedDoor" type="Sprite2D" parent="VBoxContainer/Background/Oven"]
+position = Vector2(548, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(96, 64, 40, 55)
+
+[node name="OvenFryingPanControl" type="Control" parent="VBoxContainer/Background/Oven"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 550.0
+offset_top = 179.0
+offset_right = 550.0
+offset_bottom = 179.0
+
+[node name="FryingPan" type="Control" parent="VBoxContainer/Background/Oven/OvenFryingPanControl"]
+anchors_preset = 0
+
+[node name="LeftFryingPan" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(27, 15)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 48, 19, 20)
+
+[node name="LeftActiveBurner" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(31, 17)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 48, 21, 18)
+
+[node name="RightFryingPan" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+position = Vector2(37, 24)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 80, 19, 19)
+
+[node name="RightActiveBurner" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(33, 20)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 80, 21, 19)
+
+[node name="RawEgg" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(32, 20)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 0, 8, 9)
+
+[node name="FriedEgg" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(32, 20)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(192, 0, 8, 7)
+
+[node name="RawScrambledEggs" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(32, 19)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 16, 8, 8)
+
+[node name="FriedScrambledEggs" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(32, 20)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(192, 16, 8, 7)
+
+[node name="Ashes" type="Sprite2D" parent="VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan"]
+visible = false
+position = Vector2(32, 21)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 32, 8, 6)
+
+[node name="Dials" type="Control" parent="VBoxContainer/Background/Oven"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FrontLeftOn" type="Sprite2D" parent="VBoxContainer/Background/Oven/Dials"]
+visible = false
+position = Vector2(584, 144)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 32, 4, 4)
+
+[node name="BackLeftOn" type="Sprite2D" parent="VBoxContainer/Background/Oven/Dials"]
+visible = false
+position = Vector2(596, 150)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 32, 4, 4)
+
+[node name="BackRightOn" type="Sprite2D" parent="VBoxContainer/Background/Oven/Dials"]
+visible = false
+position = Vector2(632, 168)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 32, 4, 4)
+
+[node name="FrontRightOn" type="Sprite2D" parent="VBoxContainer/Background/Oven/Dials"]
+visible = false
+position = Vector2(644, 174)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 32, 4, 4)
+
+[node name="Fridge" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="GrapefruitJuices" type="Control" parent="VBoxContainer/Background/Fridge"]
+anchors_preset = 0
+
+[node name="GrapefruitJuice1" type="Sprite2D" parent="VBoxContainer/Background/Fridge/GrapefruitJuices"]
+position = Vector2(149, 225)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(272, 16, 5, 11)
+
+[node name="GrapefruitJuice2" type="Sprite2D" parent="VBoxContainer/Background/Fridge/GrapefruitJuices"]
+position = Vector2(161, 229)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(272, 32, 5, 11)
+
+[node name="GrapefruitJuice3" type="Sprite2D" parent="VBoxContainer/Background/Fridge/GrapefruitJuices"]
+position = Vector2(185, 237)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(272, 48, 11, 5)
+
+[node name="GrapefruitJuice4" type="Sprite2D" parent="VBoxContainer/Background/Fridge/GrapefruitJuices"]
+position = Vector2(173, 222)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(272, 17, 5, 10)
+
+[node name="MilkUnlocked" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+visible = false
+position = Vector2(208, 197)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(272, 80, 8, 11)
+
+[node name="Milk" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+position = Vector2(197, 193)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 0, 11, 15)
+
+[node name="MilkLocked" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+position = Vector2(209, 195)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(272, 0, 7, 11)
+
+[node name="Eggs" type="Control" parent="VBoxContainer/Background/Fridge"]
+anchors_preset = 0
+
+[node name="Egg2" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Eggs"]
+position = Vector2(172, 199)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 32, 4, 3)
+
+[node name="Egg4" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Eggs"]
+position = Vector2(164, 197)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 32, 4, 3)
+
+[node name="Egg6" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Eggs"]
+position = Vector2(156, 195)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 32, 4, 3)
+
+[node name="Egg1" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Eggs"]
+position = Vector2(170, 203)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 16, 4, 3)
+
+[node name="Egg3" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Eggs"]
+position = Vector2(162, 201)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 16, 4, 3)
+
+[node name="Egg5" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Eggs"]
+position = Vector2(154, 199)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 16, 4, 3)
+
+[node name="Spoons" type="Control" parent="VBoxContainer/Background/Fridge"]
+anchors_preset = 0
+
+[node name="Spoon7" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+modulate = Color(0.724643, 0.724643, 0.724643, 1)
+position = Vector2(195, 163)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+flip_v = true
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="Spoon6" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+modulate = Color(0.724643, 0.724643, 0.724643, 1)
+position = Vector2(153, 163)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="Spoon5" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+modulate = Color(0.724643, 0.724643, 0.724643, 1)
+position = Vector2(175, 165)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_v = true
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="Spoon4" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+position = Vector2(153, 165)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="Spoon3" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+position = Vector2(189, 163)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="Spoon2" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+position = Vector2(171, 165)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+flip_v = true
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="Spoon1" type="Sprite2D" parent="VBoxContainer/Background/Fridge/Spoons"]
+position = Vector2(207, 163)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_v = true
+region_enabled = true
+region_rect = Rect2(256, 64, 9, 9)
+
+[node name="FrozenStrategyGuide" type="Control" parent="VBoxContainer/Background/Fridge"]
+anchors_preset = 0
+
+[node name="StrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Fridge/FrozenStrategyGuide"]
+position = Vector2(189, 118)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 144, 17, 18)
+
+[node name="IceBlock" type="Sprite2D" parent="VBoxContainer/Background/Fridge/FrozenStrategyGuide"]
+position = Vector2(189, 116)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 112, 21, 22)
+
+[node name="BottomDoorOpen" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+visible = false
+position = Vector2(139, 203)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(208, 80, 5, 63)
+
+[node name="BottomDoorClosed" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+visible = false
+position = Vector2(177, 192)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(224, 80, 41, 52)
+
+[node name="LockLight" type="ColorRect" parent="VBoxContainer/Background/Fridge"]
+offset_left = 200.0
+offset_top = 162.0
+offset_right = 202.0
+offset_bottom = 164.0
+color = Color(0.803922, 0.117647, 0.117647, 1)
+
+[node name="TopDoorOpen" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+visible = false
+position = Vector2(139, 128)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(208, 144, 5, 36)
+
+[node name="TopDoorClosed" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
+position = Vector2(177, 119)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(224, 144, 41, 27)
+
+[node name="Microwave" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="CerealBowl" type="Sprite2D" parent="VBoxContainer/Background/Microwave"]
+visible = false
+position = Vector2(49, 179)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(240, 208, 11, 7)
+
+[node name="MilkVapor" type="Sprite2D" parent="VBoxContainer/Background/Microwave"]
+visible = false
+position = Vector2(59, 172)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(128, 192, 27, 34)
+
+[node name="OpenDoor" type="Sprite2D" parent="VBoxContainer/Background/Microwave"]
+visible = false
+position = Vector2(55, 204)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(96, 240, 23, 42)
+
+[node name="ClosedDoor" type="Sprite2D" parent="VBoxContainer/Background/Microwave"]
+position = Vector2(59, 172)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(128, 240, 27, 34)
+
+[node name="Timer" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="Minutes" type="Label" parent="VBoxContainer/Background/Timer"]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 50.0
+offset_right = 361.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_vskr0")
+theme_override_font_sizes/font_size = 40
+text = "5"
+
+[node name="Colon" type="Label" parent="VBoxContainer/Background/Timer"]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 50.0
+offset_right = 384.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_vskr0")
+theme_override_font_sizes/font_size = 40
+text = ":"
+
+[node name="Seconds" type="Label" parent="VBoxContainer/Background/Timer"]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 50.0
+offset_right = 406.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_vskr0")
+theme_override_font_sizes/font_size = 40
+text = "00"
+
+[node name="LarryOff" type="Sprite2D" parent="VBoxContainer/Background/Timer"]
+position = Vector2(317, 107)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 192, 1, 3)
+
+[node name="MiscBackground" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="DirtyCerealBowl" type="Sprite2D" parent="VBoxContainer/Background/MiscBackground"]
+position = Vector2(401, 161)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(208, 192, 11, 7)
+
+[node name="CleanCerealBowl" type="Sprite2D" parent="VBoxContainer/Background/MiscBackground"]
+visible = false
+position = Vector2(271, 150)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(224, 192, 11, 7)
+
+[node name="CounterCerealBox" type="Sprite2D" parent="VBoxContainer/Background/MiscBackground"]
+visible = false
+position = Vector2(461, 136)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 0, 17, 26)
+
+[node name="CounterStrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/MiscBackground"]
+visible = false
+position = Vector2(505, 160)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 192, 23, 14)
+
+[node name="CounterAshes" type="Sprite2D" parent="VBoxContainer/Background/MiscBackground"]
+visible = false
+position = Vector2(505, 160)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(178, 208, 19, 12)
+
+[node name="FloorEgg" type="Sprite2D" parent="VBoxContainer/Background/MiscBackground"]
+visible = false
+position = Vector2(480, 289)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 0, 8, 9)
+
+[node name="Player" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+offset_left = 106.0
+offset_top = 240.0
+offset_right = 170.0
+offset_bottom = 400.0
+
+[node name="Player" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+position = Vector2(32, 80)
+scale = Vector2(2, 2)
+texture = ExtResource("5_fkx3i")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 80)
+
+[node name="CerealBox" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(11, 76)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 0, 17, 26)
+
+[node name="Milk" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(17, 81)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(256, 0, 11, 15)
+
+[node name="StrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(5, 90)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 144, 17, 18)
+
+[node name="Fork" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(10, 77)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(16, 112, 10, 5)
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(11, 77)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(272, 64, 11, 5)
+
+[node name="PlayerFryingPanControl" type="Control" parent="VBoxContainer/Background/Player"]
+anchors_preset = 0
+offset_left = -6.0
+offset_top = 75.0
+offset_right = -6.0
+offset_bottom = 75.0
+
+[node name="Hand Foreground" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+position = Vector2(9, 59)
+scale = Vector2(2, 2)
+texture = ExtResource("5_fkx3i")
+region_enabled = true
+region_rect = Rect2(226, 18, 5, 23)
+
+[node name="FrozenStrategyGuide" type="Control" parent="VBoxContainer/Background/Player"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+
+[node name="StrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/Player/FrozenStrategyGuide"]
+position = Vector2(33, 50)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 144, 17, 18)
+
+[node name="IceBlock" type="Sprite2D" parent="VBoxContainer/Background/Player/FrozenStrategyGuide"]
+position = Vector2(33, 48)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 112, 21, 22)
+
+[node name="Ashes" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(32, 68)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(178, 208, 19, 12)
+
+[node name="CerealBowl" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(13, 63)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(224, 192, 11, 7)
+
+[node name="Egg" type="Sprite2D" parent="VBoxContainer/Background/Player"]
+visible = false
+position = Vector2(32, -1)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(256, 48, 4, 5)
+
+[node name="MiscForeground" type="Control" parent="VBoxContainer/Background"]
+anchors_preset = 0
+
+[node name="Table" type="Sprite2D" parent="VBoxContainer/Background/MiscForeground"]
+position = Vector2(465, 356)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(96, 320, 153, 44)
+
+[node name="TableCerealBowl" type="Sprite2D" parent="VBoxContainer/Background/MiscForeground"]
+visible = false
+position = Vector2(387, 369)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(224, 192, 11, 7)
+
+[node name="TableCerealBox" type="Sprite2D" parent="VBoxContainer/Background/MiscForeground"]
+visible = false
+position = Vector2(415, 338)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(144, 0, 17, 26)
+
+[node name="TableStrategyGuide" type="Sprite2D" parent="VBoxContainer/Background/MiscForeground"]
+visible = false
+position = Vector2(459, 332)
+scale = Vector2(2, 2)
+texture = ExtResource("4_vskr0")
+region_enabled = true
+region_rect = Rect2(176, 192, 23, 14)
 
 [node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
 layout_mode = 2

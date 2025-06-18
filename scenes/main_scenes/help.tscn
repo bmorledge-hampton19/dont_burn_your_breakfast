@@ -88,8 +88,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "All commands will be given
 by typing into the terminal
-below.
-"
+below."
 vertical_alignment = 1
 
 [node name="Rule2" type="VBoxContainer" parent="VBoxContainer/Background/Page1"]
@@ -113,8 +112,7 @@ text = "All commands start with an
 action and are often
 followed by a subject. 
 Try inputting the following
-command to progress:
-"
+command to progress:"
 vertical_alignment = 1
 
 [node name="ExampleContainer" type="MarginContainer" parent="VBoxContainer/Background/Page1/Rule2"]
@@ -124,8 +122,7 @@ theme_override_constants/margin_left = 48
 [node name="Example" type="Label" parent="VBoxContainer/Background/Page1/Rule2/ExampleContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "> Go to next page
-"
+text = "> Go to next page"
 vertical_alignment = 1
 
 [node name="Page2" type="VBoxContainer" parent="VBoxContainer/Background"]
@@ -177,8 +174,7 @@ theme_override_constants/margin_left = 48
 [node name="Example1" type="Label" parent="VBoxContainer/Background/Page2/Rule3/ExampleContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "> Quit
-"
+text = "> Quit"
 vertical_alignment = 1
 
 [node name="ExampleContainer2" type="MarginContainer" parent="VBoxContainer/Background/Page2/Rule3"]
@@ -188,8 +184,7 @@ theme_override_constants/margin_left = 48
 [node name="Example1" type="Label" parent="VBoxContainer/Background/Page2/Rule3/ExampleContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "> Main Menu
-"
+text = "> Main Menu"
 vertical_alignment = 1
 
 [node name="ExampleContainer3" type="MarginContainer" parent="VBoxContainer/Background/Page2/Rule3"]
@@ -199,8 +194,7 @@ theme_override_constants/margin_left = 48
 [node name="Example1" type="Label" parent="VBoxContainer/Background/Page2/Rule3/ExampleContainer3"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "> Proceed
-"
+text = "> Proceed"
 vertical_alignment = 1
 
 [node name="ExplanationContainer3" type="MarginContainer" parent="VBoxContainer/Background/Page2/Rule3"]
@@ -240,8 +234,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "The following command will
 replay the output from your
-most recent valid command.
-"
+most recent valid command."
 vertical_alignment = 1
 
 [node name="ExampleContainer" type="MarginContainer" parent="VBoxContainer/Background/Page3/Rule4"]
@@ -251,8 +244,7 @@ theme_override_constants/margin_left = 48
 [node name="Example" type="Label" parent="VBoxContainer/Background/Page3/Rule4/ExampleContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "> Replay
-"
+text = "> Replay"
 vertical_alignment = 1
 
 [node name="Rule5" type="VBoxContainer" parent="VBoxContainer/Background/Page3"]
@@ -414,8 +406,7 @@ on your journey to breakfast
 Nirvana! You can view these
 \"endings\" at almost any time
 with the command \"endings\".
-Try it out here!
-"
+Try it out here!"
 vertical_alignment = 1
 
 [node name="ExplanationContainer2" type="MarginContainer" parent="VBoxContainer/Background/Page6/Rule 9"]
@@ -466,7 +457,7 @@ theme_override_constants/margin_left = 48
 [node name="Explanation" type="Label" parent="VBoxContainer/Background/Page7/Rule 10/ExplanationContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "You're now ready to begin
+text = "You are now ready to begin
 your journey!
 
 Experiment, be creative,
