@@ -51,12 +51,31 @@ func receiveInputFromTerminal(input: String):
 				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT one that replays the last message " +
 				"to continue.)", false
 				)
-		elif input.to_lower() in ["retry level", "retry the current level", "retry", "replay level", "r", "back"]:
+		elif input.to_lower() in [
+			"retry level", "retry the current level", "retry", "replay level", "r", "back",
+			"restart level", "restart the current level", "restart",
+		]:
 			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
 		else:
 			firstParse = false
-			endingScene.setMainEndingTexture()
-			terminal.initMessage(endingMessage, true)
+			if SceneManager.endingID == SceneManager.EndingID.CHAMPION_OF_BREAKFASTS:
+				var message: String
+				if EndingsManager.areAllEndingsUnlocked():
+					message = (
+						"Congratulations on reaching the end of the game! It looks like you've found all the endings too! " +
+						"Impressive! Have you visited the options menu or collected all your cereal coins yet?\n\n" +
+						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
+					)
+				else:
+					message = (
+						"Congratulations on reaching the end of the game! But... It looks like you still have some endings left to find. " +
+						"Don't forget that you can buy hints for the ones you're missing.\n" +
+						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
+					)
+				terminal.initMessage(message, true)
+			else:
+				endingScene.setMainEndingTexture()
+				terminal.initMessage(endingMessage, true)
 	else: super(input)
 
 

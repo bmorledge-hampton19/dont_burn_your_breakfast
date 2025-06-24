@@ -322,8 +322,11 @@ func _init():
 	var sid := SceneManager.SceneID
 	sceneTransitions = [sid.MAIN_MENU, sid.ENDING]
 	defaultStartingMessage = (
-		"You've reached the end of this demo! Have you found all the endings so far?\n\n" +
-		"Only one more area to go! See you soon!"
+		"With your chores completed and your conscience clear, you throw open the door to the kitchen and step inside. " +
+		"Zoomba follows lazily behind you and begins searching for food scraps as you take a look around. Your eyes " +
+		"dart over to the large timer on the back wall, filling you with a peculiar mixture of hope and dread. " +
+		"There's still time for you to make your breakfast and get to work before it's too late, " +
+		"but you'll have to hurry!\nQuickly! Your breakfast awaits!"
 	)
 
 func _ready():
@@ -366,7 +369,7 @@ func _ready():
 	maxMilkHeat = idealMilkHeat + 2
 
 
-	timeRemaining = 300
+	timeRemaining = 360.9
 
 
 func _process(delta):
@@ -383,6 +386,18 @@ func _process(delta):
 	else:
 		timeRemaining -= delta
 
+	if timeRemaining < 0:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"You're still running around frantically when the timer ticks down to zero and alarms begin blaring throughout your house. " +
+			"It's too late! Breakfast time is here, and YOU HAVE NO BREAKFAST!!\nThe next few hours pass in a blur as you rush to your job " +
+			"and try your best to work on an empty stomach. It's no use though. With the gaping hole in your nutritional intake, your " +
+			"performance slips into an all time low, and at the end of the day, your boss approaches you to inform you that you're being laid " +
+			"off. Unfortunately for you, corporate policy mandates that all firing must be performed both figuratively and literally, so an " +
+			"arsonist is dispatched to your house to burn it to the ground. It's a bit inconvenient, but hey, that's just business for ya!",
+			SceneManager.EndingID.FIRED_AND_FIRED
+		)
+
 	var minutesRemaining = int(timeRemaining) / 60
 	var secondsRemaining = int(timeRemaining) % 60
 	if minutesRemaining > 9:
@@ -396,6 +411,16 @@ func _process(delta):
 	if isBottomFridgeDoorOpen: fridgeHeat += delta
 	if not isTopFridgeDoorOpen and not isBottomFridgeDoorOpen: fridgeHeat -= delta
 	if fridgeHeat < 0: fridgeHeat = 0
+	if fridgeHeat > 60:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"The whirring from your fridge's motor has been getting louder for a while, and now the steady whirring has " +
+			"transitioned to a frantic, high-pitched buzzing. You don't usually leave the doors open for this long, " +
+			"and it seems like the fridge is NOT happy about it. You reach out your hand to close the door, and as if on cue the " +
+			"motor behind the fridge starts expelling flames at an alarming rate. With a yelp, you slam the door shut, " +
+			"but bright red flames have already latched onto the wall behind the fridge and started to spread throughout the kitchen...",
+			SceneManager.EndingID.BEWARE_OF_BURNOUT
+		)
 
 
 func openTopLeftCupboard():
@@ -703,6 +728,12 @@ func checkMilkCombo(combo: String):
 	milkUnlocked.show()
 	isMilkUnlocked = true
 	return true
+
+func lockMilk():
+	movePlayer(PlayerPos.FRIDGE)
+	milkLocked.show()
+	milkUnlocked.hide()
+	isMilkUnlocked = false
 
 func takeMilk():
 	milk.hide()

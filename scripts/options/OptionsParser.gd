@@ -34,9 +34,10 @@ func initParsableActions():
 
 
 func initParsableSubjects():
-	addParsableSubject(SubjectID.FONT_SIZE, ["terminal font size", "font size", "size"],
+	addParsableSubject(SubjectID.FONT_SIZE, ["terminal font size", "font size", "terminal text size", "text size", "size"],
 			[ActionID.INSPECT, ActionID.SET])
-	addParsableSubject(SubjectID.FONT_SPEED, ["terminal font speed", "font speed", "speed"],
+	addParsableSubject(SubjectID.FONT_SPEED,
+			["terminal font speed", "font speed", "terminal output speed", "output speed", "terminal text speed", "text speed", "speed"],
 			[ActionID.INSPECT, ActionID.SET])
 	addParsableSubject(SubjectID.DISPLAY_FORMAT, ["screen display format", "screen", "display format", "display", "format"],
 			[ActionID.INSPECT, ActionID.SET])
@@ -191,24 +192,24 @@ func parseItems() -> String:
 
 						ModifierID.SLOW:
 							if Options.fontSpeed == Options.FontSpeed.SLOW:
-								return "The font speed is already set to slow."
+								return "The output speed is already set to slow."
 							else:
 								optionsScene.setFontSpeed(Options.FontSpeed.SLOW)
-								return "Setting font speed to slow."
+								return "Setting output speed to slow."
 						
 						ModifierID.MEDIUM:
 							if Options.fontSpeed == Options.FontSpeed.MEDIUM:
-								return "The font speed is already set to medium."
+								return "The output speed is already set to medium."
 							else:
 								optionsScene.setFontSpeed(Options.FontSpeed.MEDIUM)
-								return "Setting font speed to medium."
+								return "Setting output speed to medium."
 
 						ModifierID.FAST:
 							if Options.fontSpeed == Options.FontSpeed.FAST:
-								return "The font speed is already set to fast."
+								return "The output speed is already set to fast."
 							else:
 								optionsScene.setFontSpeed(Options.FontSpeed.FAST)
-								return "Setting font speed to fast."
+								return "Setting output speed to fast."
 						
 						-1:
 							return requestAdditionalModifierContext("What", " to")

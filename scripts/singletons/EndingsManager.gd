@@ -85,6 +85,15 @@ func collectCoins(endingID: SceneManager.EndingID):
 	_getEndingSaveData(endingID).coinsCollected = true
 	saveData()
 
+func areAllCoinsCollected() -> bool:
+	for endingID in SceneManager.EndingID.values():
+		if endingID == SceneManager.EndingID.NONE or endingID == SceneManager.EndingID.YOU_BURNED_YOUR_BREAKFAST: continue
+		if not _getEndingSaveData(endingID).coinsCollected: return false
+	return true
+
+func maximizeCerealCoins():
+	_endingsSaveData.cerealCoins = 999
+
 
 func _getHintArray(endingID: SceneManager.EndingID, unlockingOrAvoiding, textOrCost = TEXT) -> Array:
 	if unlockingOrAvoiding == UNLOCKING:

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://dfmjn6gt71yrf"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_0m38q"]
+
+[resource]
+script = ExtResource("1_0m38q")
+endingID = 280
+sceneID = 10
+coinsRewarded = 5
+unlockingHints = Array[String](["The oven is involved in this ending.", "This ending also involves the box of Dino-mite Eggs.", "Turn on the oven with the cereal box still inside."])
+unlockingHintCosts = Array[int]([5, 5, 6])
+avoidingHints = Array[String](["The box of cereal does not need to be in the oven for any part of your breakfast preparations.", "You can set the box of cereal down on the counter or table after removing it from the oven."])
+avoidingHintCosts = Array[int]([6, 6])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

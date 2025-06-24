@@ -18,4 +18,4 @@ extends Resource
 	SceneManager.SceneID.KITCHEN : false
 }
 
-@export var endings := {}
+@export var endings: Dictionary[SceneManager.EndingID, EndingSaveData]

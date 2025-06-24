@@ -204,7 +204,9 @@ func parseItems() -> String:
 			if endings.viewingEnding: return "You need to [go back] to the endings first."
 			else:
 				var collectedCoins := endings.collectCoins()
-				if collectedCoins > 1:
+				if collectedCoins > 100:
+					return "Wow! You're a breakfast superstar! Have ALL the cereal coins!"
+				elif collectedCoins > 1:
 					return "Collected " + str(collectedCoins) + " cereal coins!"
 				elif collectedCoins == 1:
 					return "Collected 1 cereal coin."

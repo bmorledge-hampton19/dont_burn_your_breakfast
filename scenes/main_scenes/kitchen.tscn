@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="5_fkx3i"]
 [ext_resource type="FontFile" uid="uid://bevax8c07quhc" path="res://fonts/E1234.ttf" id="5_vskr0"]
 
-[node name="Kitchen" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
+[node name="Kitchen" type="CenterContainer" node_paths=PackedStringArray("topLeftCupboard", "coloredCerealBoxes", "bottomLeftCupboard", "cerealBoxNumberSprites", "bottomDrawer", "middleDrawer", "topDrawer", "middleLeftCupboard", "hungryDemon", "satisfiedDemon", "middleRightCupboard", "cupboardFork", "bottomRightCupboard", "closedOvenDoor", "openedOvenDoor", "ovenFlames", "ovenCereal", "ovenFrozenStrategyGuide", "ovenThawedStrategyGuide", "ovenDriedStrategyGuide", "ovenBurntStrategyGuide", "ovenFryingPanControl", "frontLeftOnDial", "backLeftOnDial", "backRightOnDial", "frontRightOnDial", "fryingPanControl", "leftFryingPan", "leftActiveBurner", "rightFryingPan", "rightActiveBurner", "rawEgg", "friedEgg", "rawScrambledEgg", "friedScrambledEgg", "eggAshes", "closedTopFridgeDoor", "openedTopFridgeDoor", "closedBottomFridgeDoor", "openedBottomFridgeDoor", "fridgeLockLight", "fridgeFrozenStrategyGuide", "spoons", "eggs", "grapefruitJuices", "milk", "milkLocked", "milkUnlocked", "closedMicrowaveDoor", "openedMicrowaveDoor", "milkVapor", "microwaveCerealBowl", "minutes", "seconds", "larryOff", "dirtyCerealBowl", "cleanedCerealBowl", "tableCerealBowl", "tableCerealBox", "counterCerealBox", "tableStrategyGuide", "counterStrategyGuide", "counterAshes", "floorEgg", "playerControl", "playerSprite", "handForeground", "playerCerealBox", "playerMilk", "playerThawedStrategyGuide", "playerFork", "playerSpoon", "playerFryingPanControl", "playerFrozenStrategyGuide", "playerAshes", "playerCerealBowl", "playerEgg", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -22,6 +22,83 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_djsap")
+topLeftCupboard = NodePath("VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard")
+coloredCerealBoxes = [NodePath("VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes/CerealBox1"), NodePath("VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes/CerealBox2"), NodePath("VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes/CerealBox3"), NodePath("VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes/CerealBox4")]
+bottomLeftCupboard = NodePath("VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard")
+cerealBoxNumberSprites = [NodePath("VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard/FirstNumber"), NodePath("VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard/SecondNumber"), NodePath("VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard/ThirdNumber"), NodePath("VBoxContainer/Background/CupboardsAndDrawers/BottomLeftCupboard/FourthNumber")]
+bottomDrawer = NodePath("VBoxContainer/Background/CupboardsAndDrawers/Drawers/BottomDrawer")
+middleDrawer = NodePath("VBoxContainer/Background/CupboardsAndDrawers/Drawers/MiddleDrawer")
+topDrawer = NodePath("VBoxContainer/Background/CupboardsAndDrawers/Drawers/Top Drawer")
+middleLeftCupboard = NodePath("VBoxContainer/Background/CupboardsAndDrawers/MiddleLeftCupboard")
+hungryDemon = NodePath("VBoxContainer/Background/CupboardsAndDrawers/MiddleLeftCupboard/HungryDemon")
+satisfiedDemon = NodePath("VBoxContainer/Background/CupboardsAndDrawers/MiddleLeftCupboard/SatisfiedDemon")
+middleRightCupboard = NodePath("VBoxContainer/Background/CupboardsAndDrawers/MiddleRightCupboard")
+cupboardFork = NodePath("VBoxContainer/Background/CupboardsAndDrawers/MiddleRightCupboard/Fork")
+bottomRightCupboard = NodePath("VBoxContainer/Background/CupboardsAndDrawers/BottomRightCupboard")
+closedOvenDoor = NodePath("VBoxContainer/Background/Oven/ClosedDoor")
+openedOvenDoor = NodePath("VBoxContainer/Background/Oven/OpenDoor")
+ovenFlames = NodePath("VBoxContainer/Background/Oven/Flames")
+ovenCereal = NodePath("VBoxContainer/Background/Oven/Cereal")
+ovenFrozenStrategyGuide = NodePath("VBoxContainer/Background/Oven/FrozenStrategyGuide")
+ovenThawedStrategyGuide = NodePath("VBoxContainer/Background/Oven/ThawedStrategyGuide")
+ovenDriedStrategyGuide = NodePath("VBoxContainer/Background/Oven/DriedStrategyGuide")
+ovenBurntStrategyGuide = NodePath("VBoxContainer/Background/Oven/BurntStrategyGuide")
+ovenFryingPanControl = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl")
+frontLeftOnDial = NodePath("VBoxContainer/Background/Oven/Dials/FrontLeftOn")
+backLeftOnDial = NodePath("VBoxContainer/Background/Oven/Dials/BackLeftOn")
+backRightOnDial = NodePath("VBoxContainer/Background/Oven/Dials/BackRightOn")
+frontRightOnDial = NodePath("VBoxContainer/Background/Oven/Dials/FrontRightOn")
+fryingPanControl = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan")
+leftFryingPan = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/LeftFryingPan")
+leftActiveBurner = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/LeftActiveBurner")
+rightFryingPan = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/RightFryingPan")
+rightActiveBurner = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/RightActiveBurner")
+rawEgg = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/RawEgg")
+friedEgg = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/FriedEgg")
+rawScrambledEgg = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/RawScrambledEggs")
+friedScrambledEgg = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/FriedScrambledEggs")
+eggAshes = NodePath("VBoxContainer/Background/Oven/OvenFryingPanControl/FryingPan/Ashes")
+closedTopFridgeDoor = NodePath("VBoxContainer/Background/Fridge/TopDoorClosed")
+openedTopFridgeDoor = NodePath("VBoxContainer/Background/Fridge/TopDoorOpen")
+closedBottomFridgeDoor = NodePath("VBoxContainer/Background/Fridge/BottomDoorClosed")
+openedBottomFridgeDoor = NodePath("VBoxContainer/Background/Fridge/BottomDoorOpen")
+fridgeLockLight = NodePath("VBoxContainer/Background/Fridge/LockLight")
+fridgeFrozenStrategyGuide = NodePath("VBoxContainer/Background/Fridge/FrozenStrategyGuide")
+spoons = [NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon1"), NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon2"), NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon3"), NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon4"), NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon5"), NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon6"), NodePath("VBoxContainer/Background/Fridge/Spoons/Spoon7")]
+eggs = [NodePath("VBoxContainer/Background/Fridge/Eggs/Egg1"), NodePath("VBoxContainer/Background/Fridge/Eggs/Egg2"), NodePath("VBoxContainer/Background/Fridge/Eggs/Egg3"), NodePath("VBoxContainer/Background/Fridge/Eggs/Egg4"), NodePath("VBoxContainer/Background/Fridge/Eggs/Egg5"), NodePath("VBoxContainer/Background/Fridge/Eggs/Egg6")]
+grapefruitJuices = [NodePath("VBoxContainer/Background/Fridge/GrapefruitJuices/GrapefruitJuice1"), NodePath("VBoxContainer/Background/Fridge/GrapefruitJuices/GrapefruitJuice2"), NodePath("VBoxContainer/Background/Fridge/GrapefruitJuices/GrapefruitJuice3"), NodePath("VBoxContainer/Background/Fridge/GrapefruitJuices/GrapefruitJuice4")]
+milk = NodePath("VBoxContainer/Background/Fridge/Milk")
+milkLocked = NodePath("VBoxContainer/Background/Fridge/MilkLocked")
+milkUnlocked = NodePath("VBoxContainer/Background/Fridge/MilkUnlocked")
+closedMicrowaveDoor = NodePath("VBoxContainer/Background/Microwave/ClosedDoor")
+openedMicrowaveDoor = NodePath("VBoxContainer/Background/Microwave/OpenDoor")
+milkVapor = NodePath("VBoxContainer/Background/Microwave/MilkVapor")
+microwaveCerealBowl = NodePath("VBoxContainer/Background/Microwave/CerealBowl")
+minutes = NodePath("VBoxContainer/Background/Timer/Minutes")
+seconds = NodePath("VBoxContainer/Background/Timer/Seconds")
+larryOff = NodePath("VBoxContainer/Background/Timer/LarryOff")
+dirtyCerealBowl = NodePath("VBoxContainer/Background/MiscBackground/DirtyCerealBowl")
+cleanedCerealBowl = NodePath("VBoxContainer/Background/MiscBackground/CleanCerealBowl")
+tableCerealBowl = NodePath("VBoxContainer/Background/MiscForeground/TableCerealBowl")
+tableCerealBox = NodePath("VBoxContainer/Background/MiscForeground/TableCerealBox")
+counterCerealBox = NodePath("VBoxContainer/Background/MiscBackground/CounterCerealBox")
+tableStrategyGuide = NodePath("VBoxContainer/Background/MiscForeground/TableStrategyGuide")
+counterStrategyGuide = NodePath("VBoxContainer/Background/MiscBackground/CounterStrategyGuide")
+counterAshes = NodePath("VBoxContainer/Background/MiscBackground/CounterAshes")
+floorEgg = NodePath("VBoxContainer/Background/MiscBackground/FloorEgg")
+playerControl = NodePath("VBoxContainer/Background/Player")
+playerSprite = NodePath("VBoxContainer/Background/Player/Player")
+handForeground = NodePath("VBoxContainer/Background/Player/Hand Foreground")
+playerCerealBox = NodePath("VBoxContainer/Background/Player/CerealBox")
+playerMilk = NodePath("VBoxContainer/Background/Player/Milk")
+playerThawedStrategyGuide = NodePath("VBoxContainer/Background/Player/StrategyGuide")
+playerFork = NodePath("VBoxContainer/Background/Player/Fork")
+playerSpoon = NodePath("VBoxContainer/Background/Player/Spoon")
+playerFryingPanControl = NodePath("VBoxContainer/Background/Player/PlayerFryingPanControl")
+playerFrozenStrategyGuide = NodePath("VBoxContainer/Background/Player/FrozenStrategyGuide")
+playerAshes = NodePath("VBoxContainer/Background/Player/Ashes")
+playerCerealBowl = NodePath("VBoxContainer/Background/Player/CerealBowl")
+playerEgg = NodePath("VBoxContainer/Background/Player/Egg")
 inputParser = NodePath("KitchenParser")
 
 [node name="Borders" type="ColorRect" parent="."]
@@ -603,7 +680,6 @@ region_enabled = true
 region_rect = Rect2(208, 80, 5, 63)
 
 [node name="BottomDoorClosed" type="Sprite2D" parent="VBoxContainer/Background/Fridge"]
-visible = false
 position = Vector2(177, 192)
 scale = Vector2(2, 2)
 texture = ExtResource("4_vskr0")
@@ -611,6 +687,7 @@ region_enabled = true
 region_rect = Rect2(224, 80, 41, 52)
 
 [node name="LockLight" type="ColorRect" parent="VBoxContainer/Background/Fridge"]
+layout_mode = 0
 offset_left = 200.0
 offset_top = 162.0
 offset_right = 202.0

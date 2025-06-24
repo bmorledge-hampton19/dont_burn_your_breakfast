@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://dwltoo7g8s4l2"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_2cinw"]
+
+[resource]
+script = ExtResource("1_2cinw")
+endingID = 260
+sceneID = 10
+coinsRewarded = 5
+unlockingHints = Array[String](["You can unlock this ending by simply doing nothing.", "Let the timer count down to zero, and the ending will be unlocked automatically."])
+unlockingHintCosts = Array[int]([5, 3])
+avoidingHints = Array[String](["Remember that you can use the up and down arrow keys to recycle old commands for faster input.", "You don't need to wait for the terminal to finish outputting text before typing your next command. If you need to see the output more quickly, you can press enter to skip to the end or increase the output speed in the options menu.", "If all else fails, you still have an ace up your sleeve... Call on the awesome power of Larry the Light Switch with the following command: \"Flip Larry the Light Switch\"."])
+avoidingHintCosts = Array[int]([5, 5, 20])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

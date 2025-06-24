@@ -122,9 +122,12 @@ func showShortcut():
 func collectCoins() -> int:
 	var coinsBeforeCollection := EndingsManager.getCerealCoins()
 	for endingPreview in currentLevelEndingPreviews:
+		var wereCoinsCollected: bool
 		if (EndingsManager.isEndingUnlocked(endingPreview.endingID) and
 			not EndingsManager.haveCoinsBeenCollected(endingPreview.endingID)):
 			endingPreview.collectCoins()
+			wereCoinsCollected = true
+		if wereCoinsCollected and EndingsManager.areAllCoinsCollected(): EndingsManager.maximizeCerealCoins()
 	return EndingsManager.getCerealCoins() - coinsBeforeCollection
 
 

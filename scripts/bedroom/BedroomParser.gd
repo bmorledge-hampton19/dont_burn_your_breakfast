@@ -8,7 +8,7 @@ enum ActionID {
 	TAKE, REPLACE, USE, OPEN, CLOSE, ENTER, WEAR, TAKE_OFF,
 	FOLD, PULL_UP, PULL, MAKE, TIDY_UP,
 	DRESS, CUT, LATHER, 
-	SCATTER, FEED, EAT, TURN_ON, TURN_OFF,
+	SCATTER, FEED, EAT, TURN_ON, TURN_OFF, PET,
 	SIT_IN,
 	PUT, TURN, WAKE,
 	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY
@@ -70,6 +70,7 @@ func initParsableActions():
 	addParsableAction(ActionID.TURN_ON, ["turn on", "start", "activate", "wake up"])
 	addParsableAction(ActionID.TURN_OFF, ["turn off", "shut down", "deactivate", "stop", "unplug"])
 	addParsableAction(ActionID.CLOSE, ["close", "shut"])
+	addParsableAction(ActionID.PET, ["pet", "give pets to", "pat"])
 
 	addParsableAction(ActionID.SIT_IN, ["sit in", "sit down in", "sit"])
 
@@ -170,7 +171,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.TOOLS, ["tools", "tool rack", "tool", "smokey's tools"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SMOKEY, ["smokey bear", "smokey", "bear"],
-		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.LATHER, ActionID.CUT, ActionID.DRESS])
+		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.LATHER, ActionID.CUT, ActionID.DRESS, ActionID.PET])
 
 	addParsableSubject(SubjectID.GAMING_CHAIR, ["gaming chair", "cereal chair", "cereal gaming chair", "chair"],
 		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.SIT_IN])
@@ -193,7 +194,7 @@ func initParsableSubjects():
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.MOVE_TO, ActionID.EAT])
 	addParsableSubject(SubjectID.ZOOMBA,
 		["zoomba", "robot vacuum", "robot", "vacuum", "pizza", "pet", "sleepyhead", "sleepy head"],
-		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.FEED, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.WAKE])
+		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.FEED, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.WAKE, ActionID.PET])
 
 	addParsableSubject(SubjectID.CABLES, ["cables", "power strip", "power", "outlet", "wall outlet", "cable management"],
 		[ActionID.INSPECT])
@@ -344,7 +345,7 @@ func parseItems() -> String:
 			ActionID.TAKE, ActionID.REPLACE, ActionID.USE, ActionID.OPEN, ActionID.CLOSE, ActionID.ENTER,\
 			ActionID.WEAR, ActionID.PULL_UP, ActionID.MAKE, ActionID.TIDY_UP,\
 			ActionID.DRESS, ActionID.CUT, ActionID.LATHER,\
-			ActionID.SCATTER, ActionID.FEED, ActionID.EAT, ActionID.TURN_ON, ActionID.TURN_OFF, \
+			ActionID.SCATTER, ActionID.FEED, ActionID.EAT, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.PET,\
 			ActionID.SIT_IN,\
 			ActionID.PUT, ActionID.TURN, ActionID.WAKE:
 				return requestAdditionalSubjectContext()
@@ -661,12 +662,15 @@ func parseItems() -> String:
 		(subjectID == SubjectID.SMOKEY and actionID == ActionID.DRESS and modifierID == ModifierID.WITH_BRA)
 	):
 		if modifierAlias in ["on smokey's beard", "on smokey's hair", "on smokey's head"]:
-			return "You wouldn't say you're intimately familiar with how a bra is worn, but you're pretty sure it doesn't go there."
+			return "You're not intimately familiar with how a bra is worn, but you're pretty sure it doesn't go there."
 		elif bedroom.playerHeldItem != bedroom.PlayerHeldItem.CLOTHING or bedroom.heldClothing.type != Clothing.BRA:
 			return "You're not carrying the bra right now."
 		else:
 			bedroom.putBraOnSmokey()
 			return "Much better! You were finding it hard to stay focused with Smokey's melons flapping around."
+
+	if actionID == ActionID.PET and subjectID == SubjectID.SMOKEY:
+		return "You and Smokey are really just friends. This would probably be taking things too far."
 
 
 	# Feeding Zoomba
@@ -779,7 +783,16 @@ func parseItems() -> String:
 			return "Zoomba is still digesting his meal. It would be rude to interrupt him."
 		else:
 			return "Zoomba is already off. In fact, he's been off for a while now, and you're sure he's starving!"
-	
+
+	if actionID == ActionID.PET and subjectID == SubjectID.ZOOMBA:
+		if bedroom.roombaSatisfied:
+			bedroom.movePlayer(Bedroom.PlayerPos.SCATTERING_FOOD)
+			return "You reach down and pet Zoomba lovingly. His motor whirrs contentedly."
+		else:
+			bedroom.movePlayer(Bedroom.PlayerPos.ZOOMBA)
+			return "You reach down towards the sleepy vacuum and gently pat him on the head. He shifts slightly in his sleep."
+
+
 	### Cleaning Computer
 	if (
 		(subjectID == SubjectID.COMPUTER and actionID in [ActionID.TIDY_UP, ActionID.USE]) or

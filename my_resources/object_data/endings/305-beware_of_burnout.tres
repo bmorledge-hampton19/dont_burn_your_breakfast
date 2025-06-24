@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://bgtatvwaw8b54"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_70uqi"]
+
+[resource]
+script = ExtResource("1_70uqi")
+endingID = 305
+sceneID = 10
+coinsRewarded = 5
+unlockingHints = Array[String](["Unlike most endings, this one is not unlocked immediately after inputting a specific command.", "You will have to wait around for a while to unlock this ending.", "This ending involves the refrigerator and freezer.", "Open the freezer door and wait 1 minute. The ending will occur faster if the refrigerator door is open as well."])
+unlockingHintCosts = Array[int]([3, 4, 5, 6])
+avoidingHints = Array[String](["The refrigerator will heat up faster if both doors are open, so be sure to shut each one when you no longer need to access its contents.", "The refrigerator will slowly coold down when both doors are closed.", "Once you know what you are doing, it helps to plan out your trips to the fridge in order to minimize the time it spends open. With careful planning, you should only have to open it twice."])
+avoidingHintCosts = Array[int]([5, 3, 4])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

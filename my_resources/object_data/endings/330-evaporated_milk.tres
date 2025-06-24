@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://dvag5hm8mdse6"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_pefs3"]
+
+[resource]
+script = ExtResource("1_pefs3")
+endingID = 330
+sceneID = 10
+coinsRewarded = 5
+unlockingHints = Array[String](["You'll need to progress until your breakfast is nearly ready before you can unlock this ending.", "This ending involves the microwave.", "Input too much heat into the milk using the microwave."])
+unlockingHintCosts = Array[int]([4, 5, 6])
+avoidingHints = Array[String](["The amount of time that the milk must be heated changes each time the level is loaded.", "By the time you are ready to heat your milk, it will already be too late to check how long it needs to be heated for... Plan accordingly.", "You can find the time that the milk needs to be heated for in the breakfast strategy guide.", "Before you incinerate the breakfast strategy guide, make sure you check the recipe titled \"Cereal That's Out of This World!\", and record the time that your milk needs to be heated for."])
+avoidingHintCosts = Array[int]([4, 5, 6, 4])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"

@@ -24,7 +24,7 @@ config/name="Don't Burn Your Breakfast"
 config/description="A silly little game about the inherent dangers of the most important meal of the day.
 Inspired by the timeless classic, \"Don't Shit Your Pants\"."
 config/version="0.3"
-run/main_scene="res://scenes/main_scenes/main_menu.tscn"
+run/main_scene="uid://d20cc824v4s0y"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://sprites/misc/app_icon.png"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EndingData" load_steps=2 format=3 uid="uid://l2f3in4bg7bp"]
+
+[ext_resource type="Script" uid="uid://c883xkxcfrgg0" path="res://my_resources/object_data/endings/EndingData.gd" id="1_f7cnh"]
+
+[resource]
+script = ExtResource("1_f7cnh")
+endingID = 310
+sceneID = 10
+coinsRewarded = 5
+unlockingHints = Array[String](["Zoomba is not the only picky eater in your kitchen.", "The squatter under your sink has very high expectations for food service.", "Feed the demon under your sink something other than his desired order."])
+unlockingHintCosts = Array[int]([4, 6, 5])
+avoidingHints = Array[String](["The demon's request may sound extreme, but the food he wants is actually quite mundane.", "Somewhere in the kitchen, you can find further instructions on how to satisfy the demon's request.", "You will need items from the fridge, freezer, and middle-right cupboard to prepare the demon's breakfast.", "The breakfast strategy guide in the freezer can help you prepare the demon's breakfast in more ways than one!", "Retrieve an egg from the fridge, open it into the pan, and scramble it with the fork under the sink. Turn the correct burner on cook it. Thaw and then burn the strategy guide in the oven (turn the oven on and off twice) to obtan the ashes to sprinkle on top."])
+avoidingHintCosts = Array[int]([4, 5, 6, 6, 7])
+metadata/_custom_type_script = "uid://c883xkxcfrgg0"
