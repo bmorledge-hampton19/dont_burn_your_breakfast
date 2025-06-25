@@ -197,41 +197,29 @@ func parseInput(input: String) -> String:
 	if requestingSubject:
 		recallLastParse()
 		requestingSubject = false
-		subjectID = checkForRequestedSubject()
+		subjectID = findBestMatch(findSubject, true)
 		if subjectID != -1: return parseItems()
-		for prefix in requestingHelperPrefixes:
-			subjectID = checkForRequestedSubject(prefix)
-			if subjectID != -1: return parseItems()
-		for suffix in requestingHelperSuffixes:
-			subjectID = checkForRequestedSubject("", suffix)
-			if subjectID != -1: return parseItems()
-		for prefix in requestingExtraneousPrefixes:
-			subjectID = checkForRequestedSubject("", "", prefix)
-			if subjectID != -1: return parseItems()
-		for suffix in requestingExtraneousSuffixes:
-			subjectID = checkForRequestedSubject("", "", "", suffix)
-			if subjectID != -1: return parseItems()
-		if previousActionID in actionsWithWildcards: requestingWildCard = true
+		elif previousActionID in actionsWithWildcards:
+			subjectID = findBestMatch(findSubject, false)
+			if subjectID != -1:
+				wildCard = workingInput.strip_edges()
+				return parseItems()
+			else:
+				requestingWildCard = true
 		else: return unrecognizedResponseParse(input)
 
 	if requestingModifier:
 		recallLastParse()
 		requestingModifier = false
-		modifierID = checkForRequestedModifier()
+		modifierID = findBestMatch(findModifier, true)
 		if modifierID != -1: return parseItems()
-		for prefix in requestingHelperPrefixes:
-			modifierID = checkForRequestedModifier(prefix)
-			if modifierID != -1: return parseItems()
-		for suffix in requestingHelperSuffixes:
-			modifierID = checkForRequestedModifier("", suffix)
-			if modifierID != -1: return parseItems()
-		for prefix in requestingExtraneousPrefixes:
-			modifierID = checkForRequestedModifier("", "", prefix)
-			if modifierID != -1: return parseItems()
-		for suffix in requestingExtraneousSuffixes:
-			modifierID = checkForRequestedModifier("", "", "", suffix)
-			if modifierID != -1: return parseItems()
-		if previousActionID in actionsWithWildcards: requestingWildCard = true
+		elif previousActionID in actionsWithWildcards:
+			modifierID = findBestMatch(findModifier, false)
+			if modifierID != -1:
+				wildCard = workingInput.strip_edges()
+				return parseItems()
+			else:
+				requestingWildCard = true
 		else: return unrecognizedResponseParse(input)
 
 	if requestingWildCard:
@@ -306,60 +294,52 @@ func removeBlacklistedArticlesAndAdjectives(input: String) -> String:
 	return output.strip_edges()
 
 
-func findAction() -> int:
+func findAction(exactMatchOnly: bool = false) -> int:
 	var inputForComparison = workingInput.to_lower()
 	for action in parsableActions:
 		for alias in action.aliases:
-			if inputForComparison.begins_with(alias):
-				workingInput = workingInput.erase(0,alias.length()).strip_edges()
-				actionAlias = alias
-				return action.id
+			if exactMatchOnly:
+				if inputForComparison == alias:
+					workingInput = ""
+					actionAlias = alias
+					return action.id
+			else:
+				if inputForComparison.begins_with(alias):
+					workingInput = workingInput.erase(0,alias.length()).strip_edges()
+					actionAlias = alias
+					return action.id
 	return -1
 
-func findSubject() -> int:
+func findSubject(exactMatchOnly: bool = false) -> int:
 	var inputForComparison = workingInput.to_lower()
 	for subject in parsableSubjects[actionID]:
 		for alias in subject.aliases:
-			if inputForComparison.begins_with(alias):
-				workingInput = workingInput.erase(0,alias.length()).strip_edges()
-				subjectAlias = alias
-				return subject.id
-	return -1
-
-func checkForRequestedSubject(helperPrefix := "", helperSuffix := "", extraneousPrefix := "", extraneousSuffix := "") -> int:
-	for subject in parsableSubjects[actionID]:
-		for alias: String in subject.aliases:
-
-			var originalAlias := alias
-			if helperPrefix and alias.begins_with(helperPrefix):
-				alias = alias.right(-len(helperPrefix)).strip_edges()
-			if helperSuffix and alias.ends_with(helperSuffix):
-				alias = alias.left(-len(helperSuffix)).strip_edges()
-			if extraneousPrefix:
-				alias = extraneousPrefix + alias
-			if extraneousSuffix:
-				alias = alias + extraneousSuffix
-
-			if actionID in actionsWithWildcards:
-				if workingInput.to_lower().begins_with(alias):
-					subjectAlias = originalAlias
-					var potentialWildCard := workingInput.erase(0,alias.length()).strip_edges().to_lower()
-					if potentialWildCard: wildCard = potentialWildCard
+			if exactMatchOnly:
+				if inputForComparison == alias:
+					workingInput = ""
+					subjectAlias = alias
 					return subject.id
 			else:
-				if workingInput.to_lower() == alias:
-					subjectAlias = originalAlias
+				if inputForComparison.begins_with(alias):
+					workingInput = workingInput.erase(0,alias.length()).strip_edges()
+					subjectAlias = alias
 					return subject.id
 	return -1
 
-func findModifier() -> int:
+func findModifier(exactMatchOnly: bool = false) -> int:
 	var inputForComparison = workingInput.to_lower()
 	for modifier in parsableModifiers[actionID]:
 		for alias in modifier.aliases:
-			if inputForComparison.begins_with(alias):
-				workingInput = workingInput.erase(0,alias.length()).strip_edges()
-				modifierAlias = alias
-				return modifier.id
+			if exactMatchOnly:
+				if inputForComparison == alias:
+					workingInput = ""
+					modifierAlias = alias
+					return modifier.id
+			else:
+				if inputForComparison.begins_with(alias):
+					workingInput = workingInput.erase(0,alias.length()).strip_edges()
+					modifierAlias = alias
+					return modifier.id
 	return -1
 
 func extractModifierFromEndOfWildCard() -> int:
@@ -372,30 +352,37 @@ func extractModifierFromEndOfWildCard() -> int:
 				return modifier.id
 	return -1 
 
-func checkForRequestedModifier(helperPrefix := "", helperSuffix := "", extraneousPrefix := "", extraneousSuffix := "") -> int:
-	for modifier in parsableModifiers[actionID]:
-		for alias: String in modifier.aliases:
+func findBestMatch(findFunction: Callable, exactMatchOnly: bool):
+	var originalWorkingInput := workingInput
+	var foundMatch: int
 
-			var originalAlias := alias
-			if helperPrefix and alias.begins_with(helperPrefix):
-				alias = alias.right(-len(helperPrefix)).strip_edges()
-			if helperSuffix and alias.ends_with(helperSuffix):
-				alias = alias.left(-len(helperSuffix)).strip_edges()
-			if extraneousPrefix:
-				alias = extraneousPrefix + alias
-			if extraneousSuffix:
-				alias = alias + extraneousSuffix
+	workingInput = originalWorkingInput
+	foundMatch = findFunction.call(exactMatchOnly)
+	if foundMatch != -1: return foundMatch
 
-			if actionID in actionsWithWildcards:
-				if workingInput.to_lower().begins_with(alias):
-					modifierAlias = originalAlias
-					var potentialWildCard := workingInput.erase(0,alias.length()).strip_edges().to_lower()
-					if potentialWildCard: wildCard = potentialWildCard
-					return modifier.id
-			else:
-				if workingInput.to_lower() == alias:
-					modifierAlias = originalAlias
-					return modifier.id
+	for prefix in requestingHelperPrefixes:
+		workingInput = prefix + originalWorkingInput
+		foundMatch = findFunction.call(exactMatchOnly)
+		if foundMatch != -1: return foundMatch
+	
+	for suffix in requestingHelperSuffixes:
+		workingInput = originalWorkingInput + suffix
+		foundMatch = findFunction.call(exactMatchOnly)
+		if foundMatch != -1: return foundMatch
+	
+	for prefix in requestingExtraneousPrefixes:
+		if originalWorkingInput.begins_with(prefix):
+			workingInput = originalWorkingInput.right(-len(prefix)).strip_edges()
+			foundMatch = findFunction.call(exactMatchOnly)
+			if foundMatch != -1: return foundMatch
+	
+	for suffix in requestingExtraneousSuffixes:
+		if originalWorkingInput.ends_with(suffix):
+			workingInput = originalWorkingInput.left(-len(suffix)).strip_edges()
+			foundMatch = findFunction.call(exactMatchOnly)
+			if foundMatch != -1: return foundMatch
+
+	workingInput = originalWorkingInput
 	return -1
 
 

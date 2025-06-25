@@ -348,11 +348,11 @@ func _ready():
 	ovenFryingPanPos = FRONT_RIGHT
 
 
-	spoonNum = randi_range(1,7)
+	spoonNum = randi_range(2,7)
 	for i in range(len(spoons)):
 		if i < spoonNum: spoons[i].show()
 		else: spoons[i].hide()
-	
+
 	eggNum = randi_range(1,6)
 	for i in range(len(eggs)):
 		if i < eggNum: eggs[i].show()

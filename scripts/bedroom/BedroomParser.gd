@@ -1638,7 +1638,7 @@ class ClothingCharacteristics:
 				Clothing.PINK: string += "pink "
 		
 		if typeAlias:
-			string += typeAlias + " "
+			string += typeAlias
 		else:
 			match type:
 				Clothing.SOCK: string += "sock"

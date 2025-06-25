@@ -49,7 +49,7 @@ enum SubjectID {
 enum ModifierID {
 	ON_FLOOR, IN_CUPBOARD, IN_MICROWAVE, IN_FREEZER, IN_FRIDGE, ON_PENTAGRAM, IN_SINK, IN_BOWL, ON_FAN, ON_COUNTER, IN_OVEN, ON_STOVE,
 	IN_FRYING_PAN, ON_FRONT_LEFT_BURNER, ON_BACK_LEFT_BURNER, ON_BACK_RIGHT_BURNER, ON_FRONT_RIGHT_BURNER, ON_AMBIGUOUS_BURNER,
-	ON_TABLE,
+	ON_TABLE, ON_HEAD,
 
 	WITH_CODE,
 
@@ -196,7 +196,8 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.NUMBERED_CEREAL_BOXES,
 		["numbered cereal boxes", "numbered cereal box", "numbered cereal", "lower cereal boxes", "lower cereal box", "lower cereal"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.MOVE_TO])
-	addParsableSubject(SubjectID.DINO_CEREAL_BOX, ["dino eggs cereal box", "dino eggs cereal", "dino-mite eggs cereal box", "dino-mite eggs cereal"],
+	addParsableSubject(SubjectID.DINO_CEREAL_BOX,
+		["dino eggs cereal box", "dino eggs cereal", "dino eggs", "dino-mite eggs cereal box", "dino-mite eggs cereal", "dino-mite eggs"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.POUR, ActionID.PUT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.IMPRISONED_CEREAL_BOX,
 		["shredded wheat cereal box", "shredded wheat cereal", "shredded wheat", "imprisoned cereal box", "imprisoned cereal", "prisoner", "prison"],
@@ -204,7 +205,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.AMBIGUOUS_CEREAL_BOX, ["cereal boxes", "cereal box", "cereal"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.MOVE_TO])
 	
-	addParsableSubject(SubjectID.MICROWAVE, ["microwave", "quantum microwave"],
+	addParsableSubject(SubjectID.MICROWAVE, ["microwave time", "quantum microwave time", "microwave", "quantum microwave"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.USE, ActionID.INPUT, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.OUTLET, ["outlet", "power outlet", "dryer power outlet", "power cord"],
 		[ActionID.INSPECT, ActionID.TURN_OFF, ActionID.MOVE_TO])
@@ -245,14 +246,14 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.GRAPEFRUIT_JUICE,
 		["grapefruit juice", "grapefruit", "juice boxes", "juice box", "juice", "cartons", "carton", "boxes in fridge", "box in fridge"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.COUNT])
-	addParsableSubject(SubjectID.NOTE, ["note in fridge", "note", "paper", "list"],
+	addParsableSubject(SubjectID.NOTE, ["note in fridge", "note", "paper", "list", "strange note"],
 		[ActionID.INSPECT, ActionID.INSPECT, ActionID.READ])
 	addParsableSubject(SubjectID.MILK, ["gallon of milk", "jug of milk", "milk jug", "milk"],
 		[ActionID.INSPECT, ActionID.UNLOCK, ActionID.TAKE, ActionID.USE, ActionID.POUR, ActionID.REPLACE, ActionID.PUT, ActionID.LOCK, ActionID.HEAT])
 	addParsableSubject(SubjectID.LOCK, ["lock", "padlock"],
 		[ActionID.INSPECT, ActionID.UNLOCK, ActionID.TAKE, ActionID.LOCK])
 	
-	addParsableSubject(SubjectID.TIMER, ["timer", "clock", "countdown timer", "countdown", "stadium timer"],
+	addParsableSubject(SubjectID.TIMER, ["timer", "clock", "countdown timer", "countdown", "stadium timer", "time"],
 		[ActionID.INSPECT, ActionID.TURN_OFF, ActionID.TURN_ON, ActionID.TURN, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.LARRY_LIGHT_SWITCH, ["larry light switch", "larry"],
 		[ActionID.INSPECT, ActionID.USE, ActionID.FLIP])
@@ -271,7 +272,7 @@ func initParsableSubjects():
 		[ActionID.INSPECT])
 	addParsableSubject(SubjectID.DEMON, ["demon", "devil", "blob", "creature", "breakfast demon", "cereal demon"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.FEED, ActionID.EXORCISE, ActionID.MOVE_TO])
-	addParsableSubject(SubjectID.PENTAGRAM, ["pentagram", "red star", "red circle", "star", "circle"],
+	addParsableSubject(SubjectID.PENTAGRAM, ["pentagram", "red star", "red circle", "star", "circle", "portal"],
 		[ActionID.INSPECT])
 	addParsableSubject(SubjectID.FORK, ["fork"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.USE, ActionID.REPLACE, ActionID.PUT])
@@ -370,7 +371,9 @@ func initParsableModifiers():
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_TABLE, ["on table", "on kitchen table"],
 		[ActionID.REPLACE, ActionID.PUT])
-	
+	addParsableModifier(ModifierID.ON_HEAD, ["on self", "on player", "on head"],
+		[ActionID.INSPECT, ActionID.OPEN])
+
 	addParsableModifier(ModifierID.WITH_CODE, ["with code", "with combination", "using code", "using combination"],
 		[ActionID.UNLOCK])
 	
@@ -420,7 +423,7 @@ func eggParse() -> String:
 			"In an effort to regain your composure, you begin blundering around your kitchen, flailing your limbs wildly. " +
 			"In the ensuing chaos you somehow manage to turn on all the burners on the stove, start the oven with the door open, "+
 			"set the microwave to run for 99 minutes and 99 seconds, and do a pretty impressive cartwheel. By the time you're " +
-			"steady on your feet again, the kitchen is hot, flaming mess.",
+			"steady on your feet again, the kitchen is a hot, flaming mess.",
 			SceneManager.EndingID.EGGSISTENTIAL_CRISIS
 		)
 		return ""
@@ -471,30 +474,9 @@ func parseItems() -> String:
 		ActionID.INSPECT:
 			match subjectID:
 
-				-1 when wildCard:
+				-1, SubjectID.STRATEGY_GUIDE, SubjectID.BLOCK_OF_ICE, SubjectID.ASHES when wildCard:
 
-					var pageNumber: int
-					if wildCard.begins_with("page"):
-						wildCard = wildCard.replace("page", "").strip_edges()
-						if not wildCard.is_valid_int(): return wildCard + " is not a valid page number."
-						else: pageNumber = int(wildCard)
-					else:
-						if not wildCard.is_valid_int(): return unrecognizedEndingParse()
-						else: pageNumber = int(wildCard)
-					
-					validWildCard = true
-					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FROZEN_STRATEGY_GUIDE:
-						return "You can't read the strategy guide while it's frozen in ice..."
-					elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.ASHES:
-						return "The strategy guide is burnt beyond all recognition..."
-					elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.THAWED_STRATEGY_GUIDE:
-						return "You're not holding anything with page numbers."
-					elif pageNumber < 1 or pageNumber > 128:
-						return "That page isn't in the strategy guide. It only has 128 pages."
-					
-					match pageNumber:
-						_:
-							return "This page talks at length about preparing a " + getRandomOmelet(pageNumber) + "."
+					return attemptReadStrategyGuide()
 
 				SubjectID.SELF:
 					return "Your tummy rumbles eagerly in anticipation of breakfast."
@@ -550,7 +532,7 @@ func parseItems() -> String:
 						else:
 							return (
 								"*Sigh* It looks like the breakfast demon has appropriated your fork again... " +
-								"Why must have left his regular pitchfork back in Hell..."
+								"He must have left his regular pitchfork back in Hell..."
 							)
 					else:
 						return "That cupboard is currently closed."
@@ -600,180 +582,389 @@ func parseItems() -> String:
 					)
 
 				
-				SubjectID.:
+				SubjectID.COLORED_CEREAL_BOXES:
+					if kitchen.isTopLeftCupboardOpen:
+						return (
+							"Strangely, these brightly colored cereal boxes are all empty, " +
+							"and you get the sense that they're only here to help you remember something..."
+						)
+					else:
+						return wrongContextParse()
+
+				SubjectID.NUMBERED_CEREAL_BOXES:
+					if kitchen.isBottomLeftCupboardOpen:
+						return (
+							"This cupboard holds a few monochrome cereal boxes, each with a number prominently displayed on the spine. " +
+							"They're all empty though, and you get the sense that they're only here to help you remember something..."
+						)
+					else:
+						return wrongContextParse()
+
+				SubjectID.DINO_CEREAL_BOX:
+					return (
+						"Oh boy! Dino-mite Eggs was one of your favorite cereals growing up, and even now, starting your day with it fills " +
+						"you with a warm fuzzy feeling. (You're not sure if that's from the nostalgia or the real TNT pieces hiding inside each egg.)"
+					)
+
+				SubjectID.IMPRISONED_CEREAL_BOX:
+					if kitchen.isBottomRightCupboardOpen:
+						return "This box of UNFROSTED shredded wheat is still serving its 5-year prison sentence for impersonating its frosted counterpart."
+					else: return wrongContextParse()
+
+				SubjectID.AMBIGUOUS_CEREAL_BOX:
+					if not kitchen.isTopLeftCupboardOpen and not kitchen.isBottomLeftCupboardOpen and not kitchen.isBottomRightCupboardOpen:
+						return (
+							"Oh boy! Dino-mite Eggs was one of your favorite cereals growing up, and even now, starting your day with it fills " +
+							"you with a warm fuzzy feeling. (You're not sure if that's from the nostalgia or the real TNT pieces hiding inside each egg.)"
+						)
+					else:
+						return (
+							"You can see a few different cereal boxes when you look around your kitchen. Your eyes linger on the box of \"Dino-mite Eggs\" though." +
+							"Those would make for a great breakfast!"
+						)
+
+				
+				SubjectID.MICROWAVE:
+					return (
+						"This is a top-of-the-line quantum microwave! It's substantially more powerful than traditional microwaves and can deliver the same " +
+						"amount of heat in a fraction of the time! All you have to do is input the time a normal microwave would take, and it achieves the same result " +
+						"in an instant! Now that's efficient!"
+					)
+
+				SubjectID.OUTLET:
+					return "You had to have a dryer outlet installed in your kitchen to satisfy the needs of your quantum microwave."
+
+				
+				SubjectID.TOP_FRIDGE_DOOR:
+					if kitchen.isTopFridgeDoorOpen:
+						return "The freezer door is wide open. Brrrr!"
+					else:
+						return "The freezer door is currently closed."
+
+				SubjectID.BOTTOM_FRIDGE_DOOR:
+					if kitchen.isBottomFridgeDoorOpen:
+						return "The refrigerator door is wide open. There's a slight chill in the air."
+					elif kitchen.isFridgeUnlocked:
+						return "The refrigerator door is unlocked and ready to open."
+					else:
+						return "The refrigerator door is closed and locked up tight. No one's burgling your milk now!"
+
+				SubjectID.FRIDGE:
+					if kitchen.isBottomFridgeDoorOpen:
+						return (
+							"This is where you keep your milk, as well as other, less important things. " +
+							"You've got some spoons, eggs, grapefruit juice, and a strange note..."
+						)
+					else:
+						return (
+							"You had a special combination lock added to your fridge to prevent anyone from stealing your precious milk. " +
+							"You can open it by pressing the colored buttons in the right order, which is... Hmmm... You seem to have forgotten the combination. " +
+							"Perhaps you left clues for yourself somewhere around the kitchen?"
+						)
+
+				SubjectID.FREEZER:
+					if kitchen.isTopFridgeDoorOpen: return "OH NO! You're out of ice cream! You'll have to remember to get some after work."
+					else: return "This is your freezer. It freezes things."
+
+				SubjectID.QUAKER_DRAWING:
+					if kitchen.isTopFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						return (
+							"Your niece made this beautiful drawing of the Quaker mascot just for you! " +
+							"You're pretty sure it would sell for millions at an art auction, but to you, it's priceless."
+						)
+
+				SubjectID.PICTURES:
+					if kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						return (
+							"There are several christmas cards from friends and family. " +
+							"You get the sense that their lives are a little more put together than yours..."
+						)
+
+				SubjectID.BLUE_BUTTON:
+					return "The blue button is blue."
+
+				SubjectID.GREEN_BUTTON:
+					return "The green button is green."
+
+				SubjectID.RED_BUTTON:
+					return "The red button is red."
+
+				SubjectID.YELLOW_BUTTON:
+					return "The yellow button is................ Yellow."
+
+				SubjectID.AMBIGUOUS_BUTTON:
+					return requestAdditionalContextCustom("Which button would you like to " + actionAlias + "?", REQUEST_SUBJECT, [], [" button"])
+
+				SubjectID.BLOCK_OF_ICE:
+					if (
+						kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FROZEN_STRATEGY_GUIDE or
+						(kitchen.isStrategyGuideFrozen and kitchen.isStrategyGuideInOven) or
+						(kitchen.isStrategyGuideInFridge and kitchen.isTopFridgeDoorOpen)
+					):
+						return (
+							"Drat! It looks like your friends pulled a prank on you while you were passed out last night... " +
+							"You'll need to melt this ice if you want to regain access to your breakfast strategy guide. " +
+							"(You make a mental note to add a lock to your freezer as well.)"
+						)
+					else:
+						return wrongContextParse()
+
+				SubjectID.STRATEGY_GUIDE:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FROZEN_STRATEGY_GUIDE:
+						return "You can't read the strategy guide while it's frozen in ice..."
+					elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.ASHES:
+						return "The strategy guide is burnt beyond all recognition..."
+					elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.THAWED_STRATEGY_GUIDE:
+						return (
+							"This is a limited-edition Preemuh Games breakfast strategy guide! " +
+							"Looking through the table of contents, a few interesting entries catch your eye:\n" +
+							"- Page 25: Fancy breakfast for fancy people\n" +
+							"- Page 36: Breakfast evangelism 101\n" +
+							"- Page 64: Incubating dino eggs to perfection\n" +
+							"- Page 81: The cereal mixing manifesto\n" +
+							"- Page 121: Appeasing the infernal offspring of Breakfast Hell"
+						)
+					else:
+						return "You need to be holding the strategy guide to get a closer look at it."
+
+				SubjectID.DINO_NUGGETS:
+					if kitchen.isTopFridgeDoorOpen:
+						return "Mmmmm... Dino nuggets... You really should wait until 5:00 to start indulging in these guys though..."
+					else:
+						return wrongContextParse()
+
+				SubjectID.SPOON:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.SPOON:
+						return "Holding this spoon makes you even hungrier for breakfast!"
+					elif kitchen.isBottomFridgeDoorOpen:
+						return "Your spoons are perfectly chilled and ready for breakfast!"
+					else:
+						return wrongContextParse()
+
+				SubjectID.EGG:
+					if kitchen.isPlayerWearingEgg:
+						return "You trained for years in the Himalayan institute of ovate equilibrium. This egg is perfectly safe!"
+					elif modifierID == ModifierID.ON_HEAD or not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						return "Sometimes, you dream about eating fresh eggs you laid yourself, just like the farmers of yore..."
+
+				SubjectID.GRAPEFRUIT_JUICE:
+					if kitchen.isBottomFridgeDoorOpen:
+						return "Ugh... You really wish your aunt would stop sending you so much grapefruit juice..."
+					else:
+						return wrongContextParse()
+
+				SubjectID.NOTE:
+					if kitchen.isBottomFridgeDoorOpen:
+						return (
+							"It looks like you wrote this note to help you remember something. " +
+							"It has a picture of an egg, then a spoon, then a grapefruit... " +
+							"If you only you could remember what this was supposed to help you remember! Then you could remember it!"
+						)
+					else:
+						return wrongContextParse()
+
+				SubjectID.MILK:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.MILK or (kitchen.isBottomFridgeDoorOpen and kitchen.isMilkUnlocked):
+						return (
+							"You had this milk imported specially from Cow Planet. " +
+							"It's rich in vitamin B29, and it never goes bad! It's perfect for making cereal too! " +
+							"You've often wondered how it's made, but every time you try to google it, your browser mysteriously crashes... Oh well! " +
+							"You've unlocked the milk, and now it's ready to be poured! "
+						)
+					elif kitchen.isBottomFridgeDoorOpen:
+						return (
+							"You had this milk imported specially from Cow Planet. " +
+							"It's rich in vitamin B29, and it never goes bad! It's perfect for making cereal too! " +
+							"You've often wondered how it's made, but every time you try to google it, your browser mysteriously crashes... Oh well! " +
+							"The milk is still secured firmly to the side of the fridge and locked in place with a padlock, safe and sound. " +
+							"You'll need to input the correct 3-digit code to unlock it."
+						)
+					else:
+						return wrongContextParse()
+
+				SubjectID.LOCK:
+					if kitchen.isBottomFridgeDoorOpen:
+						if kitchen.isMilkUnlocked:
+							return "The lock is lying open on the fridge shelf."
+						else:
+							return (
+								"The lock is keeping the milk fastened securely to the side of the fridge. " +
+								"You'll need to input the correct 3-digit code to unlock it."
+							)
+					else:
+						return wrongContextParse()
+
+				
+				SubjectID.TIMER:
+					return "This clock is set to BST (Breakfast Standard Time) and is always counting down to the proper time to have breakfast."
+
+				SubjectID.LARRY_LIGHT_SWITCH:
+					return (
+						"You try to look at Larry the Light Switch, but space bends and warps ominously around him. The more you try to make sense " +
+						"of what you're seeing, the more your head hurts. Eventually, you are forced to look away."
+					)
+
+				SubjectID.AMBIGUOUS_LIGHT_SWITCH:
+					return "It's a pretty normal light switch."
+
+				
+				SubjectID.FAN:
+					return "Instead of a traditional drying rack, you opted to have a box fan mounted in your counter. It dries dishes in record time!"
+
+				SubjectID.SINK:
+					if kitchen.bowlState == Kitchen.DIRTY:
+						return "A lone cereal bowl sits at the bottom of the sink. You'll need to wash it before you can use it again."
+					else:
+						return "Your sink is empty, just like your stomach..."
+
+				SubjectID.FAUCET:
+					if kitchen.isDemonSatisfied:
+						return "With the demon below your sink focused on his breakfast, the faucet is operational again!"
+					else:
+						return "The faucet doesn't appear to be working right now... Maybe you should check the cupboard below the sink?"
+
+				SubjectID.CEREAL_BOWL:
+					match kitchen.bowlState:
+						Kitchen.DIRTY:
+							return "This bowl is still filthy from last night's cereal bender. You'll need to wash it before you can use it again."
+						Kitchen.CLEAN:
+							return "The cereal bowl has been rinsed and dried, and that's good enough for you. Time to fill it!"
+						Kitchen.JUST_MILK:
+							return "The cereal bowl is full of milk. Now for the cereal..."
+						Kitchen.JUST_CEREAL:
+							return "The cereal bowl is full of cereal. Now for the milk..."
+						Kitchen.UNHATCHED:
+							return "The Dino-mite Eggs cereal is happily marinating in the milk. Now you just need to get it warm enough for the eggs to hatch!"
+						Kitchen.HATCHED:
+							return "Your stomach growls as you stare at the hatched Dino-mite eggs. Quickly! To the table!"
+
+				SubjectID.PLUMBING:
+					if not kitchen.isMiddleRightCupboardOpen and not kitchen.isMiddleLeftCupboardOpen:
+						return wrongContextParse()
+					elif kitchen.isMiddleRightCupboardOpen and not kitchen.isMiddleLeftCupboardOpen:
+						return "Hmmm... The plumbing looks fine on this side. What about the other one?"
+					elif kitchen.isDemonSatisfied:
+						return "The pipes have been freed from the grip of Cheeriofel. The faucet should work now!"
+					else:
+						return (
+							"Ah. You can see the problem now. That cereal demon that's been hanging around has latched onto the plumbing again... " +
+							"Upon seeing you, he begins shouting his usual tirade in a frantic, high-pitched voice:\n" +
+							HUNGRY_DEMON_SPIEL + "\nIt looks like you'll have to make his breakfast first if you want access to running water again..."
+						)
+
+
+				SubjectID.DEMON:
+					if not kitchen.isMiddleLeftCupboardOpen:
+						return wrongContextParse()
+					elif kitchen.isDemonSatisfied:
+						return (
+							"The breakfast demon is sitting on the frying pan making loud slurping noises. " +
+							"At least he's not blocking your plumbing any more!"
+						)
+					else:
+						return (
+							"You accidentally summoned this breakfast demon after making your 6666th bowl of cereal. " +
+							"As a housemate, he leaves a little something to be desired... " +
+							"Upon seeing you, he begins shouting his usual tirade in a frantic, high-pitched voice:\n" +
+							HUNGRY_DEMON_SPIEL + "\nIt looks like you'll have to make his breakfast first if you want access to running water again..."
+						)
+
+				SubjectID.PENTAGRAM:
+					if not kitchen.isMiddleLeftCupboardOpen:
+						return wrongContextParse()
+					elif kitchen.isDemonSatisfied:
+						return (
+							"The breakfast demon is sitting on the frying pan making loud slurping noises. " +
+							"At least he's not blocking your plumbing any more!"
+						)
+					else:
+						return "This is the portal the breakfast demon entered through. It's made of ketchup, and as far as you can tell, it's impossible to remove."
+
+				SubjectID.FORK:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FORK:
+						return "This fork won't be much good for eating cereal, but you can probably find another use for it."
+					elif kitchen.isMiddleRightCupboardOpen:
+						return (
+							"*Sigh* It looks like the breakfast demon has appropriated your fork again... " +
+							"He must have left his regular pitchfork back in Hell..."
+						)
+					else:
+						return wrongContextParse()
+
+				
+				SubjectID.WINDOW:
 					return ""
 
-				SubjectID.:
+				SubjectID.POTTED_PLANT:
 					return ""
 
-				SubjectID.:
+				SubjectID.BACKYARD:
 					return ""
 
-				SubjectID.:
+				SubjectID.HAMMOCK:
 					return ""
 
-				SubjectID.:
+				SubjectID.FRUIT_BASKET:
+					return ""
+
+				SubjectID.GOULASH_INGREDIENTS:
 					return ""
 
 				
-				SubjectID.:
+				SubjectID.OVEN:
 					return ""
 
-				SubjectID.:
+				SubjectID.ASHES:
+					if kitchen.isStrategyGuideBurnt:
+						return ""
+					else:
+						return wrongContextParse()
+
+				SubjectID.STOVE_TOP:
 					return ""
 
-				
-				SubjectID.:
+				SubjectID.FRYING_PAN:
+					if kitchen.isDemonSatisfied:
+						return "Hopefully no one tries to steal your milk while the demon is busy with your frying pan."
+					else:
+						return "This trusty frying pan doubles as a weapon against would-be milk thieves."
+
+				SubjectID.FUME_HOOD:
 					return ""
 
-				SubjectID.:
+				SubjectID.FRONT_LEFT_BURNER:
 					return ""
 
-				SubjectID.:
+				SubjectID.BACK_LEFT_BURNER:
 					return ""
 
-				SubjectID.:
+				SubjectID.BACK_RIGHT_BURNER:
 					return ""
 
-				SubjectID.:
+				SubjectID.FRONT_RIGHT_BURNER:
 					return ""
 
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
+				SubjectID.AMBIGUOUS_BURNER:
 					return ""
 
 				
-				SubjectID.:
-					return ""
+				SubjectID.TABLE:
+					return "This is where you eat breakfast! (and other meals too, you suppose.)"
 
-				SubjectID.:
-					return ""
+				SubjectID.CHAIRS:
+					return "Zoomba has a bad habit of getting stuck in between the legs of these chairs..."
 
-				SubjectID.:
-					return ""
-
-				
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
-
-				SubjectID.:
-					return ""
+				SubjectID.SALT_AND_PEPPER_SHAKERS:
+					return (
+						"You recently had the brilliant idea to fill the salt and pepper shakers with powdered milk and pancake mix! " +
+						"It looks like they're empty right now though."
+					)
 
 				
 				SubjectID.BREAKFAST:
@@ -804,7 +995,7 @@ func parseItems() -> String:
 
 
 		ActionID.USE:
-			pass
+			return requestSpecificAction()
 
 
 		ActionID.OPEN:
@@ -962,6 +1153,103 @@ func parseItems() -> String:
 	return unknownParse()
 
 
+func attemptReadStrategyGuide() -> String:
+	var pageNumber: int
+	if wildCard == "table of contents": pageNumber = 0
+	if wildCard.begins_with("page"):
+		wildCard = wildCard.replace("page", "").strip_edges()
+		if not wildCard.is_valid_int(): return wildCard + " is not a valid page number."
+		else: pageNumber = int(wildCard)
+	else:
+		if not wildCard.is_valid_int(): return unrecognizedEndingParse()
+		else: pageNumber = int(wildCard)
+	
+	validWildCard = true
+	if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FROZEN_STRATEGY_GUIDE:
+		return "You can't read the strategy guide while it's frozen in ice..."
+	elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.ASHES:
+		return "The strategy guide is burnt beyond all recognition..."
+	elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.THAWED_STRATEGY_GUIDE:
+		return "You're not holding anything with page numbers."
+	elif pageNumber < 1 or pageNumber > 128:
+		return "That page isn't in the strategy guide. It only has 128 pages."
+	
+	match pageNumber:
+		0:
+			return (
+				"Looking through the table of contents, a few interesting entries catch your eye:\n" +
+				"- Page 25: Fancy breakfast for fancy people\n" +
+				"- Page 36: Breakfast evangelism 101\n" +
+				"- Page 64: Incubating dino eggs to perfection\n" +
+				"- Page 81: The cereal mixing manifesto\n" +
+				"- Page 121: Appeasing the infernal offspring of Breakfast Hell"
+			)
+		25:
+			return (
+				"This page discusses preparations for an especially fancy breakfast:\n" +
+				"\"Start by preparing a modest portion of caviar. (It is recommended that the roe be obtained " +
+				"directly from local sturgeon populations to maximize freshness.) Carefully pour 4 ounces of the caviar " +
+				"into a clean china bowl for each guest partaking in the dish. If you are not entertaining guests, " +
+				"the rest of the caviar should be disposed of posthaste, lest the odors accumulate and speak poorly " +
+				"of your hospitality. Carefully ladle a healthy volume of 19th century Merlot over the caviar, just " +
+				"to the point of submersion. In the absence of this vintage, a red wine from the early 1900s can be " +
+				"substituted, albeit with some detriment to the overall flavor profile. Serve with tea and " +
+				"crumpets in your estate's sunroom.\"\n" +
+				"(You quietly wonder who Merlot is.)"
+			)
+		36:
+			return (
+				"This page discusses strategies for convincing friends and family of the benefits of breakfast:\n" +
+				"\"We often hear breakfast described as the 'most important meal of the day', and while many understand " +
+				"this claim on a rational level, few have taken the necessary steps to truly accept it into their " +
+				"heart. For the masses that claim that they 'don't really eat breakfast' or 'aren't that hungry in " +
+				"the morning', remember that it is not a deficit of the mind, but a deficit of the soul that leads " +
+				"them to these self-destructive tendencies. Our tasks as true breakfast believers, therefore, is not " +
+				"to argue with these loved ones but instead to show them the light that we hold within, fueled " +
+				"by the balanced meals that we accept into our bodies each morning. Breakfast does not come into " +
+				"anyone's life by force but is instead a beautiful choice that must be made willingly.\"\n" +
+				"(You nod thoughtfully as you meditate on these words of wisdom)."
+			)
+		64:
+			return (
+				"This page discusses proper protocol for hatching various Dino Egg breakfast products:\n" +
+				"\"While the breadth of products containing exciting 'hatchables' has rapidly " +
+				"expanded in the last decade, there is still a steadfast methodology for properly experiencing them. " +
+				"The robust mixture of dextrose and partially hydrogenated oils forming the eggshell readily " +
+				"solubilizes at temperatures just shy of water's boiling point. Assuming a half cup of liquid media " +
+				"(water or milk) and a microwave of conventional wattage, a cook time of " +
+				str((kitchen.minMilkHeat + kitchen.maxMilkHeat)/2) +
+				" seconds is typically sufficient to degrade the composite carbohydrate and lipid shell.\"\n" +
+				"(You absentmindedly glance at the protocol's authors. To no one's surprise, Dr. Quaker is listed "+
+				"as the corresponding author. That man is never going to retire...)"
+
+			)
+		81:
+			return (
+				"This page discusses the importance of maintaining sugar equilibrium in breakfast cereal pairings:\n" +
+				"While the novice breakfast enthusiast may reach for popular, sugar-rich cereal brands in isolation, " +
+				"the expert understands the importance of balancing sugar content in more sophisticated combinations. " +
+				"The first axiom of cereal combinatorics states that a cereal high in sugar (dubbed a 'sugar cereal') " +
+				"must be counterbalanced with one of lower sugar content (dubbed a 'non-sugar cereal'). This rule serves " +
+				"as the foundation of cereal theory and is only superseded by the existence of several 'medium' class " +
+				"cereals with sugar content sufficient to balance the entire bowl on their own. Notable examples of " +
+				"medium cereals include Frosted Shredded Mini Wheats, Honey Bunches of Oats, and Dino-mite Eggs.\n" +
+				"(This entry is nothing new to you, but it's always nice to review the basics.)"
+			)
+		121:
+			return (
+				"This page discusses strategies for dealing with various breakfast demons. " +
+				"You look through the entries until you find one matching the creature under your sink:\n" +
+				"\"The Cheerio family of breakfast demons (Cheeriobub, Cheeriofer, Cheeriofel, etc.) is partial " +
+				"to egg dishes, usually scrambled. Ensure that the dish is cooked through, and if requested, " +
+				"go the extra mile by garnishing with the ashes of some informative text. We recommend keeping " +
+				"a dictionary or encyclopedia on hand for this purpose. Like most breakfast demons, these can be " +
+				"exorcised by sprinkling Grape Nuts around their home and reading the nutrition facts in Latin.\"\n" +
+				"(It would be nice to get rid of the demon for good, " +
+				"but you wouldn't be caught dead carrying around a box of Grape Nuts.)"
+			)
+		_:
+			return "This page talks at length about preparing a " + getRandomOmelet(pageNumber) + "."
 
 func getRandomOmelet(pageNumber: int) -> String:
 	var omeletRNG = RandomNumberGenerator.new()
