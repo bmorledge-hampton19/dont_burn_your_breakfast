@@ -158,6 +158,9 @@ var isCerealBowlInMicrowave: bool
 
 @export_group("Timer")
 
+@export var timerTextControl: Control
+var isTimerOn: bool = true
+
 @export var minutes: Label
 @export var seconds: Label
 var timeRemaining: float
@@ -238,7 +241,7 @@ func movePlayer(newPos: PlayerPos):
 
 @export var playerSprite: Sprite2D
 @export var handForeground: Sprite2D
-enum {RELAXED, ARMS_IN, RIGHT_ARM_IN, LEFT_ARM_IN, ARMS_VERY_IN, HOLDING_ICE}
+enum {RELAXED, ARMS_IN, RIGHT_ARM_IN, LEFT_ARM_IN, ARMS_VERY_IN, HOLDING_ICE, HOLDING_ASHES}
 func _setPlayerTexture(texture: int):
 	match texture:
 		RELAXED:
@@ -258,6 +261,9 @@ func _setPlayerTexture(texture: int):
 			handForeground.hide()
 		HOLDING_ICE:
 			playerSprite.region_rect.position = Vector2(192,80)
+			handForeground.hide()
+		HOLDING_ASHES:
+			playerSprite.region_rect.position = Vector2(224,80)
 			handForeground.hide()
 
 @export var playerCerealBox: Sprite2D
@@ -308,11 +314,13 @@ func _givePlayerHeldItem(item: PlayerHeldItem):
 			_setPlayerTexture(HOLDING_ICE)
 		PlayerHeldItem.ASHES:
 			playerAshes.show()
-			_setPlayerTexture(ARMS_VERY_IN)
+			_setPlayerTexture(HOLDING_ASHES)
 		PlayerHeldItem.CEREAL_BOWL:
 			playerCerealBowl.show()
 			_setPlayerTexture(RIGHT_ARM_IN)
-		
+
+var arePlayersHandsFull: bool:
+	get(): return playerHeldItem == PlayerHeldItem.FROZEN_STRATEGY_GUIDE or playerHeldItem == PlayerHeldItem.ASHES
 
 @export var playerEgg: Sprite2D
 var isPlayerWearingEgg: bool
@@ -573,7 +581,7 @@ func burnStrategyGuide():
 	isStrategyGuideBurnt = true
 	movePlayer(PlayerPos.OVEN)
 
-func takeBurntStrategyGuideFromOven():
+func takeAshesFromOven():
 	ovenBurntStrategyGuide.hide()
 	isStrategyGuideInOven = false
 	_givePlayerHeldItem(PlayerHeldItem.ASHES)
@@ -765,6 +773,13 @@ func addHeatToMilk(heat: int):
 		bowlState = HATCHED
 	movePlayer(PlayerPos.MICROWAVE)
 	
+
+func turnTimerOff():
+	timerTextControl.hide()
+	isTimerOn = false
+func turnTimerOn():
+	timerTextControl.show()
+	isTimerOn = true
 
 func flipLarryTheLightSwitch():
 	larryOff.hide()

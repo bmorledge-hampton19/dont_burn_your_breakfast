@@ -4,7 +4,7 @@ extends InputParser
 @export var kitchen: Kitchen
 
 enum ActionID {
-	INSPECT, MOVE_TO,
+	INSPECT, MOVE_TO, MOVE,
 	TAKE, REPLACE, USE, OPEN, CLOSE, TURN_ON, TURN_OFF,
 	PET, FLIP,
 	INPUT, INPUT_DOOR_CODE, INPUT_MILK_CODE, INPUT_CODE_AMBIGUOUS, UNLOCK, LOCK, WEAR, COUNT,
@@ -17,7 +17,7 @@ enum ActionID {
 }
 
 enum SubjectID {
-	SELF, ZOOMBA, KITCHEN, FLOOR,
+	SELF, ZOOMBA, KITCHEN, BEDROOM, FLOOR,
 
 	TOP_LEFT_CUPBOARD, BOTTOM_LEFT_CUPBOARD, MIDDLE_LEFT_CUPBOARD, MIDDLE_RIGHT_CUPBOARD,
 	BOTTOM_RIGHT_CUPBOARD, MIDDLE_CUPBOARDS, BOTTOM_CUPBOARD, AMBIGUOUS_CUPBOARD,
@@ -48,7 +48,9 @@ enum SubjectID {
 
 enum ModifierID {
 	ON_FLOOR, IN_CUPBOARD, IN_MICROWAVE, IN_FREEZER, IN_FRIDGE, ON_PENTAGRAM, IN_SINK, IN_BOWL, ON_FAN, ON_COUNTER, IN_OVEN, ON_STOVE,
-	IN_FRYING_PAN, ON_FRONT_LEFT_BURNER, ON_BACK_LEFT_BURNER, ON_BACK_RIGHT_BURNER, ON_FRONT_RIGHT_BURNER, ON_AMBIGUOUS_BURNER,
+	IN_FRYING_PAN,
+	ON_FRONT_LEFT_BURNER, ON_BACK_LEFT_BURNER, ON_BACK_RIGHT_BURNER, ON_FRONT_RIGHT_BURNER, ON_AMBIGUOUS_BURNER,
+	TO_FRONT_LEFT_BURNER, TO_BACK_LEFT_BURNER, TO_BACK_RIGHT_BURNER, TO_FRONT_RIGHT_BURNER, TO_AMBIGUOUS_BURNER,
 	ON_TABLE, ON_HEAD,
 
 	WITH_CODE,
@@ -79,19 +81,21 @@ var secondOmeletteIngredients: Array[String] = [
 	"paprika", "soy sauce", "bbq sauce", "ketchup", "mustard", "mayonnaise", "chili powder"
 ]
 
+const NONE := -1
 
 func initParsableActions():
 
 	addParsableAction(ActionID.MOVE_TO,
-		["move to", "move on", "move", "walk to", "walk on", "walk up", "walk down", "walk", "go to", "go on", "go",
+		["move to", "move on", "walk to", "walk on", "walk up", "walk down", "walk", "go to", "go on", "go",
 		"step to", "step on", "step"])
+	addParsableAction(ActionID.MOVE, ["move", "switch"])
 
 	addParsableAction(ActionID.TAKE, ["take", "get", "obtain", "hold", "pick up", "grab"])
 	addParsableAction(ActionID.REPLACE, ["replace", "return", "put back", "put down", "put away", "set down"])
 	addParsableAction(ActionID.USE, ["use"])
 	addParsableAction(ActionID.OPEN, ["open", "crack open", "crack", "split open", "split"])
 	addParsableAction(ActionID.CLOSE, ["close", "shut"])
-	addParsableAction(ActionID.TURN_ON, ["turn on", "start", "activate"])
+	addParsableAction(ActionID.TURN_ON, ["turn on", "start", "activate", "run"], true)
 	addParsableAction(ActionID.TURN_OFF, ["turn off", "shut down", "deactivate", "stop", "unplug"])
 
 	addParsableAction(ActionID.PET, ["pet", "give pets to", "pat"])
@@ -111,13 +115,13 @@ func initParsableActions():
 		 "input code for milk", "enter code for milk", "input combination for milk", "enter combination for milk",],
 		true)
 	addParsableAction(ActionID.INPUT_CODE_AMBIGUOUS, ["input code", "enter code", "input combination", "enter combination",], true)
-	addParsableAction(ActionID.INPUT, ["push", "press", "click", "input", "enter", "set"])
+	addParsableAction(ActionID.INPUT, ["push", "press", "click", "input", "enter", "set"], true)
 	addParsableAction(ActionID.UNLOCK, ["unlock", "free"], true)
 	addParsableAction(ActionID.LOCK, ["lock"])
 	addParsableAction(ActionID.WEAR, ["wear", "put on"])
 	addParsableAction(ActionID.COUNT, ["count", "number"])
 
-	addParsableAction(ActionID.HEAT, ["heat up", "heat", "warm up", "warm", "burn", "fry", "cook", "melt", "thaw"])
+	addParsableAction(ActionID.HEAT, ["heat up", "heat", "warm up", "warm", "burn", "fry", "cook", "melt", "thaw"], true)
 	addParsableAction(ActionID.READ, ["read", "turn to"], true)
 
 	addParsableAction(ActionID.FEED, ["feed", "serve", "deliver", "give"])
@@ -148,10 +152,12 @@ func initParsableActions():
 
 func initParsableSubjects():
 	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you"],
-		[ActionID.INSPECT, ActionID.MOVE_TO])
+		[ActionID.INSPECT])
 	addParsableSubject(SubjectID.ZOOMBA,["zoomba", "robot vacuum", "robot", "vacuum", "pizza", "pet", "sleepyhead", "sleepy head"],
 		[ActionID.INSPECT, ActionID.MOVE_TO, ActionID.FEED, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.PET])
 	addParsableSubject(SubjectID.KITCHEN, ["kitchen", "surroundings", "around"],
+		[ActionID.INSPECT, ActionID.MOVE_TO])
+	addParsableSubject(SubjectID.BEDROOM, ["bedroom"],
 		[ActionID.INSPECT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.FLOOR, ["kitchen floor", "floor", "ground", "tiles", "transparency", "transparent background"],
 		[ActionID.INSPECT])
@@ -197,13 +203,14 @@ func initParsableSubjects():
 		["numbered cereal boxes", "numbered cereal box", "numbered cereal", "lower cereal boxes", "lower cereal box", "lower cereal"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.DINO_CEREAL_BOX,
-		["dino eggs cereal box", "dino eggs cereal", "dino eggs", "dino-mite eggs cereal box", "dino-mite eggs cereal", "dino-mite eggs"],
-		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.POUR, ActionID.PUT, ActionID.MOVE_TO])
+		["dino eggs cereal box", "dino eggs cereal", "dino eggs", "dino-mite eggs cereal box", "dino-mite eggs cereal", "dino-mite eggs",
+		 "box of dino eggs cereal", "box of dino eggs", "box of dino-mite eggs cereal", "box of dino-mite eggs"],
+		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.POUR, ActionID.REPLACE, ActionID.PUT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.IMPRISONED_CEREAL_BOX,
 		["shredded wheat cereal box", "shredded wheat cereal", "shredded wheat", "imprisoned cereal box", "imprisoned cereal", "prisoner", "prison"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.UNLOCK, ActionID.MOVE_TO])
-	addParsableSubject(SubjectID.AMBIGUOUS_CEREAL_BOX, ["cereal boxes", "cereal box", "cereal"],
-		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.MOVE_TO])
+	addParsableSubject(SubjectID.AMBIGUOUS_CEREAL_BOX, ["cereal boxes", "cereal box", "cereal", "box of cereal"],
+		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT, ActionID.POUR, ActionID.REPLACE, ActionID.PUT, ActionID.MOVE_TO])
 	
 	addParsableSubject(SubjectID.MICROWAVE, ["microwave time", "quantum microwave time", "microwave", "quantum microwave"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.USE, ActionID.INPUT, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.MOVE_TO])
@@ -223,15 +230,15 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.PICTURES, ["pictures", "picture", "cards", "card", "christmas cards", "christmas card", "postcards", "postcard"],
 		[ActionID.INSPECT, ActionID.TAKE])
 	addParsableSubject(SubjectID.BLUE_BUTTON, ["blue button", "blue"],
-		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT])
+		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT, ActionID.INPUT_DOOR_CODE, ActionID.INPUT_CODE_AMBIGUOUS])
 	addParsableSubject(SubjectID.GREEN_BUTTON, ["green button", "green"],
-		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT])
+		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT, ActionID.INPUT_DOOR_CODE, ActionID.INPUT_CODE_AMBIGUOUS])
 	addParsableSubject(SubjectID.RED_BUTTON, ["red button", "red"],
-		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT])
+		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT, ActionID.INPUT_DOOR_CODE, ActionID.INPUT_CODE_AMBIGUOUS])
 	addParsableSubject(SubjectID.YELLOW_BUTTON, ["yellow button", "yellow"],
-		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT])
+		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT, ActionID.INPUT_DOOR_CODE, ActionID.INPUT_CODE_AMBIGUOUS])
 	addParsableSubject(SubjectID.AMBIGUOUS_BUTTON, ["button"],
-		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT])
+		[ActionID.INSPECT, ActionID.USE, ActionID.INPUT, ActionID.INPUT_DOOR_CODE, ActionID.INPUT_CODE_AMBIGUOUS])
 	addParsableSubject(SubjectID.BLOCK_OF_ICE, ["block of ice", "frozen strategy guide", "frozen book", "frozen magazine", "ice block", "ice"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.HEAT, ActionID.READ])
 	addParsableSubject(SubjectID.STRATEGY_GUIDE, ["strategy guide", "breakfast strategy guide", "book", "magazine", "table of contents"],
@@ -249,7 +256,8 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.NOTE, ["note in fridge", "note", "paper", "list", "strange note"],
 		[ActionID.INSPECT, ActionID.INSPECT, ActionID.READ])
 	addParsableSubject(SubjectID.MILK, ["gallon of milk", "jug of milk", "milk jug", "milk"],
-		[ActionID.INSPECT, ActionID.UNLOCK, ActionID.TAKE, ActionID.USE, ActionID.POUR, ActionID.REPLACE, ActionID.PUT, ActionID.LOCK, ActionID.HEAT])
+		[ActionID.INSPECT, ActionID.UNLOCK, ActionID.TAKE, ActionID.USE, ActionID.POUR, ActionID.REPLACE, ActionID.PUT, ActionID.LOCK,
+		 ActionID.HEAT, ActionID.FEED])
 	addParsableSubject(SubjectID.LOCK, ["lock", "padlock"],
 		[ActionID.INSPECT, ActionID.UNLOCK, ActionID.TAKE, ActionID.LOCK])
 	
@@ -270,7 +278,7 @@ func initParsableSubjects():
 		[ActionID.INSPECT, ActionID.WASH, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.HEAT])
 	addParsableSubject(SubjectID.PLUMBING, ["pipes", "plumbing"],
 		[ActionID.INSPECT])
-	addParsableSubject(SubjectID.DEMON, ["demon", "devil", "blob", "creature", "breakfast demon", "cereal demon"],
+	addParsableSubject(SubjectID.DEMON, ["demon", "devil", "blob", "creature", "breakfast demon", "cereal demon", "cheeriofel"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.FEED, ActionID.EXORCISE, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.PENTAGRAM, ["pentagram", "red star", "red circle", "star", "circle", "portal"],
 		[ActionID.INSPECT])
@@ -282,9 +290,9 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.POTTED_PLANT, ["potted plant", "pot", "plant", "vines", "string of bananas"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
 	addParsableSubject(SubjectID.BACKYARD, ["backyard", "yard", "outside", "grass", "trees", "tree", "bushes", "bush", "out window"],
-		[ActionID.INSPECT])
+		[ActionID.INSPECT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.HAMMOCK, ["hammock"],
-		[ActionID.INSPECT])
+		[ActionID.INSPECT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.FRUIT_BASKET, ["fruit basket", "fruit", "basket", "apples", "apple", "mold", "fungus"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
 	addParsableSubject(SubjectID.GOULASH_INGREDIENTS,
@@ -294,11 +302,11 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.OVEN, ["oven door", "oven", "foodcinerator 9000", "foodcinerator"],
 		[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.USE, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.HEAT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.ASHES, ["ashes", "pile of ashes", "burnt strategy guide", "burnt book", "burnt magazine"],
-		[ActionID.INSPECT, ActionID.TAKE, ActionID.USE, ActionID.SCATTER, ActionID.REPLACE, ActionID.PUT])
+		[ActionID.INSPECT, ActionID.TAKE, ActionID.USE, ActionID.SCATTER, ActionID.REPLACE, ActionID.PUT, ActionID.FEED])
 	addParsableSubject(SubjectID.STOVE_TOP, ["stove top", "stove"],
 		[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.FRYING_PAN, ["frying pan", "pan"],
-		[ActionID.INSPECT, ActionID.TAKE, ActionID.USE, ActionID.REPLACE, ActionID.PUT, ActionID.HEAT])
+		[ActionID.INSPECT, ActionID.TAKE, ActionID.USE, ActionID.REPLACE, ActionID.PUT, ActionID.HEAT, ActionID.MOVE, ActionID.FEED])
 	addParsableSubject(SubjectID.FUME_HOOD, ["fume hood", "oven vent", "vent above oven", "vent over oven", "ventilation", "vent"],
 		[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN])
 	addParsableSubject(SubjectID.FRONT_LEFT_BURNER, ["front left burner", "left burner", "bottom left burner", "lower left burner"],
@@ -332,47 +340,76 @@ func initParsableModifiers():
 		[ActionID.REPLACE, ActionID.PUT, ActionID.POUR, ActionID.OPEN])
 	addParsableModifier(ModifierID.IN_CUPBOARD,["in cupboard", "back in cupboard"],
 		[ActionID.REPLACE, ActionID.PUT])
-	addParsableModifier(ModifierID.IN_MICROWAVE, ["in microwave"],
+	addParsableModifier(ModifierID.IN_MICROWAVE, ["in microwave", "back in microwave"],
 		[ActionID.REPLACE, ActionID.PUT])
-	addParsableModifier(ModifierID.IN_FREEZER, ["in freezer", "in upper fridge", "in top of fridge"],
+	addParsableModifier(ModifierID.IN_FREEZER,
+		["in freezer", "in upper fridge", "in top of fridge",
+		 "back in freezer", "back in upper fridge", "back in top of fridge"],
 		[ActionID.REPLACE, ActionID.PUT])
-	addParsableModifier(ModifierID.IN_FRIDGE, ["in fridge", "in lower fridge", "in bottom of fridge"],
+	addParsableModifier(ModifierID.IN_FRIDGE,
+		["in fridge", "in lower fridge", "in bottom of fridge",
+		 "back in fridge", "back in lower fridge", "back in bottom of fridge"],
 		[ActionID.REPLACE, ActionID.PUT])
 	addParsableModifier(ModifierID.ON_PENTAGRAM, ["in pentagram", "on pentagram", "in star", "on star", "in red circle", "on red circle"],
 		[ActionID.REPLACE, ActionID.PUT])
-	addParsableModifier(ModifierID.IN_SINK, ["in sink", "in wash basin", "in basin", "in kitchen sink"],
+	addParsableModifier(ModifierID.IN_SINK,
+		["in sink", "in wash basin", "in basin", "in kitchen sink",
+		 "back in sink", "back in wash basin", "back in basin", "back in kitchen sink"],
 		[ActionID.REPLACE, ActionID.PUT])
 	addParsableModifier(ModifierID.IN_BOWL, ["in bowl", "in cereal bowl", "in cereal"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.POUR, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_FAN, ["on fan", "on drying fan"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
-	addParsableModifier(ModifierID.ON_COUNTER, ["on counter top", "on counter"],
+	addParsableModifier(ModifierID.ON_COUNTER, ["on counter top", "on counter", "back on counter top", "back on counter"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
-	addParsableModifier(ModifierID.IN_OVEN, ["in oven", "in foodcinerator 9000", "in foodcinerator"],
+	addParsableModifier(ModifierID.IN_OVEN,
+		["in oven", "in foodcinerator 9000", "in foodcinerator",
+		 "back in oven", "back in foodcinerator 9000", "back in foodcinerator"],
 		[ActionID.REPLACE, ActionID.PUT])
-	addParsableModifier(ModifierID.ON_STOVE, ["on stove top", "on stove", "on top of oven"],
+	addParsableModifier(ModifierID.ON_STOVE,
+		["on stove top", "on stove", "on top of oven",
+		 "back on stove top", "back on stove", "back on top of oven"],
 		[ActionID.REPLACE, ActionID.PUT])
 	addParsableModifier(ModifierID.IN_FRYING_PAN, ["in frying pan", "on frying pan", "in pan", "on pan"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_FRONT_LEFT_BURNER,
-		["on front left burner", "on left burner", "on bottom left burner", "on lower left burner"],
+		["on front left burner", "on left burner", "on bottom left burner", "on lower left burner",
+		 "back on front left burner", "back on left burner", "back on bottom left burner", "back on lower left burner",],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_BACK_LEFT_BURNER,
-		["on back left burner", "on top burner", "on upper burner", "on top left burner", "on upper left burner"],
+		["on back left burner", "on top burner", "on upper burner", "on top left burner", "on upper left burner",
+		 "back on back left burner", "back on top burner", "back on upper burner", "back on top left burner", "back on upper left burner"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_BACK_RIGHT_BURNER,
-		["on back right burner", "on right burner", "on top right burner", "on upper right burner"],
+		["on back right burner", "on right burner", "on top right burner", "on upper right burner",
+		 "back on back right burner", "back on right burner", "back on top right burner", "back on upper right burner"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_FRONT_RIGHT_BURNER,
-		["on front right burner", "on bottom burner", "on lower burner", "on bottom right burner", "on lower right burner"],
+		["on front right burner", "on bottom burner", "on lower burner", "on bottom right burner", "on lower right burner",
+		 "back on front right burner", "back on bottom burner", "back on lower burner", "back on bottom right burner", "back on lower right burner"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
 	addParsableModifier(ModifierID.ON_AMBIGUOUS_BURNER,
-		["on burners", "on burner"],
+		["on burners", "on burner", "back on burners", "back on burner"],
 		[ActionID.REPLACE, ActionID.PUT, ActionID.OPEN])
-	addParsableModifier(ModifierID.ON_TABLE, ["on table", "on kitchen table"],
+	addParsableModifier(ModifierID.TO_FRONT_LEFT_BURNER,
+		["to front left burner", "to left burner", "to bottom left burner", "to lower left burner",],
+		[ActionID.MOVE])
+	addParsableModifier(ModifierID.TO_BACK_LEFT_BURNER,
+		["to back left burner", "to top burner", "to upper burner", "to top left burner", "to upper left burner"],
+		[ActionID.MOVE])
+	addParsableModifier(ModifierID.TO_BACK_RIGHT_BURNER,
+		["to back right burner", "to right burner", "to top right burner", "to upper right burner"],
+		[ActionID.MOVE])
+	addParsableModifier(ModifierID.TO_FRONT_RIGHT_BURNER,
+		["to front right burner", "to bottom burner", "to lower burner", "to bottom right burner", "to lower right burner"],
+		[ActionID.MOVE])
+	addParsableModifier(ModifierID.TO_AMBIGUOUS_BURNER,
+		["to burners", "to burner"],
+		[ActionID.MOVE])
+	addParsableModifier(ModifierID.ON_TABLE, ["on table", "on kitchen table", "back on table", "back on kitchen table"],
 		[ActionID.REPLACE, ActionID.PUT])
 	addParsableModifier(ModifierID.ON_HEAD, ["on self", "on player", "on head"],
-		[ActionID.INSPECT, ActionID.OPEN])
+		[ActionID.INSPECT, ActionID.PUT, ActionID.OPEN, ActionID.WEAR])
 
 	addParsableModifier(ModifierID.WITH_CODE, ["with code", "with combination", "using code", "using combination"],
 		[ActionID.UNLOCK])
@@ -384,7 +421,8 @@ func initParsableModifiers():
 		[ActionID.GARNISH])
 	addParsableModifier(ModifierID.ON_EGGS, ["on eggs", "on egg", "on fried eggs", "on fried egg", "on scrambled eggs", "on scrambled egg"],
 		[ActionID.SCATTER, ActionID.PUT, ActionID.REPLACE])
-	addParsableModifier(ModifierID.TO_DEMON, ["to demon", "to devil", "to blob", "to creature", "to breakfast demon", "to cereal demon"],
+	addParsableModifier(ModifierID.TO_DEMON,
+	    ["to demon", "to devil", "to blob", "to creature", "to breakfast demon", "to cereal demon", "to cheeriofel"],
 		[ActionID.FEED])
 	
 	addParsableModifier(ModifierID.ON, ["on"],
@@ -449,7 +487,7 @@ func parseItems() -> String:
 			ActionID.MOVE_TO:
 				return requestAdditionalSubjectContext("Where", [], [], ["on ", "to "])
 
-			ActionID.TAKE, ActionID.REPLACE, ActionID.USE, ActionID.OPEN, ActionID.CLOSE, ActionID.TURN_ON, ActionID.TURN_OFF,\
+			ActionID.MOVE, ActionID.TAKE, ActionID.REPLACE, ActionID.USE, ActionID.OPEN, ActionID.CLOSE, ActionID.TURN_ON, ActionID.TURN_OFF,\
 			ActionID.PET, ActionID.FLIP,\
 			ActionID.INPUT, ActionID.UNLOCK, ActionID.LOCK, ActionID.WEAR, ActionID.COUNT,\
 			ActionID.HEAT, ActionID.READ,\
@@ -486,6 +524,9 @@ func parseItems() -> String:
 
 				SubjectID.KITCHEN:
 					return "You've finally made it to the kitchen! This place is chock full of high-tech appliances perfect for overcomplicating mealtime."
+
+				SubjectID.BEDROOM:
+					return "That's where you came from. No need to go back now."
 
 				SubjectID.FLOOR:
 					return "Looking down, you're struck with the odd sense that you should be able to see through your tiled floor to the bathroom below."
@@ -899,35 +940,60 @@ func parseItems() -> String:
 
 				
 				SubjectID.WINDOW:
-					return ""
+					return (
+						"This window looks out into your backyard, where your hammock sways gently in the morning breeze."
+					)
 
 				SubjectID.POTTED_PLANT:
-					return ""
+					return (
+						"You got this \"string of bananas\" plant under the assumption that it would produce a constant supply " +
+						"of delicious, yellow fruit. The bananas it's made so far are much smaller and greener than you expected, " +
+						"but that's okay. It's trying it's best, and it would be rude to rush it. You can wait."
+					)
 
 				SubjectID.BACKYARD:
-					return ""
+					return (
+						"Your hammock is strung carefully between the plum trees, and the tulips at the fence line are in full bloom. " +
+						"All is as it should be."
+					)
+
 
 				SubjectID.HAMMOCK:
-					return ""
+					return (
+						"The sight of your hammock on a warm summer's morning makes your heart ache with longing... With difficulty, you " +
+						"tear your gaze away from it refocus on the task at hand. You've got to finish preparing your breakfast and get to work! " +
+						"There will be time to relax in your hammock once crisis has been averted."
+					)
 
 				SubjectID.FRUIT_BASKET:
-					return ""
+					return (
+						"This used to be a fruit basket, but after a few weeks of neglect, now it's more of a mold basket. Gross... " +
+						"You'd throw it out, but that would require touching it, and you'd rather not..."
+					)
 
 				SubjectID.GOULASH_INGREDIENTS:
-					return ""
+					return (
+						"Your loyal army of pasta ingredients is standing at attention. You've got the next 4 months of dinners planned out right here!"
+					)
 
 				
 				SubjectID.OVEN:
-					return ""
+					return (
+						"This baby is the foodcinerator 9000, and it makes short work of all your baking and frying needs! It's been recalled by the " +
+						"manufacturer several times for safety concerns, but you have yet to order a new one. You're pretty sure they're just jealous."
+					)
 
 				SubjectID.ASHES:
 					if kitchen.isStrategyGuideBurnt:
-						return ""
+						return "\"Ashes to ashes\", you mutter to yourself. You immediately feel 200% cooler."
 					else:
 						return wrongContextParse()
 
 				SubjectID.STOVE_TOP:
-					return ""
+					return (
+						"This stove top is powerful enough to boil water in under a minute and " +
+						"has the added bonus of singing off your unibrow if you get close enough."
+					)
 
 				SubjectID.FRYING_PAN:
 					if kitchen.isDemonSatisfied:
@@ -936,22 +1002,50 @@ func parseItems() -> String:
 						return "This trusty frying pan doubles as a weapon against would-be milk thieves."
 
 				SubjectID.FUME_HOOD:
-					return ""
+					return (
+						"You recently had the genius idea of rerouting your fume hood to the house's HVAC system instead of venting it outdoors. " +
+						"That way, you can smell a freshly cooked meal anywhere in your house!"
+					)
+
 
 				SubjectID.FRONT_LEFT_BURNER:
-					return ""
+					if kitchen.activeBurner == kitchen.FRONT_LEFT:
+						return (
+							"That burner is cooking the dickens out of your frying pan. " +
+							"You're not sure what dickens are, but there sure aren't any left in the pan."
+						)
+					else:
+						return "That burner is off"
 
 				SubjectID.BACK_LEFT_BURNER:
-					return ""
+					if kitchen.activeBurner == kitchen.BACK_LEFT:
+						return (
+							"That burner is cooking the dickens out of your frying pan. " +
+							"You're not sure what dickens are, but there sure aren't any left in the pan."
+						)
+					else:
+						return "That burner is off"
 
 				SubjectID.BACK_RIGHT_BURNER:
-					return ""
+					if kitchen.activeBurner == kitchen.BACK_RIGHT:
+						return (
+							"That burner is cooking the dickens out of your frying pan. " +
+							"You're not sure what dickens are, but there sure aren't any left in the pan."
+						)
+					else:
+						return "That burner is off"
 
 				SubjectID.FRONT_RIGHT_BURNER:
-					return ""
+					if kitchen.activeBurner == kitchen.FRONT_RIGHT:
+						return (
+							"That burner is cooking the dickens out of your frying pan. " +
+							"You're not sure what dickens are, but there sure aren't any left in the pan."
+						)
+					else:
+						return "That burner is off"
 
 				SubjectID.AMBIGUOUS_BURNER:
-					return ""
+					return requestAdditionalContextCustom("Which burner would you like to " + actionAlias + "?", REQUEST_SUBJECT, [], [" burner"])
 
 				
 				SubjectID.TABLE:
@@ -979,11 +1073,431 @@ func parseItems() -> String:
 
 
 		ActionID.MOVE_TO:
-			pass
+
+			match subjectID:
+
+				SubjectID.KITCHEN:
+					return "You are already in the kitchen."
+
+				SubjectID.BEDROOM:
+					return "There's no need to go back into your bedroom. Your breakfast is here in the kitchen!"
+
+
+				SubjectID.ZOOMBA:
+					kitchen.movePlayer(Kitchen.PlayerPos.ZOOMBA)
+					return "You walk over to Zoomba"
+
+
+				SubjectID.MICROWAVE, SubjectID.OUTLET:
+					kitchen.movePlayer(Kitchen.PlayerPos.MICROWAVE)
+					return "You walk over to the microwave"
+				
+				SubjectID.BOTTOM_LEFT_CUPBOARD, SubjectID.NUMBERED_CEREAL_BOXES:
+					kitchen.movePlayer(Kitchen.PlayerPos.MICROWAVE)
+					return "You walk over to the cupboard under the microwave"
+				
+				SubjectID.TOP_LEFT_CUPBOARD, SubjectID.COLORED_CEREAL_BOXES:
+					kitchen.movePlayer(Kitchen.PlayerPos.MICROWAVE)
+					return "You walk over to the cupboard over the microwave"
+
+
+				SubjectID.TOP_FRIDGE_DOOR, SubjectID.BOTTOM_FRIDGE_DOOR, SubjectID.FRIDGE, SubjectID.FREEZER:
+					kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+					return "You walk over to the refrigerator."
+				
+
+				SubjectID.BOTTOM_DRAWER, SubjectID.MIDDLE_DRAWER, SubjectID.TOP_DRAWER, SubjectID.AMBIGUOUS_DRAWER:
+					kitchen.movePlayer(Kitchen.PlayerPos.DRAWERS)
+					return "You walk over to the drawers."
+
+				SubjectID.FAN:
+					kitchen.movePlayer(Kitchen.PlayerPos.DRAWERS)
+					return "You walk over to the fan."
+
+
+				SubjectID.MIDDLE_LEFT_CUPBOARD, SubjectID.MIDDLE_CUPBOARDS:
+					kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_LEFT_CUPBOARD)
+					return "You walk over to the cupboards under the sink."
+
+				SubjectID.DEMON:
+					kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_LEFT_CUPBOARD)
+					return "You walk over to the cupboard with the breakfast demon."
+
+
+				SubjectID.MIDDLE_RIGHT_CUPBOARD:
+					kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_RIGHT_CUPBOARD)
+					return "You walk over to the cupboards under the sink."
+
+				SubjectID.SINK:
+					kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_RIGHT_CUPBOARD)
+					return "You walk over to the sink."
+
+				SubjectID.TIMER:
+					kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_RIGHT_CUPBOARD)
+					return "You walk over to the " + subjectAlias + "."
+
+
+				SubjectID.OVEN:
+					kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+					return "You walk over to the oven."
+
+				SubjectID.STOVE_TOP:
+					kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+					return "You walk over to the stove."
+
+				SubjectID.COUNTER:
+					kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+					return "You walk over to an open section of the counter."
+
+
+				SubjectID.TABLE:
+					kitchen.movePlayer(Kitchen.PlayerPos.TABLE)
+					return "You walk over to the table."
+
+
+				SubjectID.BOTTOM_RIGHT_CUPBOARD, SubjectID.IMPRISONED_CEREAL_BOX:
+					kitchen.movePlayer(Kitchen.PlayerPos.RIGHT_CUPBOARD)
+					return "You walk over to the cupboard containing cereal jail."
+
+
+				SubjectID.HAMMOCK, SubjectID.BACKYARD:
+					return "There's no time to be lounging around outside. You've got to eat your breakfast and get to work!"
+
+
+				SubjectID.DINO_CEREAL_BOX, SubjectID.AMBIGUOUS_CEREAL_BOX:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.CEREAL_BOX:
+						return "This cereal box is already with you wherever you go!"
+					elif kitchen.isCerealInOven:
+						kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+						return "You walk over to the cereal box in the oven."
+					elif kitchen.isCerealOnCounter:
+						kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+						return "You walk over to the cereal box on the counter."
+					elif kitchen.isCerealOnTable:
+						kitchen.movePlayer(Kitchen.PlayerPos.TABLE)
+						return "You walk over to the cereal box on the table."
+
+				SubjectID.BOTTOM_CUPBOARD, SubjectID.AMBIGUOUS_CUPBOARD:
+					return requestAdditionalContextCustom(
+						"Which of the cupboards would you like to " + actionAlias + "?",
+						REQUEST_SUBJECT, [], [" cupboard"]
+					)
+
+
+		ActionID.MOVE:
+			if subjectID == SubjectID.FRYING_PAN:
+				var movingOffActiveBurner: bool
+				match modifierID:
+					ModifierID.ON_FRONT_LEFT_BURNER:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.FRONT_LEFT:
+							return "The frying pan is already there."
+						else:
+							if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FRYING_PAN:
+								kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.FRONT_LEFT)
+							if kitchen.activeBurner == NONE or kitchen.activeBurner == kitchen.ovenFryingPanPos:
+								return "You move the frying pan over to the front left burner."
+							else:
+								movingOffActiveBurner = true
+					ModifierID.ON_FRONT_RIGHT_BURNER:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.FRONT_RIGHT:
+							return "The frying pan is already there."
+						else:
+							if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FRYING_PAN:
+								kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.FRONT_RIGHT)
+							if kitchen.activeBurner == NONE or kitchen.activeBurner == kitchen.ovenFryingPanPos:
+								return "You move the frying pan over to the front right burner."
+							else:
+								movingOffActiveBurner = true
+					ModifierID.ON_BACK_LEFT_BURNER:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.BACK_LEFT:
+							return "The frying pan is already there."
+						else:
+							if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FRYING_PAN:
+								kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.BACK_LEFT)
+							if kitchen.activeBurner == NONE or kitchen.activeBurner == kitchen.ovenFryingPanPos:
+								return "You move the frying pan over to the back left burner."
+							else:
+								movingOffActiveBurner = true
+					ModifierID.ON_BACK_RIGHT_BURNER:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.BACK_RIGHT:
+							return "The frying pan is already there."
+						else:
+							if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FRYING_PAN:
+								kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.BACK_RIGHT)
+							if kitchen.activeBurner == NONE or kitchen.activeBurner == kitchen.ovenFryingPanPos:
+								return "You move the frying pan over to the back right burner."
+							else:
+								movingOffActiveBurner = true
+					ModifierID.ON_AMBIGUOUS_BURNER, -1:
+						return requestAdditionalContextCustom("Which burner would you like to move the pan to?", REQUEST_SUBJECT, [], [" burner"])
+				
+				if movingOffActiveBurner:
+					SceneManager.transitionToScene(
+						SceneManager.SceneID.ENDING,
+						"The burner underneath the frying pan is still red hot, with flames licking out around it, " +
+						"but for some reason you feel a pressing need to take the frying pan away from it. " +
+						"A smarter man might have turned off the burner first, but you are not that man. As soon as you remove the pan, " +
+						"the jet of fire that it was blocking shoots up into the air. You watch in awe as the column of flame rapidly climbs to the ceiling. " +
+						"A man of low to moderate intelligence might have turned off the burner now, but sadly, you are not that man either.",
+						SceneManager.EndingID.DRY_FIRE
+					)
+					return ""
 
 
 		ActionID.TAKE:
-			pass
+
+			match subjectID:
+
+				SubjectID.COLORED_CEREAL_BOXES:
+					if kitchen.isTopLeftCupboardOpen:
+						return "There's not actually any cereal in these boxes, so there's no point in taking them."
+					else:
+						return wrongContextParse()
+
+				SubjectID.NUMBERED_CEREAL_BOXES:
+					if kitchen.isBottomLeftCupboardOpen:
+						return "There's not actually any cereal in these boxes, so there's no point in taking them."
+					else:
+						return wrongContextParse()
+
+				SubjectID.DINO_CEREAL_BOX, SubjectID.AMBIGUOUS_CEREAL_BOX:
+					return attemptTakeDinoEggsCereal()
+
+				SubjectID.IMPRISONED_CEREAL_BOX:
+					if kitchen.isBottomRightCupboardOpen:
+						return "You can't release the prisoner until they've finished serving their sentence."
+					else:
+						return wrongContextParse()
+
+
+				SubjectID.QUAKER_DRAWING, SubjectID.PICTURES:
+					return "The Feng Shui of your fridge is perfect right now. You don't want to mess with it."
+
+				SubjectID.BLOCK_OF_ICE, SubjectID.STRATEGY_GUIDE when subjectID == SubjectID.BLOCK_OF_ICE or kitchen.isStrategyGuideFrozen:
+					if not kitchen.isStrategyGuideFrozen:
+						return wrongContextParse()
+					elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FROZEN_STRATEGY_GUIDE:
+						return "You're already holding that. (Brrrr!)"
+					elif kitchen.isStrategyGuideInFridge:
+						if kitchen.isTopFridgeDoorOpen:
+							if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+								return "You're already carrying something. You'll need to put it down first."
+							else:
+								kitchen.takeFrozenStrategyGuideFromFridge()
+								return "You pick up the block of ice containing the strategy guide."
+						else:
+							return wrongContextParse()
+					elif kitchen.isStrategyGuideInOven:
+						if kitchen.isOvenDoorOpen:
+							if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+								return "You're already carrying something. You'll need to put it down first."
+							else:
+								kitchen.takeFrozenStrategyGuideFromOven()
+								return "You pick up the block of ice containing the strategy guide."
+						else:
+							return "You'll need to open the oven door first."
+
+				SubjectID.ASHES, SubjectID.STRATEGY_GUIDE when subjectID == SubjectID.ASHES or kitchen.isStrategyGuideBurnt:
+					if not kitchen.isStrategyGuideBurnt:
+						return wrongContextParse()
+					elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.ASHES:
+						return "You're already holding that."
+					elif kitchen.isStrategyGuideInOven:
+						if kitchen.isOvenDoorOpen:
+							if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+								return "You're already carrying something. You'll need to put it down first."
+							else:
+								kitchen.takeAshesFromOven()
+								return "You pick up the ashes that were once a breakfast strategy guide. (Your hands take +2 fire damage)"
+						else:
+							return "You'll need to open the oven door first."
+					elif kitchen.isStrategyGuideOnCounter:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+							return "You're already carrying something. You'll need to put it down first."
+						else:
+							kitchen.takeAshesFromCounter()
+							return "You pick up the ashes that were once a breakfast strategy guide."
+
+				SubjectID.STRATEGY_GUIDE:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.THAWED_STRATEGY_GUIDE:
+						return "You're already holding that."
+					elif kitchen.isStrategyGuideInOven:
+						if kitchen.isOvenDoorOpen:
+							if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+								return "You're already carrying something. You'll need to put it down first."
+							else:
+								kitchen.takeThawedStrategyGuideFromOven()
+								return "You pick up the freshly thawed strategy guide."
+						else:
+							return "You'll need to open the oven door first."
+					elif kitchen.isStrategyGuideOnCounter:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+							return "You're already carrying something. You'll need to put it down first."
+						else:
+							kitchen.takeStrategyGuideFromCounter()
+							return "You pick up the breakfast strategy guide."
+					elif kitchen.isStrategyGuideOnTable:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+							return "You're already carrying something. You'll need to put it down first."
+						else:
+							kitchen.takeStrategyGuideFromTable()
+							return "You pick up the breakfast strategy guide."
+
+				SubjectID.DINO_NUGGETS:
+					if not kitchen.isTopFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						return "As delicious as these are, they're not really breakfast food..."
+
+				SubjectID.SPOON:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.SPOON:
+						return "You're already holding that."
+					elif not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+						return "You're already carrying something. You'll need to put it down first."
+					else:
+						kitchen.takeSpoonFromFridge()
+						return "You pick up a spoon."
+
+				SubjectID.EGG:
+					if kitchen.isPlayerWearingEgg:
+						return "You've already got an egg."
+					elif not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					elif kitchen.isEggInPan or kitchen.isEggOnFloor:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return "You've already taken an egg."
+					else:
+						kitchen.takeEggFromFridge()
+						return "You take an egg and balance it carefully on your head."
+
+				SubjectID.GRAPEFRUIT_JUICE:
+					if not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						return "Yuck! That stuff is NOT good breakfast material, and you don't want anything to do with it."
+				
+				SubjectID.MILK:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.MILK:
+						return "You're already holding that."
+					elif not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					elif not kitchen.isMilkUnlocked:
+						return "The milk is still chained to the side of the fridge. You'll need to unlock it first."
+					elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+						return "You're already carrying something. You'll need to put it down first."
+					else:
+						kitchen.takeMilk()
+						return "You pick up the milk and take a quick swig from the jug. Refreshing!"
+				
+				SubjectID.LOCK:
+					if not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						return "It's better if this stays in the fridge."
+
+
+				SubjectID.CEREAL_BOWL:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.CEREAL_BOWL:
+						return "You're already holding that."
+					elif kitchen.bowlState == Kitchen.DIRTY:
+						return "You should really wash it first..."
+					elif kitchen.isCerealBowlInMicrowave:
+						if not kitchen.isMicrowaveDoorOpen:
+							return "You'll need to open the microwave first."
+						elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+							return "You're already carrying something. You'll need to put it down first."
+						else:
+							kitchen.takeCerealBowl()
+							return "You pick up the cereal bowl"
+					elif kitchen.isCerealBowlOnFan or kitchen.isCerealBowlOnTable:
+						if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+							return "You're already carrying something. You'll need to put it down first."
+						else:
+							kitchen.takeCerealBowl()
+							return "You pick up the cereal bowl"
+
+
+				SubjectID.DEMON:
+					if not kitchen.isMiddleLeftCupboardOpen:
+						return wrongContextParse()
+					else:
+						return "That seems like a really bad idea."
+
+				SubjectID.FORK:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FORK:
+						return "You're already holding that."
+					elif not kitchen.isMiddleRightCupboardOpen:
+						return wrongContextParse()
+					elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+						return "You're already carrying something. You'll need to put it down first."
+					else:
+						kitchen.takeFork()
+						return "You pick up the fork."
+
+
+				SubjectID.POTTED_PLANT:
+					return "Your plant doesn't like being pushed around. You'd rather let it grow in peace."
+
+				SubjectID.FRUIT_BASKET:
+					return "Gross... You don't want to touch that."
+
+				SubjectID.GOULASH_INGREDIENTS:
+					return "These aren't breakfast ingredients, so you don't need them right now."
+
+
+				SubjectID.FRYING_PAN:
+					if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FRYING_PAN:
+						return "You're already holding that."
+					elif kitchen.isDemonSatisfied:
+						return "The breakfast demon is busy with the frying pan right now. Best to leave him be..."
+					elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+						return "You're already carrying something. You'll need to put it down first." 
+					elif kitchen.activeBurner == kitchen.ovenFryingPanPos:
+						SceneManager.transitionToScene(
+							SceneManager.SceneID.ENDING,
+							"The burner underneath the frying pan is still red hot, with flames licking out around it, " +
+							"but for some reason you feel a pressing need to take the frying pan away from it. " +
+							"A smarter man might have turned off the burner first, but you are not that man. As soon as you remove the pan, " +
+							"the jet of fire that it was blocking shoots up into the air. You watch in awe as the column of flame rapidly climbs to the ceiling. " +
+							"A man of low to moderate intelligence might have turned off the burner now, but sadly, you are not that man either.",
+							SceneManager.EndingID.DRY_FIRE
+						)
+						return ""
+					else:
+						kitchen.takeFryingPan()
+						return "You pick up the frying pan."
+
+
+				SubjectID.SALT_AND_PEPPER_SHAKERS:
+					return "You briefly pick up each shaker. They're both empty..."
+
+
+				SubjectID.BREAKFAST:
+					if kitchen.bowlState == Kitchen.HATCHED:
+						if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.CEREAL_BOWL:
+							return "You're already holding that."
+						elif kitchen.isCerealBowlInMicrowave:
+							if not kitchen.isMicrowaveDoorOpen:
+								return "You'll need to open the microwave first."
+							elif kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+								return "You're already carrying something. You'll need to put it down first."
+							else:
+								kitchen.takeCerealBowl()
+								return "You pick up your breakfast!"
+						elif kitchen.isCerealBowlOnFan or kitchen.isCerealBowlOnTable:
+							if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+								return "You're already carrying something. You'll need to put it down first."
+							else:
+								kitchen.takeCerealBowl()
+								return "You pick up your breakfast!"
+					else:
+						return "You don't have any breakfast fully prepared yet... Keep going!"
 
 
 		ActionID.REPLACE, ActionID.PUT:
@@ -991,7 +1505,296 @@ func parseItems() -> String:
 				modifierID = -1
 			
 			match subjectID:
-				pass
+				
+				SubjectID.BLOCK_OF_ICE, SubjectID.STRATEGY_GUIDE when subjectID == SubjectID.BLOCK_OF_ICE or kitchen.isStrategyGuideFrozen:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FROZEN_STRATEGY_GUIDE:
+						return "You're not holding that right now."
+					match modifierID:
+						-1:
+							if kitchen.isTopFridgeDoorOpen:
+								kitchen.putFrozenStrategyGuideInFridge()
+								return "You put the " + subjectAlias + " back in the freezer."
+							if kitchen.isOvenDoorOpen:
+								kitchen.putFrozenStrategyGuideInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								return wrongContextParse()
+						ModifierID.IN_FREEZER:
+							if kitchen.isTopFridgeDoorOpen:
+								kitchen.putFrozenStrategyGuideInFridge()
+								return "You put the " + subjectAlias + " back in the freezer."
+							else:
+								return "You'll need to open the freezer first."
+						ModifierID.IN_FRIDGE:
+							return "For some reason, it just feels wrong putting a block of ice in the refrigerator..."
+						ModifierID.IN_OVEN:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putFrozenStrategyGuideInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								return "You'll need to open the over door first."
+						ModifierID.IN_MICROWAVE:
+							return "The block of ice is too big to fit in the microwave."
+						ModifierID.IN_FRYING_PAN, ModifierID.ON_BACK_LEFT_BURNER, ModifierID.ON_BACK_RIGHT_BURNER,\
+						ModifierID.ON_FRONT_LEFT_BURNER, ModifierID.ON_FRONT_RIGHT_BURNER, ModifierID.ON_AMBIGUOUS_BURNER:
+							return "The block of ice is too big to fit in the frying pan, and you don't think it's a good idea to put it on a burner without it."
+						ModifierID.ON_COUNTER:
+							return "You don't like the idea of the ice melting all over your counter..."
+						ModifierID.ON_TABLE:
+							return "You don't have a coaster big enough for the ice..."
+
+
+				SubjectID.ASHES, SubjectID.STRATEGY_GUIDE when subjectID == SubjectID.ASHES or kitchen.isStrategyGuideBurnt:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.ASHES:
+						return "You're not holding that right now."
+					match modifierID:
+						-1:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putBurntStrategyGuideInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								kitchen.putAshesOnCounter()
+								return "You put the " + subjectAlias + " on the counter."
+						ModifierID.IN_OVEN:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putBurntStrategyGuideInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								return "You'll need to open the over door first."
+						ModifierID.ON_COUNTER:
+							kitchen.putAshesOnCounter()
+							return "You put the " + subjectAlias + " on the counter."
+						ModifierID.ON_TABLE:
+							return "Your wooden table probably isn't the best place to put hot ashes."
+						ModifierID.IN_FRIDGE, ModifierID.IN_FREEZER:
+							return "The fridge is meant for cold things, and these ashes are hot, hot, hot!"
+						ModifierID.IN_FRYING_PAN:
+							if kitchen.isDemonSatisfied:
+								return "The demon will ask (loudly) for more ashes if he wants them."
+							elif kitchen.isEggInPan:
+								kitchen.addAshes()
+								return "You sprinkle some of the ashes on top of the egg."
+							else:
+								return "Ashes are one of those spices that go best on top of something, you know? Right now, the frying pan is empty."
+						ModifierID.ON_EGGS:
+							if kitchen.isDemonSatisfied:
+								return "The demon will ask (loudly) for more ashes if he wants them."
+							elif kitchen.isEggInPan:
+								kitchen.addAshes()
+								return "You sprinkle some of the ashes on top of the egg."
+							else:
+								return wrongContextParse()
+
+				SubjectID.STRATEGY_GUIDE:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.THAWED_STRATEGY_GUIDE:
+						return "You're not holding that right now."
+					match modifierID:
+						-1:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putThawedStrategyGuideInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								kitchen.putStrategyGuideOnCounter()
+								return "You put the " + subjectAlias + " on the counter."
+						ModifierID.IN_OVEN:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putThawedStrategyGuideInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								return "You'll need to open the over door first."
+						ModifierID.ON_COUNTER:
+							kitchen.putStrategyGuideOnCounter()
+							return "You put the " + subjectAlias + " on the counter."
+						ModifierID.ON_TABLE:
+							kitchen.putStrategyGuideOnTable()
+							return "You put the " + subjectAlias + " on the table."
+						ModifierID.IN_FRIDGE, ModifierID.IN_FREEZER:
+							return "You just finished thawing the strategy guide. Putting it back in the fridge would be counterproductive."
+
+
+				SubjectID.SPOON:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.SPOON:
+						return "You're not holding that right now."
+					match modifierID:
+						-1, ModifierID.IN_FRIDGE:
+							if kitchen.isBottomFridgeDoorOpen:
+								kitchen.putSpoonInFridge()
+								return "You put the spoon back in the fridge."
+							else:
+								return "You can't return the spoon while the fridge door is closed."
+						ModifierID.IN_BOWL:
+							if kitchen.bowlState == Kitchen.HATCHED:
+								return win()
+							else:
+								return "Your breakfast isn't ready to be eaten yet."
+						ModifierID.IN_MICROWAVE:
+							return "You may not be the deepest spoon in the drawer, but you know not to put one in the microwave."
+
+
+				SubjectID.EGG:
+					return attemptPlaceEgg(false)
+
+				SubjectID.MILK:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.MILK:
+						return "You're not holding that right now."
+					match modifierID:
+						-1, ModifierID.IN_FRIDGE:
+							if kitchen.isBottomFridgeDoorOpen:
+								kitchen.putMilkBack()
+								return "You put the milk back in the fridge."
+							else:
+								return "You can't return the milk while the fridge door is closed."
+						ModifierID.IN_BOWL:
+							if kitchen.bowlState == Kitchen.DIRTY:
+								return "Gross! This bowl still needs to be washed."
+							if not kitchen.bowlHasMilk:
+								if kitchen.bowlState == Kitchen.CLEAN:
+									kitchen.pourMilkInBowl()
+									return "You pour the milk into the bowl first. A chill runs down your spine as you realize what you've just done."
+								else:
+									kitchen.pourMilkInBowl()
+									return "You pour milk into the bowl."
+							else:
+								return "There's already plenty of milk in the bowl."
+						ModifierID.IN_MICROWAVE:
+							return "The milk jug doesn't fit in the microwave. Maybe you can heat up the milk in a different container?"
+						ModifierID.IN_FRYING_PAN:
+							return (
+								"This wouldn't be the first time you made cereal in a frying pan to avoid washing the dishes, " +
+								"but you promised yourself it would never happen again."
+							)
+						ModifierID.IN_SINK:
+							return "How wasteful!"
+
+
+				SubjectID.DINO_CEREAL_BOX, SubjectID.AMBIGUOUS_CEREAL_BOX:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.CEREAL_BOX:
+						return "You're not holding that right now."
+					match modifierID:
+						-1:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putCerealInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								kitchen.putCerealOnCounter()
+								return "You put the " + subjectAlias + " on the counter."
+						ModifierID.IN_OVEN:
+							if kitchen.isOvenDoorOpen:
+								kitchen.putCerealInOven()
+								return "You put the " + subjectAlias + " in the oven."
+							else:
+								return "You'll need to open the over door first."
+						ModifierID.ON_COUNTER:
+							kitchen.putCerealOnCounter()
+							return "You put the " + subjectAlias + " on the counter."
+						ModifierID.ON_TABLE:
+							kitchen.putCerealOnTable()
+							return "You put the " + subjectAlias + " on the table."
+						ModifierID.IN_BOWL:
+							if kitchen.bowlState == Kitchen.DIRTY:
+								return "Gross! This bowl still needs to be washed."
+							if not kitchen.bowlHasCereal:
+								if kitchen.bowlState == Kitchen.CLEAN:
+									kitchen.pourCerealInBowl()
+									return "You pour cereal into the bowl."
+								else:
+									kitchen.pourCerealInBowl()
+									return (
+										"Every fiber of being resists as you force yourself to pour the cereal into the bowl after the milk. " +
+										"You feel sick."
+									)
+							else:
+								return "There's already plenty of cereal in the bowl."
+						ModifierID.IN_FRYING_PAN:
+							return (
+								"This wouldn't be the first time you made cereal in a frying pan to avoid washing the dishes, " +
+								"but you promised yourself it would never happen again."
+							)
+						ModifierID.IN_SINK:
+							return "How wasteful!"
+
+				SubjectID.CEREAL_BOWL:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.CEREAL_BOWL:
+						return "You're not holding that right now."
+					match modifierID:
+						-1, ModifierID.ON_TABLE:
+							kitchen.putCerealBowlOnTable()
+							return "You put the " + subjectAlias + " down on the table."
+						ModifierID.ON_FAN:
+							kitchen.putCerealBowlOnFan()
+							return "You put the " + subjectAlias + " back on the fan."
+						ModifierID.IN_MICROWAVE:
+							if not kitchen.isMicrowaveDoorOpen:
+								return "You need to open the microwave door first."
+							else:
+								kitchen.putCerealBowlInMicrowave()
+								return "You put the " + subjectAlias + " in the microwave."
+						ModifierID.IN_FRYING_PAN, ModifierID.ON_BACK_LEFT_BURNER, ModifierID.ON_BACK_RIGHT_BURNER,\
+						ModifierID.ON_FRONT_LEFT_BURNER, ModifierID.ON_FRONT_RIGHT_BURNER, ModifierID.ON_AMBIGUOUS_BURNER, ModifierID.IN_OVEN:
+							return "This plastic cereal bowl isn't rated for the kind of heat that the foodcinerator 9000 puts out..."
+						ModifierID.IN_SINK:
+							return "Your cereal bowl is clean enough for now."
+
+				SubjectID.FORK:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FORK:
+						return "You're not holding that right now."
+					match modifierID:
+						-1, ModifierID.IN_CUPBOARD:
+							if kitchen.isMiddleRightCupboardOpen:
+								kitchen.putForkBack()
+								return "You put the fork back in the cupboard. Hopefully Cheeriofel never realized it was gone."
+							else:
+								return "You'll need to open up the cupboard under the sink first."
+						ModifierID.IN_FRYING_PAN:
+							if kitchen.isEggInPan:
+								if kitchen.isEggScrambled:
+									return "You've already scrambled the egg."
+								else:
+									kitchen.scrambleEgg()
+									return "You rough the egg up something good. That'll show it!"
+							else:
+								return wrongContextParse()
+						ModifierID.IN_BOWL:
+							return "That's not how civilized people eat cereal."
+						ModifierID.IN_MICROWAVE:
+							return "You may not be the pointiest fork in the drawer, but you know not to put one in the microwave."
+
+
+				SubjectID.FRYING_PAN:
+					if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN:
+						return "You're not holding that right now."
+					match modifierID:
+						-1:
+							kitchen.putFryingPanBack()
+						ModifierID.ON_FRONT_LEFT_BURNER:
+							kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.FRONT_LEFT)
+							return "You set the frying pan down on the front left burner."
+						ModifierID.ON_FRONT_RIGHT_BURNER:
+							kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.FRONT_RIGHT)
+							return "You set the frying pan down on the front right burner."
+						ModifierID.ON_BACK_LEFT_BURNER:
+							kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.BACK_LEFT)
+							return "You set the frying pan down on the back left burner."
+						ModifierID.ON_BACK_RIGHT_BURNER:
+							kitchen.putFryingPanBack()
+							kitchen.moveFryingPan(Kitchen.BACK_RIGHT)
+							return "You set the frying pan down on the back right burner."
+						ModifierID.ON_AMBIGUOUS_BURNER:
+							return requestAdditionalContextCustom("Which burner would you like to set the pan on?", REQUEST_SUBJECT, [], [" burner"])
+						ModifierID.ON_PENTAGRAM:
+							return attemptFeedDemon()
+						ModifierID.IN_MICROWAVE:
+							return "The frying pan doesn't fit in the microwave."
+						ModifierID.IN_SINK:
+							return (
+								"You heard somewhere that you're not supposed to wash cast iron pans. " +
+								"You're not sure if this pan is cast iron or not, but it's easier to just assume that it is and never wash it."
+							)
+
+				
 
 
 		ActionID.USE:
@@ -999,59 +1802,517 @@ func parseItems() -> String:
 
 
 		ActionID.OPEN:
-			pass
+			
+			if kitchen.arePlayersHandsFull:
+				return "Your hands are a bit full at the moment..."
+			
+			match subjectID:
+
+				SubjectID.TOP_LEFT_CUPBOARD:
+					if kitchen.isTopLeftCupboardOpen:
+						return "That cupboard is already open."
+					else:
+						kitchen.openTopLeftCupboard()
+						return "You open the cupboard above the microwave."
+
+				SubjectID.BOTTOM_LEFT_CUPBOARD:
+					if kitchen.isBottomLeftCupboardOpen:
+						return "That cupboard is already open."
+					else:
+						kitchen.openBottomLeftCupboard()
+						return "You open the cupboard below the microwave."
+
+				SubjectID.MIDDLE_LEFT_CUPBOARD:
+					if kitchen.isMiddleLeftCupboardOpen:
+						return "That cupboard is already open."
+					else:
+						kitchen.openMiddleLeftCupboard()
+						return "You open the left cupboard below the sink."
+
+				SubjectID.MIDDLE_RIGHT_CUPBOARD:
+					if kitchen.isMiddleRightCupboardOpen:
+						return "That cupboard is already open."
+					else:
+						kitchen.openMiddleRightCupboard()
+						return "You open the right cupboard below the sink."
+
+				SubjectID.MIDDLE_CUPBOARDS:
+					if kitchen.isMiddleLeftCupboardOpen and kitchen.isMiddleRightCupboardOpen:
+						return "Those cupboards are already open."
+					else:
+						if not kitchen.isMiddleLeftCupboardOpen: kitchen.openMiddleLeftCupboard()
+						if not kitchen.isMiddleRightCupboardOpen: kitchen.openMiddleRightCupboard()
+						return "You open the cupboards below the sink."
+
+				SubjectID.BOTTOM_RIGHT_CUPBOARD:
+					if kitchen.isBottomRightCupboardOpen:
+						return "That cupboard is already open."
+					else:
+						kitchen.openBottomRightCupboard()
+						return "You open the cupboard next to the oven."
+
+				SubjectID.BOTTOM_CUPBOARD:
+					if (
+						kitchen.isBottomLeftCupboardOpen and kitchen.isMiddleLeftCupboardOpen and
+						kitchen.isMiddleRightCupboardOpen and kitchen.isBottomRightCupboardOpen
+					):
+						return "Those cupboards are already open."
+					else:
+						if not kitchen.isBottomLeftCupboardOpen: kitchen.openBottomLeftCupboard()
+						if not kitchen.isMiddleLeftCupboardOpen: kitchen.openMiddleLeftCupboard()
+						if not kitchen.isMiddleRightCupboardOpen: kitchen.openMiddleRightCupboard()
+						if not kitchen.isBottomRightCupboardOpen: kitchen.openBottomRightCupboard()
+						return "You open the cupboards below the counter."
+
+				SubjectID.AMBIGUOUS_CUPBOARD:
+					return requestAdditionalContextCustom("Which cupboard would you like to " + actionAlias + "?", REQUEST_SUBJECT, [], [" cupboard"])
+
+				SubjectID.TOP_DRAWER:
+					if kitchen.isTopDrawerOpen:
+						return "That drawer is already open."
+					else:
+						kitchen.openTopDrawer()
+						return "You open the top drawer."
+
+				SubjectID.MIDDLE_DRAWER:
+					if kitchen.isMiddleDrawerOpen:
+						return "That drawer is already open."
+					else:
+						kitchen.openMiddleDrawer()
+						return "You open the middle drawer."
+
+				SubjectID.BOTTOM_DRAWER:
+					if kitchen.isBottomDrawerOpen:
+						return "That drawer is already open."
+					else:
+						kitchen.openBottomDrawer()
+						return "You open the bottom drawer."
+
+				SubjectID.AMBIGUOUS_DRAWER:
+					return requestAdditionalContextCustom("Which cupboard would you like to " + actionAlias + "?", REQUEST_SUBJECT, [], [" cupboard"])
+
+
+				SubjectID.MICROWAVE:
+					if kitchen.isMicrowaveDoorOpen:
+						return "The microwave is already open."
+					elif kitchen.isVaporInMicrowave:
+						SceneManager.transitionToScene(
+							SceneManager.SceneID.ENDING,
+							"Strange... After heating up the milk this time, there seems to be a light green fog filling your microwave. " +
+							"You open the door to get a better look, and the compressed milk vapors erupt into the room, stinging your eyes and clawing at " +
+							"the back of your throat. You start coughing uncontrollably, and a faint mooing begins sounding in your ears. You " +
+							"hobble over to the oven and desperately try to turn on the fume hood. " +
+							"However, with your vision obscured you accidentally turn on the stove instead, " +
+							"and as luck would have it, these milk fumes are flammable too...",
+							SceneManager.EndingID.EVAPORATED_MILK
+						)
+						return ""
+					else:
+						kitchen.openMicrowaveDoor()
+						return "You open the microwave door."
+
+
+				SubjectID.TOP_FRIDGE_DOOR, SubjectID.FREEZER:
+					if kitchen.isTopFridgeDoorOpen:
+						return "The freezer is already open."
+					else:
+						kitchen.openTopFridgeDoor()
+						return "You open up the freezer."
+
+				SubjectID.BOTTOM_FRIDGE_DOOR, SubjectID.FRIDGE:
+					if kitchen.isBottomFridgeDoorOpen:
+						return "The refrigerator is already open."
+					elif kitchen.isFridgeUnlocked:
+						kitchen.openBottomFridgeDoor()
+						return "You open up the refrigerator."
+					else:
+						return "You tug on the refrigerator door, but it's locked shut. You'll need to unlock it first."
+
+
+				SubjectID.OVEN:
+					if kitchen.isOvenDoorOpen:
+						return "The oven door is already open."
+					elif kitchen.isOvenOn:
+						SceneManager.transitionToScene(
+							SceneManager.SceneID.ENDING,
+							"The Foodcinerator 9000 is still running at full power when you decide to open the door. " +
+							"The heat that radiates out hits you with force of a raging bonfire, scorching your clothes and " +
+							"singing what little hair you have left. There's hardly even time for you to panic before your " +
+							"kitchen is consumed by the growing blaze...",
+							SceneManager.EndingID.KITCHENCINERATOR
+						)
+						return ""
+					else:
+						kitchen.openOvenDoor()
+						return "You open the oven door."
+
+
+				SubjectID.EGG:
+					return attemptPlaceEgg(true)
 
 
 		ActionID.CLOSE:
-			pass
+
+			if kitchen.arePlayersHandsFull:
+				return "Your hands are a bit full at the moment..."
+			
+			match subjectID:
+
+				SubjectID.TOP_LEFT_CUPBOARD:
+					if not kitchen.isTopLeftCupboardOpen:
+						return "That cupboard is already closed."
+					else:
+						kitchen.closeTopLeftCupboard()
+						return "You close the cupboard above the microwave."
+
+				SubjectID.BOTTOM_LEFT_CUPBOARD:
+					if not kitchen.isBottomLeftCupboardOpen:
+						return "That cupboard is already closed."
+					else:
+						kitchen.closeBottomLeftCupboard()
+						return "You close the cupboard below the microwave."
+
+				SubjectID.MIDDLE_LEFT_CUPBOARD:
+					if not kitchen.isMiddleLeftCupboardOpen:
+						return "That cupboard is already closed."
+					else:
+						kitchen.closeMiddleLeftCupboard()
+						return "You close the left cupboard below the sink."
+
+				SubjectID.MIDDLE_RIGHT_CUPBOARD:
+					if not kitchen.isMiddleRightCupboardOpen:
+						return "That cupboard is already closed."
+					else:
+						kitchen.closeMiddleRightCupboard()
+						return "You close the right cupboard below the sink."
+
+				SubjectID.MIDDLE_CUPBOARDS:
+					if not kitchen.isMiddleLeftCupboardOpen and not kitchen.isMiddleRightCupboardOpen:
+						return "Those cupboards are already closed."
+					else:
+						if kitchen.isMiddleLeftCupboardOpen: kitchen.closeMiddleLeftCupboard()
+						if kitchen.isMiddleRightCupboardOpen: kitchen.closeMiddleRightCupboard()
+						return "You close the cupboards below the sink."
+
+				SubjectID.BOTTOM_RIGHT_CUPBOARD:
+					if not kitchen.isBottomRightCupboardOpen:
+						return "That cupboard is already closed."
+					else:
+						kitchen.closeBottomRightCupboard()
+						return "You close the cupboard next to the oven."
+
+				SubjectID.BOTTOM_CUPBOARD:
+					if (
+						not kitchen.isBottomLeftCupboardOpen and not kitchen.isMiddleLeftCupboardOpen and
+						not kitchen.isMiddleRightCupboardOpen and not kitchen.isBottomRightCupboardOpen
+					):
+						return "Those cupboards are already closed."
+					else:
+						if kitchen.isBottomLeftCupboardOpen: kitchen.closeBottomLeftCupboard()
+						if kitchen.isMiddleLeftCupboardOpen: kitchen.closeMiddleLeftCupboard()
+						if kitchen.isMiddleRightCupboardOpen: kitchen.closeMiddleRightCupboard()
+						if kitchen.isBottomRightCupboardOpen: kitchen.closeBottomRightCupboard()
+						return "You close the cupboards below the counter."
+
+				SubjectID.AMBIGUOUS_CUPBOARD:
+					return requestAdditionalContextCustom("Which cupboard would you like to " + actionAlias + "?", REQUEST_SUBJECT, [], [" cupboard"])
+
+				SubjectID.TOP_DRAWER:
+					if not kitchen.isTopDrawerOpen:
+						return "That drawer is already closed."
+					else:
+						kitchen.closeTopDrawer()
+						return "You close the top drawer."
+
+				SubjectID.MIDDLE_DRAWER:
+					if not kitchen.isMiddleDrawerOpen:
+						return "That drawer is already closed."
+					else:
+						kitchen.closeMiddleDrawer()
+						return "You close the middle drawer."
+
+				SubjectID.BOTTOM_DRAWER:
+					if not kitchen.isBottomDrawerOpen:
+						return "That drawer is already closed."
+					else:
+						kitchen.closeBottomDrawer()
+						return "You close the bottom drawer."
+
+				SubjectID.AMBIGUOUS_DRAWER:
+					return requestAdditionalContextCustom("Which cupboard would you like to " + actionAlias + "?", REQUEST_SUBJECT, [], [" cupboard"])
+
+
+				SubjectID.MICROWAVE:
+					if not kitchen.isMicrowaveDoorOpen:
+						return "The microwave is already closed."
+					else:
+						kitchen.closeMicrowaveDoor()
+						return "You close the microwave door."
+
+
+				SubjectID.TOP_FRIDGE_DOOR, SubjectID.FREEZER:
+					if not kitchen.isTopFridgeDoorOpen:
+						return "The freezer is already closed."
+					else:
+						kitchen.closeTopFridgeDoor()
+						return "You close the freezer."
+
+				SubjectID.BOTTOM_FRIDGE_DOOR, SubjectID.FRIDGE:
+					if not kitchen.isBottomFridgeDoorOpen:
+						return "The refrigerator is already closed."
+					else:
+						kitchen.closeBottomFridgeDoor()
+						return "You close the refrigerator."
+
+
+				SubjectID.OVEN:
+					if not kitchen.isOvenDoorOpen:
+						return "The oven door is already closed."
+					else:
+						kitchen.closeOvenDoor()
+						return "You close the oven door."
 
 
 		ActionID.TURN_ON, ActionID.TURN when actionID == ActionID.TURN_ON or (actionID == ActionID.TURN and modifierID == ModifierID.ON):
-			pass
+
+			if wildCard and subjectID != SubjectID.MICROWAVE: return unrecognizedEndingParse()
+
+			match subjectID:
+
+				SubjectID.ZOOMBA:
+					return "Zoomba is already on."
+
+				SubjectID.MICROWAVE:
+					return attemptUseMicrowave()
+
+				SubjectID.TIMER:
+					if kitchen.isTimerOn:
+						return "The timer is already on."
+					else:
+						kitchen.turnTimerOn()
+						return "You turn the timer back on, and it looks like the backup circuits have preserved the proper time even while it was off."
+
+				SubjectID.FAN:
+					return "You don't need to dry anything right now."
+
+				SubjectID.SINK, SubjectID.FAUCET:
+					return attemptCleanBowl()
+
+				SubjectID.OVEN:
+					return attemptTurnOnOven()
+
+				SubjectID.FUME_HOOD:
+					return "There's no need. You're not cooking anything especially fragrant for breakfast."
+
+				SubjectID.STOVE_TOP, SubjectID.AMBIGUOUS_BURNER:
+					return requestAdditionalContextCustom("Which burner do you want to turn on?", REQUEST_SUBJECT, [], [" burner"])
+
+				SubjectID.FRONT_LEFT_BURNER:
+					return attemptTurnOnBurner(Kitchen.FRONT_LEFT)
+
+				SubjectID.BACK_LEFT_BURNER:
+					return attemptTurnOnBurner(Kitchen.BACK_LEFT)
+
+				SubjectID.BACK_RIGHT_BURNER:
+					return attemptTurnOnBurner(Kitchen.BACK_RIGHT)
+
+				SubjectID.FRONT_RIGHT_BURNER:
+					return attemptTurnOnBurner(Kitchen.FRONT_RIGHT)
+				
 
 
 		ActionID.TURN_OFF, ActionID.TURN when actionID == ActionID.TURN_OFF or (actionID == ActionID.TURN and modifierID == ModifierID.OFF):
-			pass
+			
+			if wildCard: return unrecognizedEndingParse()
+
+			match subjectID:
+
+				SubjectID.ZOOMBA:
+					return "Zoomba's just loving life right now. It wouldn't be right to stop him."
+
+				SubjectID.MICROWAVE, SubjectID.OUTLET:
+					return "The quantum microwave has a 30-minute boot cycle, so it's really not worth turning off."
+
+				SubjectID.TIMER:
+					if not kitchen.isTimerOn:
+						return "The timer is already off."
+					else:
+						kitchen.turnTimerOn()
+						return (
+							"You turn the display on the timer off. " +
+							"The backup circuits should still keep track of the proper time, but now you won't be distracted by it."
+						)
+
+				SubjectID.FAN:
+					return "The fan isn't on right now."
+
+				SubjectID.SINK, SubjectID.FAUCET:
+					return "The water's not running right now."
+
+				SubjectID.OVEN:
+					if kitchen.isOvenOn:
+						kitchen.turnOvenOff()
+						if kitchen.isStrategyGuideInOven:
+							if kitchen.isStrategyGuideBurnt:
+								return "You turn off the oven. The strategy guide has been reduced to a pile of smoldering ashes."
+							else:
+								return "You turn off the oven. The strategy guide has been freed from its icy prison!"
+						else:
+							return "You turn the oven off."
+					else:
+						return "The oven isn't on right now."
+
+				SubjectID.FUME_HOOD:
+					return "The fume hood isn't on right now."
+
+				SubjectID.STOVE_TOP, SubjectID.AMBIGUOUS_BURNER:
+					if kitchen.activeBurner == kitchen.NONE:
+						return "None of the burners on the stove top are currently active."
+					else:
+						return attemptTurnOffBurner(kitchen.activeBurner)
+
+				SubjectID.FRONT_LEFT_BURNER:
+					return attemptTurnOffBurner(kitchen.FRONT_LEFT)
+
+				SubjectID.BACK_LEFT_BURNER:
+					return attemptTurnOffBurner(kitchen.BACK_LEFT)
+
+				SubjectID.BACK_RIGHT_BURNER:
+					return attemptTurnOffBurner(kitchen.BACK_RIGHT)
+
+				SubjectID.FRONT_RIGHT_BURNER:
+					return attemptTurnOffBurner(kitchen.FRONT_RIGHT)
 
 
 		ActionID.PET:
-			pass
+			kitchen.movePlayer(Kitchen.PlayerPos.ZOOMBA)
+			return "You reach down and pet Zoomba lovingly. His motor whirrs contentedly."
 
 
 		ActionID.FLIP:
-			pass
+			if subjectID == SubjectID.LARRY_LIGHT_SWITCH:
+				if kitchen.isTimeReverting:
+					return "Larry is already performing his magic. The thought of disturbing him now terrifies you."
+				elif kitchen.hasTimeReverted:
+					return "Larry has already blessed you with his power once. You don't want to push your luck."
+				else:
+					kitchen.flipLarryTheLightSwitch()
+					return (
+						"You're so close to completing your breakfast, but you need more time... There's no way around it. You need to call upon " +
+						"the eldritch might of Larry the Light Switch. You glance over at the switch below your kitchen timer where space seems to " +
+						"bend inward. You take a deep breath, and reach into the anomaly, hoping that Larry is feeling merciful today. " +
+						"You feel your stomach turn and your vision blurs as time bends around you. In an instant, things are back to normal, but " +
+						"a quick glance at the kitchen timer reveals that Larry is on your side today! You have the time you need now!"
+					)
+			elif subjectID == SubjectID.AMBIGUOUS_LIGHT_SWITCH:
+				kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_RIGHT_CUPBOARD)
+				return "You absent mindedly flip the switch by the sink on and off. It doesn't do anything."
 
 
 		ActionID.INPUT:
-			pass
+			if subjectID == SubjectID.MICROWAVE:
+				return attemptUseMicrowave()
+
+			elif subjectID in [SubjectID.BLUE_BUTTON, SubjectID.GREEN_BUTTON, SubjectID.RED_BUTTON, SubjectID.YELLOW_BUTTON, SubjectID.AMBIGUOUS_BUTTON]:
+				if wildCard: return unrecognizedEndingParse()
+				else: return attemptInputFridgeButton(subjectID)
 
 
-		ActionID.INPUT_DOOR_CODE:
-			pass
+		ActionID.INPUT_DOOR_CODE, ActionID.INPUT_CODE_AMBIGUOUS when not kitchen.isBottomFridgeDoorOpen:
+			if wildCard: return unrecognizedEndingParse()
+			if subjectID == -1: subjectID = SubjectID.AMBIGUOUS_BUTTON
+			if subjectID in [SubjectID.BLUE_BUTTON, SubjectID.GREEN_BUTTON, SubjectID.RED_BUTTON, SubjectID.YELLOW_BUTTON, SubjectID.AMBIGUOUS_BUTTON]:
+				return attemptInputFridgeButton(subjectID)
 
-
-		ActionID.INPUT_MILK_CODE:
-			pass
-
-
-		ActionID.INPUT_CODE_AMBIGUOUS:
-			pass
+		ActionID.INPUT_MILK_CODE, ActionID.INPUT_CODE_AMBIGUOUS when kitchen.isBottomFridgeDoorOpen:
+			if subjectID != -1: return wrongContextParse()
+			return attemptInputMilkCode()
 
 
 		ActionID.UNLOCK:
-			pass
+			if subjectID in [SubjectID.MILK, SubjectID.LOCK]:
+				return attemptInputMilkCode()
+			elif subjectID == SubjectID.IMPRISONED_CEREAL_BOX:
+				if kitchen.isBottomRightCupboardOpen:
+					return "You can't release the prisoner until they've finished serving their sentence."
+				else:
+					return wrongContextParse()
 
 
 		ActionID.LOCK:
-			pass
+			if subjectID == SubjectID.MILK:
+				if not kitchen.isBottomFridgeDoorOpen:
+					return wrongContextParse()
+				elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.MILK:
+					return "You need to put down the milk first."
+				elif kitchen.isMilkUnlocked:
+					kitchen.lockMilk()
+					return "You take milk security very seriously, so you lock the milk back up now that you're done with it."
+				else:
+					return "The milk is already locked to the side of the fridge."
 
 
 		ActionID.WEAR:
-			pass
+			if subjectID == SubjectID.EGG:
+				if kitchen.isPlayerWearingEgg:
+					return "You've already got an egg."
+				elif not kitchen.isBottomFridgeDoorOpen:
+					return wrongContextParse()
+				elif kitchen.isEggInPan or kitchen.isEggOnFloor:
+					kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+					return "You've already taken an egg."
+				else:
+					kitchen.takeEggFromFridge()
+					return "You take an egg and balance it carefully on your head."
 
 
 		ActionID.COUNT:
-			pass
+			match subjectID:
+
+				SubjectID.EGG:
+					if not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					elif kitchen.isPlayerWearingEgg:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return (
+							"You count " + str(kitchen.eggNum-1) + " " + Helpers.singularOrPlural(kitchen.eggNum-1, "egg", "eggs") +
+							" in the fridge, plus the 1 on your head."
+						)
+					elif kitchen.isEggInPan:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return (
+							"You count " + str(kitchen.eggNum-1) + " " + Helpers.singularOrPlural(kitchen.eggNum-1, "egg", "eggs") +
+							" in the fridge, plus the 1 you put in the pan."
+						)
+					elif kitchen.isEggOnFloor:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return "THIS SHOULD TRIGGER THE EGG ENDING. IF YOU'RE SEEING THIS TEXT, SOMETHING WENT WRONG."
+					else:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return "You count " + str(kitchen.eggNum) + " eggs in the fridge."
+
+				SubjectID.SPOON:
+					if not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.SPOON:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return (
+							"You count " + str(kitchen.spoonNum-1) + " " + Helpers.singularOrPlural(kitchen.spoonNum-1, "spoon", "spoons") +
+							" in the fridge, plus the 1 you're holding."
+						)
+					else:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return "You count " + str(kitchen.spoonNum) + " spoons in the fridge."
+
+				SubjectID.GRAPEFRUIT_JUICE:
+					if not kitchen.isBottomFridgeDoorOpen:
+						return wrongContextParse()
+					else:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
+						return (
+							"You count " + str(kitchen.grapefruitJuiceNum) + " " +
+							Helpers.singularOrPlural(kitchen.grapefruitJuiceNum, "carton", "cartons") + " of grapefruit juice in the fridge."
+						)
 
 
 		ActionID.HEAT:
@@ -1257,3 +2518,389 @@ func getRandomOmelet(pageNumber: int) -> String:
 	var firstIngredient = firstOmeletteIngredients[omeletRNG.randi_range(0,len(firstOmeletteIngredients)-1)]
 	var secondIngredient = secondOmeletteIngredients[omeletRNG.randi_range(0,len(secondOmeletteIngredients)-1)]
 	return firstIngredient + " and " + secondIngredient + " omelet"
+
+
+func attemptTakeDinoEggsCereal() -> String:
+	if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.CEREAL_BOX:
+		return "You're already carrying that."
+	elif kitchen.isCerealInOven:
+		kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+		if kitchen.isOvenDoorOpen:
+			if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+				return "You're already carrying something. You'll need to put it down first."
+			else:
+				kitchen.takeCereal()
+				return "You pick up the box of cereal."
+		else:
+			return "You'll need to open the oven first."
+	elif kitchen.isCerealOnCounter:
+		kitchen.movePlayer(Kitchen.PlayerPos.OVEN)
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+			return "You're already carrying something. You'll need to put it down first."
+		else:
+			kitchen.takeCereal()
+			return "You pick up the box of cereal."
+	elif kitchen.isCerealOnTable:
+		kitchen.movePlayer(Kitchen.PlayerPos.TABLE)
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.NONE:
+			return "You're already carrying something. You'll need to put it down first."
+		else:
+			kitchen.takeCereal()
+			return "You pick up the box of cereal."
+	else: return unknownParse()
+
+
+func attemptPlaceEgg(opening: bool) -> String:
+	var crackingEggInPan: bool
+	if not kitchen.isPlayerWearingEgg:
+		return "You don't have an egg with you at the moment."
+	elif modifierID == ModifierID.ON_FLOOR or (modifierID == -1 and opening):
+		kitchen.crackEggOnFloor()
+		return (
+			"You crack the egg open and spill its contents onto the floor next to the oven. " +
+			"Not wanting to be wasteful, you pop the pieces of the broken shell into your mouth and chew vigorously. Mmmm! Calcium!"
+		)
+	elif modifierID == -1 and not opening:
+		if kitchen.isBottomFridgeDoorOpen:
+			kitchen.putEggInFridge()
+			return "You return the egg to the carton."
+	elif modifierID == ModifierID.IN_FRYING_PAN:
+		crackingEggInPan = true
+	elif modifierID == ModifierID.ON_BACK_LEFT_BURNER:
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.BACK_LEFT:
+			crackingEggInPan = true
+		else:
+			return "You don't see a good reason to put the egg on an empty burner."
+	elif modifierID == ModifierID.ON_BACK_RIGHT_BURNER:
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.BACK_RIGHT:
+			crackingEggInPan = true
+		else:
+			return "You don't see a good reason to put the egg on an empty burner."
+	elif modifierID == ModifierID.ON_FRONT_LEFT_BURNER:
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.FRONT_LEFT:
+			crackingEggInPan = true
+		else:
+			return "You don't see a good reason to put the egg on an empty burner."
+	elif modifierID == ModifierID.ON_FRONT_RIGHT_BURNER:
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.ovenFryingPanPos == kitchen.FRONT_RIGHT:
+			crackingEggInPan = true
+		else:
+			return "You don't see a good reason to put the egg on an empty burner."
+	elif modifierID == ModifierID.ON_AMBIGUOUS_BURNER:
+		return requestAdditionalContextCustom("Which burner?", REQUEST_SUBJECT, [], [" burner"])
+
+	elif modifierID == ModifierID.IN_BOWL:
+		return "This bowl is reserved exclusively for cereal."
+	elif modifierID == ModifierID.ON_FAN:
+		return "That would be a nightmare to clean..."
+	elif modifierID == ModifierID.ON_COUNTER:
+		if opening:
+			return "That would just make a mess..."
+		else:
+			return "You should put the egg back in the fridge if you're not going to use it."
+	elif modifierID == ModifierID.ON_HEAD:
+		if opening:
+			return "Your training in ovate equilibrium forbids you from breaking the egg over your own head."
+		else:
+			return "That's already where it is, silly!"
+
+	if crackingEggInPan:
+		kitchen.addRawEggToPan()
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.activeBurner == kitchen.ovenFryingPanPos:
+			kitchen.fryEgg()
+			return (
+				"You expertly flip the egg off your head and karate chop it open in midair, " +
+				"ejecting the innards into the frying pan. The egg sizzles loudly as it begins to fry. " +
+				"Not wanting to be wasteful, you pop the pieces of the broken shell into your mouth and chew vigorously. Mmmm! Calcium!"
+			)
+		else:
+			return (
+				"You expertly flip the egg off your head and karate chop it open in midair, " +
+				"ejecting the innards into the frying pan with a soft plop. " +
+				"Not wanting to be wasteful, you pop the pieces of the broken shell into your mouth and chew vigorously. Mmmm! Calcium!"
+			)
+
+	return unknownParse()
+
+
+enum {FRYING_PAN, MILK, EGG, ASHES}
+func attemptFeedDemon(specificItem: int = NONE) -> String:
+	if not kitchen.isMiddleLeftCupboardOpen:
+		return wrongContextParse() + " (You need to open the cupboard under the sink first.)"
+	if kitchen.isDemonSatisfied:
+		return "The demon is already munching happily on his breakfast."
+	if specificItem == NONE:
+		if kitchen.playerHeldItem == Kitchen.PlayerHeldItem.FRYING_PAN:
+			specificItem = FRYING_PAN
+		elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.MILK:
+			specificItem = MILK
+		elif kitchen.isPlayerWearingEgg:
+			specificItem = EGG
+		elif kitchen.playerHeldItem == Kitchen.PlayerHeldItem.ASHES:
+			specificItem = ASHES
+		else:
+			return "You're not carrying anything that you can use to " + reconstructCommand() + "."
+
+	var isDemonAngry: bool
+	if specificItem == FRYING_PAN or (specificItem == EGG and kitchen.isEggInPan):
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN:
+			return "You're not carrying that right now."
+		else:
+			if kitchen.isEggScrambled and kitchen.isEggFried and kitchen.areAshesOnEgg:
+				kitchen.feedDemon()
+				return (
+					"You tentatively place the meal you've prepared in front of the demon and wait nervously for his response. " +
+					"He slowly looks over the mass of scrambled eggs and ashes, appraising it. Then, his breaks into a wide grin " +
+					"and he leaps from the plumbing onto the frying pan, attacking the dish with gusto. Whew! It looks like he's " +
+					"satisfied, and you should actually be able to use your sink now!"
+				)
+			else:
+				isDemonAngry = true
+	elif specificItem == MILK:
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.MILK:
+			return "You're not carrying that right now."
+		else:
+			isDemonAngry = true
+	elif specificItem == EGG:
+		if not kitchen.isPlayerWearingEgg:
+			return "You're not carrying that right now."
+		else:
+			isDemonAngry = true
+	elif specificItem == ASHES:
+		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.ASHES:
+			return "You're not carrying that right now."
+		else:
+			isDemonAngry = true
+	
+	if isDemonAngry:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"It's really hard to tell what the demon wants when he refuses to speak like a normal person... You've " +
+			"tried your best to meet his expectations, but you're not very confident that you were successful. " +
+			"As you put down the dish you think the demon ordered, his face twists into a knot of indignation that " +
+			"quickly progresses to rage. \"WHAT IS THIS? THIS IS NOT WHAT I ORDERED!!\" he bellows. " +
+			"\"WHERE IS YOUR MASTER!? I MUST SPEAK WITH HIM IMMEDIATELY! THE SERVICE HERE IS ABYSMAL! " +
+			"AND I BET YOU'RE STILL EXPECTING TO BE TIPPED FOR YOUR INEPTITUDE. BAH!! HERE'S WHAT I THINK OF THAT!\" " +
+			"Without further warning, the demon begins belching blobs of something hot and viscous onto his surroundings. " +
+			"You desperately try to calm him down, promising that you'll have a word with the kitchen staff as soon as you can, " +
+			"but his rage is already burning white-hot, and there's no stopping him now...",
+			SceneManager.EndingID.ONE_STAR_REVIEW
+		)
+		return ""
+
+	return unknownParse()
+
+
+func attemptUseMicrowave():
+	if kitchen.isMicrowaveDoorOpen:
+		return "You need to close the microwave door first."
+	
+	if not wildCard:
+		return requestAdditionalContextCustom("How long (in seconds) do you want to run the microwave for?", REQUEST_WILDCARD)
+
+	if wildCard.begins_with("to"): wildCard = wildCard.replace("to", "")
+	if wildCard.begins_with("for"): wildCard = wildCard.replace("for", "")
+	if wildCard.ends_with("seconds"): wildCard = wildCard.replace("seconds", "")
+	wildCard = wildCard.strip_edges()
+
+	var seconds: int
+	if not wildCard.is_valid_int(): return unrecognizedEndingParse()
+	else: seconds = int(wildCard)
+	if seconds < 1: return "You can't run the microwave for " + wildCard + " seconds."
+
+	validWildCard = true
+	if not kitchen.isCerealBowlInMicrowave or kitchen.bowlState in [kitchen.CLEAN, kitchen.JUST_CEREAL]:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"As you key in the cook time for the quantum microwave to simulate, you can't help but feel like " +
+			"you're forgetting something... You pause for a moment, trying to recall what your chemistry teacher " +
+			"once said about how microwaves function, but it's no use. Oh well. You've always learned best through experience anyway. " +
+			"You hit start on the microwave's display, and high-energy photons immediately begin bouncing around its interior, " +
+			"furiously seeking out other particles to vibe with. They find none, and the vast power produced by the high-tech " +
+			"appliance begins to coalesce into arcs of plasma and showers of sparks... Oh! You just remembered: It's water molecules! " +
+			"The microwaves are absorbed by water molecules! As you watch your microwave go supercritical, you're pretty confident " +
+			"you'll remember that next time, assuming there IS a next time...",
+			SceneManager.EndingID.MICROWAVE_MAYHEM
+		)
+		return ""
+	else:
+		kitchen.addHeatToMilk(seconds)
+	
+	if kitchen.isVaporInMicrowave:
+		return (
+			"You set the quantum microwave to apply " + wildCard + " seconds worth of normal microwave heat. " +
+			"When it finishes, you notice that a green vapor has filled the inside of the microwave. Peculiar..."
+		)
+	elif kitchen.bowlState == Kitchen.HATCHED:
+		return (
+			"You set the quantum microwave to apply " + wildCard + " seconds worth of normal microwave heat. " +
+			"When it finishes, you can see the dynamite pieces begin to hatch in the warm milk. It's ready!"
+		)
+	else:
+		return (
+			"You set the quantum microwave to apply " + wildCard + " seconds worth of normal microwave heat. " +
+			"The energy is delivered instantaneously, but you can't see any visible difference in the microwave's contents."
+		)
+
+
+func attemptCleanBowl() -> String:
+	if not kitchen.isDemonSatisfied:
+		kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_LEFT_CUPBOARD)
+		if kitchen.isMiddleLeftCupboardOpen:
+			return (
+				"You try turning on the kitchen sink to wash the bowl, but the faucet just rattles ominously... " +
+				"At the same time, the creature below your sink begins shouting his usual tirade in a frantic, high-pitched voice:\n" +
+				HUNGRY_DEMON_SPIEL + "\nIt looks like you'll have to make his breakfast first if you want access to running water again..."
+			)
+		else:
+			return (
+				"You try turning on the kitchen sink to wash the bowl, but the faucet just rattles ominously... " +
+				"At the same time you hear muffled yelling from under the sink. What is going on?"
+			)
+	elif kitchen.bowlState != Kitchen.DIRTY:
+		return "There's no need for that. You've already washed the cereal bowl."
+	else:
+		kitchen.cleanCerealBowl()
+		return (
+			"Now that you've regained control of your sink, you can finally wash out this bowl! " +
+			"You fill it up with lukewarm water and swirl the contents around a few times before emptying it again. " +
+			"Then you move the bowl to the fan and briefly turn it on to dry it off and blow away " +
+			"the remaining scraps of food. Good enough!"
+		)
+
+
+func attemptTurnOnOven() -> String:
+	if kitchen.isOvenOn:
+		return "The oven is already running at full blast."
+	elif kitchen.isCerealInOven:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"In a rush of culinary inspiration, you " +
+			"decide to try baking the Dino-mite eggs in the cereal box instead of putting them in milk first. " +
+			"You've always prided yourself on your avant-garde cooking style, but alas, in today's " +
+			"climate, even the cooking appliances are critics. The resounding series of explosions from within the oven " +
+			"assure you that your genius has gone underappreciated yet again...",
+			SceneManager.EndingID.TNTASTY
+		)
+		return ""
+	elif kitchen.isOvenDoorOpen:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"The door to the Foodcinerator 9000 is still wide open when you decide to turn it on at full blast. " +
+			"The heat that radiates out hits you with force of a raging bonfire, scorching your clothes and " +
+			"singing what little hair you have left. There's hardly even time for you to panic before your " +
+			"kitchen is consumed by the growing blaze...",
+			SceneManager.EndingID.KITCHENCINERATOR
+		)
+		return ""
+	else:
+		if kitchen.isStrategyGuideInOven:
+			if kitchen.isStrategyGuideFrozen: kitchen.thawStrategyGuide()
+			elif kitchen.isStrategyGuideThawed: kitchen.burnStrategyGuide()
+		return (
+			"After a few quick inputs on the display, the Foodcinerator 9000 roars to life and the interior " +
+			"is wreathed in flames. Even with the door sealed tightly, you can feel the ambient temperature of the room rising."
+		)
+
+
+func attemptTurnOnBurner(whichBurner: int):
+	if kitchen.activeBurner == whichBurner:
+		return "That burner is already active."
+	elif whichBurner == Kitchen.FRONT_RIGHT:
+		return (
+			"You try to turn the burner on, but nothing happens. Come to think of it, that burner has been broken for a long time. " +
+			"That's why you turned it into the frying pan docking station."
+		)
+	elif whichBurner == kitchen.ovenFryingPanPos and kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN:
+		kitchen.turnOnBurner(whichBurner)
+		if kitchen.isEggInPan and not kitchen.isEggFried:
+			kitchen.fryEgg()
+			return "You turn the burner on full blast, and the egg inside the pan sizzles as it cooks."
+		else:
+			return "You turn the burner on full blast. You can see a faint red glow at the base of the frying pan."
+	else:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"You turn the knob of the oven to activate one of the burners, despite the fact that there is nothing on it. " +
+			"A smarter man might have put the pan on the burner first, but you are not that man. As soon as you turn the burner on, " +
+			"a jet of fire leaps out from it and ascends into the air. You watch in awe as the column of flame rapidly climbs to the ceiling. " +
+			"A man of low to moderate intelligence might have turned off the burner now, but sadly, you are not that man either.",
+			SceneManager.EndingID.DRY_FIRE
+		)
+		return ""
+
+func attemptTurnOffBurner(whichBurner: int):
+	if kitchen.activeBurner == whichBurner:
+		kitchen.turnOffBurner()
+		return "You turn off the active burner"
+	else:
+		return "That burner is already off."
+
+
+const BUTTON_SUBJECT_ID_TO_COLOR = {
+	SubjectID.BLUE_BUTTON : Kitchen.BLUE_BUTTON_COLOR,
+	SubjectID.GREEN_BUTTON : Kitchen.BLUE_BUTTON_COLOR,
+	SubjectID.RED_BUTTON : Kitchen.BLUE_BUTTON_COLOR,
+	SubjectID.YELLOW_BUTTON : Kitchen.BLUE_BUTTON_COLOR,
+}
+func attemptInputFridgeButton(button: SubjectID) -> String:
+
+	if kitchen.isBottomFridgeDoorOpen: return wrongContextParse()
+	elif kitchen.isFridgeUnlocked: return "The refrigerator door is already unlocked."
+
+	if button == SubjectID.AMBIGUOUS_BUTTON:
+		return requestAdditionalContextCustom("Which button do you want to " + actionAlias + "?", REQUEST_SUBJECT, [], [" button"])
+
+	kitchen.pressButton(BUTTON_SUBJECT_ID_TO_COLOR[button])
+	if kitchen.checkFridgeLock():
+		return (
+			"You press the " + subjectAlias + " and hear a sharp *click* from inside the fridge door. " +
+			"That did it! You should be able to open the fridge now."
+		)
+	elif len(kitchen.inputtedFridgeButtons) < 4:
+		return "You press the " + subjectAlias + "."
+	else:
+		SceneManager.transitionToScene(
+			SceneManager.SceneID.ENDING,
+			"As soon as you input the fourth color for the refrigerator's combination lock, a piercing alarm starts " +
+			"blaring from the appliance. Then, a sharp mechanical voice sounds over the cacophony. \"INTRUDER ALERT! INTRUDER ALERT! " +
+			"UNRECOGNIZED CREDENTIALS HAVE BEEN LOGGED. SELF DESTRUCTING IN 5... 4... 3...\" Well, that's that. You came to " +
+			"terms with this possibility long ago when you had the security system installed. If you can't have your milk, " +
+			"at least you can rest easy knowing it won't fall into the wrong hands. You look on mournfully as the security " +
+			"system triggers the incendiary charges hidden within the refrigerator door, engulfing it in flames.",
+			SceneManager.EndingID.REFRIGERATOR_TERMINATOR
+		)
+		return ""
+
+func attemptInputMilkCode() -> String:
+	if not kitchen.isBottomFridgeDoorOpen: return wrongContextParse()
+	elif kitchen.isMilkUnlocked: return "The lock securing the milk is already opened."
+	elif not wildCard: return requestAdditionalContextCustom("What code would you like to enter?", REQUEST_WILDCARD)
+
+	wildCard = wildCard.replace('-', '')
+	wildCard = wildCard.replace(' ', '')
+
+	if wildCard.is_valid_int(): validWildCard = true
+	else: return unrecognizedEndingParse()
+
+	if len(wildCard) != 3:
+		return "This combination won't work. The lock on the milk takes a 3-digit code."
+	elif kitchen.checkMilkCombo(wildCard):
+		return "You input the combination and the lock anchoring the milk to the fridge pops open with a satisfying *click*."
+	else:
+		return "You input the combination and tug on the lock, but nothing happens. It's still locked up tight..."
+
+
+func win() -> String:
+	SceneManager.transitionToScene(
+		SceneManager.SceneID.ENDING,
+		"After a journey fraught with peril, your breakfast is finally ready! " +
+		"You plunge your spoon triumphantly into the cereal and begin devouring it in record time. " +
+		"As you chase the last few TNT pieces around the bowl and gulp the rest of the milk down, " +
+		"you let out a sigh of relief and are filled with the strangest sense that you've just " +
+		"avoided dozens of improbable, fiery disasters... You're not sure what the rest of the day " +
+		"has in store for you, but with the most important meal of the day spurring you onward, " +
+		"you're sure you can handle it!",
+		SceneManager.EndingID.CHAMPION_OF_BREAKFASTS
+	)
+	return ""

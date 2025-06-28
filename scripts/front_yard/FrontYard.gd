@@ -77,8 +77,9 @@ func _init():
 	sceneTransitions = [sid.MAIN_MENU, sid.ENDING, sid.BEDROOM]
 	defaultStartingMessage = (
 		"You emerge from your bathroom and step out into your front yard. You take a moment to admire your custom lawn " +
-		"before looking up at the sky and realizing that the sun is almost directly overhead. It's even later than you " +
-		"thought! Your shift at work probably started hours ago, and you'll be lucky to keep your job at this point...\n" +
+		"before looking up at the sky and realizing that the sun is already well above the horizon. "+
+		"It's even later than you thought! " +
+		"Your shift could be starting any moment now, and you'll be lucky just to keep your job at this point...\n" +
 		"For the briefest instant, you consider skipping breakfast but immediately perish the thought. After all, " +
 		"it's the most important meal of the day! You'll just have to pick up the pace."
 	)
