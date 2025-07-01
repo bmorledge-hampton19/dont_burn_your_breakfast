@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://d0r7h4p772l1u" path="res://sprites/player/player_sprite_sheet.png" id="5_fkx3i"]
 [ext_resource type="FontFile" uid="uid://bevax8c07quhc" path="res://fonts/E1234.ttf" id="5_vskr0"]
 
-[node name="Kitchen" type="CenterContainer" node_paths=PackedStringArray("topLeftCupboard", "coloredCerealBoxes", "bottomLeftCupboard", "cerealBoxNumberSprites", "bottomDrawer", "middleDrawer", "topDrawer", "middleLeftCupboard", "hungryDemon", "satisfiedDemon", "middleRightCupboard", "cupboardFork", "bottomRightCupboard", "closedOvenDoor", "openedOvenDoor", "ovenFlames", "ovenCereal", "ovenFrozenStrategyGuide", "ovenThawedStrategyGuide", "ovenDriedStrategyGuide", "ovenBurntStrategyGuide", "ovenFryingPanControl", "frontLeftOnDial", "backLeftOnDial", "backRightOnDial", "frontRightOnDial", "fryingPanControl", "leftFryingPan", "leftActiveBurner", "rightFryingPan", "rightActiveBurner", "rawEgg", "friedEgg", "rawScrambledEgg", "friedScrambledEgg", "eggAshes", "closedTopFridgeDoor", "openedTopFridgeDoor", "closedBottomFridgeDoor", "openedBottomFridgeDoor", "fridgeLockLight", "fridgeFrozenStrategyGuide", "spoons", "eggs", "grapefruitJuices", "milk", "milkLocked", "milkUnlocked", "closedMicrowaveDoor", "openedMicrowaveDoor", "milkVapor", "microwaveCerealBowl", "minutes", "seconds", "larryOff", "dirtyCerealBowl", "cleanedCerealBowl", "tableCerealBowl", "tableCerealBox", "counterCerealBox", "tableStrategyGuide", "counterStrategyGuide", "counterAshes", "floorEgg", "playerControl", "playerSprite", "handForeground", "playerCerealBox", "playerMilk", "playerThawedStrategyGuide", "playerFork", "playerSpoon", "playerFryingPanControl", "playerFrozenStrategyGuide", "playerAshes", "playerCerealBowl", "playerEgg", "inputParser")]
+[node name="Kitchen" type="CenterContainer" node_paths=PackedStringArray("topLeftCupboard", "coloredCerealBoxes", "bottomLeftCupboard", "cerealBoxNumberSprites", "bottomDrawer", "middleDrawer", "topDrawer", "middleLeftCupboard", "hungryDemon", "satisfiedDemon", "middleRightCupboard", "cupboardFork", "bottomRightCupboard", "closedOvenDoor", "openedOvenDoor", "ovenFlames", "ovenCereal", "ovenFrozenStrategyGuide", "ovenThawedStrategyGuide", "ovenDriedStrategyGuide", "ovenBurntStrategyGuide", "ovenFryingPanControl", "frontLeftOnDial", "backLeftOnDial", "backRightOnDial", "frontRightOnDial", "fryingPanControl", "leftFryingPan", "leftActiveBurner", "rightFryingPan", "rightActiveBurner", "rawEgg", "friedEgg", "rawScrambledEgg", "friedScrambledEgg", "eggAshes", "closedTopFridgeDoor", "openedTopFridgeDoor", "closedBottomFridgeDoor", "openedBottomFridgeDoor", "fridgeLockLight", "fridgeFrozenStrategyGuide", "spoons", "eggs", "grapefruitJuices", "milk", "milkLocked", "milkUnlocked", "closedMicrowaveDoor", "openedMicrowaveDoor", "milkVapor", "microwaveCerealBowl", "timerTextControl", "minutes", "seconds", "larryOff", "dirtyCerealBowl", "cleanedCerealBowl", "tableCerealBowl", "tableCerealBox", "counterCerealBox", "tableStrategyGuide", "counterStrategyGuide", "counterAshes", "floorEgg", "playerControl", "playerSprite", "handForeground", "playerCerealBox", "playerMilk", "playerThawedStrategyGuide", "playerFork", "playerSpoon", "playerFryingPanControl", "playerFrozenStrategyGuide", "playerAshes", "playerCerealBowl", "playerEgg", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -74,8 +74,9 @@ closedMicrowaveDoor = NodePath("VBoxContainer/Background/Microwave/ClosedDoor")
 openedMicrowaveDoor = NodePath("VBoxContainer/Background/Microwave/OpenDoor")
 milkVapor = NodePath("VBoxContainer/Background/Microwave/MilkVapor")
 microwaveCerealBowl = NodePath("VBoxContainer/Background/Microwave/CerealBowl")
-minutes = NodePath("VBoxContainer/Background/Timer/Minutes")
-seconds = NodePath("VBoxContainer/Background/Timer/Seconds")
+timerTextControl = NodePath("VBoxContainer/Background/Timer/TimerText")
+minutes = NodePath("VBoxContainer/Background/Timer/TimerText/Minutes")
+seconds = NodePath("VBoxContainer/Background/Timer/TimerText/Seconds")
 larryOff = NodePath("VBoxContainer/Background/Timer/LarryOff")
 dirtyCerealBowl = NodePath("VBoxContainer/Background/MiscBackground/DirtyCerealBowl")
 cleanedCerealBowl = NodePath("VBoxContainer/Background/MiscBackground/CleanCerealBowl")
@@ -746,7 +747,10 @@ region_rect = Rect2(128, 240, 27, 34)
 [node name="Timer" type="Control" parent="VBoxContainer/Background"]
 anchors_preset = 0
 
-[node name="Minutes" type="Label" parent="VBoxContainer/Background/Timer"]
+[node name="TimerText" type="Control" parent="VBoxContainer/Background/Timer"]
+anchors_preset = 0
+
+[node name="Minutes" type="Label" parent="VBoxContainer/Background/Timer/TimerText"]
 layout_mode = 0
 offset_left = 233.0
 offset_top = 50.0
@@ -757,7 +761,7 @@ theme_override_fonts/font = ExtResource("5_vskr0")
 theme_override_font_sizes/font_size = 40
 text = "5"
 
-[node name="Colon" type="Label" parent="VBoxContainer/Background/Timer"]
+[node name="Colon" type="Label" parent="VBoxContainer/Background/Timer/TimerText"]
 layout_mode = 0
 offset_left = 256.0
 offset_top = 50.0
@@ -768,7 +772,7 @@ theme_override_fonts/font = ExtResource("5_vskr0")
 theme_override_font_sizes/font_size = 40
 text = ":"
 
-[node name="Seconds" type="Label" parent="VBoxContainer/Background/Timer"]
+[node name="Seconds" type="Label" parent="VBoxContainer/Background/Timer/TimerText"]
 layout_mode = 0
 offset_left = 278.0
 offset_top = 50.0

@@ -361,7 +361,7 @@ func _ready():
 		if i < spoonNum: spoons[i].show()
 		else: spoons[i].hide()
 
-	eggNum = randi_range(1,6)
+	eggNum = randi_range(2,6)
 	for i in range(len(eggs)):
 		if i < eggNum: eggs[i].show()
 		else: eggs[i].hide()
