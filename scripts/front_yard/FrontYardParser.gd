@@ -7,7 +7,7 @@ enum {AMBIGUOUS, RIGHT, LEFT, PLURAL}
 
 enum ActionID {
 	INSPECT, USE,
-	TURN_ON, TURN_OFF, TURN, MOVE_TO, ASCEND, DESCEND, STEP_GENTLY, OPEN, CLOSE, ENTER,
+	TURN_ON, TURN_OFF, TURN, MOVE_TO, EXIT, ASCEND, DESCEND, STEP_GENTLY, OPEN, CLOSE, ENTER,
 	TAKE, EAT, REMOVE, REPLACE, PUT,
 	WEAR, TIE, UNTIE, 
 	REFUEL, POUR, MOW,
@@ -21,6 +21,7 @@ enum SubjectID {
 	GAS, MOWER, GAS_CAP,
 	SHOES, AMBIGUOUS_SHOE, RIGHT_SHOE, LEFT_SHOE, SHOE_ON_RIGHT_FOOT, SHOE_ON_LEFT_FOOT,
 	FLAMETHROWER, CEREAL, BIRD_FEEDER, FAUCET, LAWN, WEEDS, STUMP, WINDOW,
+	BEDROOM_DOOR_KNOB, BATHROOM_DOOR_KNOB, GAME
 }
 
 enum ModifierID {
@@ -41,15 +42,15 @@ func initParsableActions():
 	addParsableAction(ActionID.USE, ["use"])
 	addParsableAction(ActionID.TURN_ON, ["turn on", "start", "activate"])
 	addParsableAction(ActionID.TURN_OFF, ["turn off", "stop", "deactivate"])
-	addParsableAction(ActionID.TURN, ["turn"])
+	addParsableAction(ActionID.TURN, ["turn", "rotate"])
 	addParsableAction(ActionID.OPEN, ["open"])
 	addParsableAction(ActionID.CLOSE, ["close", "shut"])
-	addParsableAction(ActionID.ENTER, ["enter", "go inside", "go in", "walk inside", "walk in"])
+	addParsableAction(ActionID.ENTER, ["enter", "go in", "walk in"])
 	addParsableAction(ActionID.REMOVE, ["remove", "take off", "unscrew", "pull off"])
 	addParsableAction(ActionID.TAKE, ["take", "get", "obtain", "hold", "pick up", "grab"])
 	addParsableAction(ActionID.EAT, ["eat"])
 	addParsableAction(ActionID.REPLACE,
-			["place", "replace", "return", "put back", "put down", "put away", "set down", "screw on", "screw"])
+			["replace", "return", "put back", "put down", "put away", "set down", "screw on", "screw"])
 	addParsableAction(ActionID.WEAR, ["wear", "slip on", "put on"])
 	addParsableAction(ActionID.TIE, ["tie up", "tie", "lace up", "lace"])
 	addParsableAction(ActionID.UNTIE, ["untie"])
@@ -58,7 +59,7 @@ func initParsableActions():
 	addParsableAction(ActionID.MOW, ["mow", "cut", "trim"])
 	addParsableAction(ActionID.FIRE, ["fire", "shoot"])
 	addParsableAction(ActionID.LIGHT, ["light", "strike", "burn"])
-	addParsableAction(ActionID.PUT, ["put"])
+	addParsableAction(ActionID.PUT, ["put", "place", "set"])
 	addParsableAction(ActionID.STEP_GENTLY,
 			["step gently on", "step gently up to", "step gently",
 			"gently step on", "gently step up to", "gently step",
@@ -76,8 +77,9 @@ func initParsableActions():
 	addParsableAction(ActionID.MOVE_TO,
 			["move to", "move on", "move", "walk to", "walk on", "walk up", "walk down", "walk", "go to", "go on", "go",
 			"step to", "step on", "step"])
+	addParsableAction(ActionID.EXIT, ["exit", "leave"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
-	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game", "exit"])
+	addParsableAction(ActionID.QUIT, ["quit game", "quit"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
 
@@ -85,14 +87,24 @@ func initParsableActions():
 func initParsableSubjects():
 	addParsableSubject(SubjectID.SELF, ["self", "yourself", "me", "myself", "you"],
 			[ActionID.INSPECT])
-	addParsableSubject(SubjectID.BATHROOM, ["bathroom door", "bathroom", "brown door", "lower door", "downstairs door"],
-			[ActionID.INSPECT, ActionID.OPEN, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ENTER, ActionID.DESCEND])
+	addParsableSubject(SubjectID.BATHROOM_DOOR_KNOB,
+			["door knob on bathroom door", "door knob on brown door", "door knob on lower door",
+			 "knob on bathroom door", "knob on brown door", "knob on lower door",
+			 "bathroom door knob", "brown door knob", "lower door knob"],
+			[ActionID.INSPECT, ActionID.TURN])
+	addParsableSubject(SubjectID.BEDROOM_DOOR_KNOB,
+			["door knob on bedroom door", "door knob on blue door", "door knob on upper door",
+			 "knob on bedroom door", "knob on blue door", "knob on upper door",
+			 "knob", "door knob", "bedroom door knob", "blue door knob", "upper door knob"],
+			[ActionID.INSPECT, ActionID.TURN])
 	addParsableSubject(SubjectID.BEDROOM,
-			["bedroom door", "bedroom", "blue door", "upper door", "upstairs door",
+			["bedroom door", "bedroom", "blue door", "upper door", "upstairs door", "inside bedroom", "inside door", "inside",
 			"top of steps", "last step", "top step", "step 6", "step six", "sixth step", "landing", ],
-			[ActionID.INSPECT, ActionID.OPEN, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ENTER, ActionID.ASCEND])
+			[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ENTER, ActionID.ASCEND])
+	addParsableSubject(SubjectID.BATHROOM, ["bathroom door", "bathroom", "brown door", "lower door", "downstairs door"],
+			[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.ENTER, ActionID.DESCEND])
 	addParsableSubject(SubjectID.AMBIGUOUS_DOOR, ["door"],
-			[ActionID.INSPECT, ActionID.OPEN, ActionID.MOVE_TO, ActionID.STEP_GENTLY,ActionID.ENTER,
+			[ActionID.INSPECT, ActionID.OPEN, ActionID.CLOSE, ActionID.MOVE_TO, ActionID.STEP_GENTLY,ActionID.ENTER,
 			ActionID.DESCEND, ActionID.ASCEND])
 	addParsableSubject(SubjectID.HOUSE, ["house"],
 			[ActionID.INSPECT, ActionID.ENTER])
@@ -122,7 +134,7 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.MOWER, ["mower", "lawn mower", "engine", "fuel tank", "gas tank", "tank"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.REFUEL, ActionID.TURN_ON, ActionID.TURN_OFF, ActionID.TURN,
 			ActionID.PUT, ActionID.MOVE_TO, ActionID.OPEN, ActionID.CLOSE])
-	addParsableSubject(SubjectID.GAS_CAP, ["gas cap", "cap", "gas lid", "lid"],
+	addParsableSubject(SubjectID.GAS_CAP, ["gas cap", "gas lid", "fuel cap", "fuel lid", "cap", "lid"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.REMOVE, ActionID.REPLACE, ActionID.TAKE, ActionID.PUT,
 			 ActionID.OPEN, ActionID.CLOSE])
 	addParsableSubject(SubjectID.GAS, ["gasoline", "gas can", "gas", "fuel"],
@@ -145,7 +157,7 @@ func initParsableSubjects():
 			ActionID.WEAR, ActionID.PUT, ActionID.TIE, ActionID.UNTIE, ActionID.REMOVE])
 	addParsableSubject(SubjectID.FLAMETHROWER, ["flamethrower", "flame thrower", "gun"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.FIRE, ActionID.TAKE])
-	addParsableSubject(SubjectID.CEREAL, ["boxes of cereal", "boxes", "box", "cereal", "top shelf", "cocoa puffs"],
+	addParsableSubject(SubjectID.CEREAL, ["boxes of cereal", "boxes", "box", "cereal", "top shelf", "cocoa puffs", "books", "book"],
 			[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
 	addParsableSubject(SubjectID.BIRD_FEEDER, ["bird feeder", "birdfeeder", "feeder"],
 			[ActionID.INSPECT])
@@ -154,14 +166,15 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.LAWN,
 			["lawn of matchsticks", "lawn of matches", "lawn",
 			"matches", "matchsticks", "match sticks", "matchstick lawn", "match",
-			"yard", "front yard",],
-			[ActionID.INSPECT, ActionID.MOW, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.LIGHT])
+			"yard", "front yard", "around", "outside"],
+			[ActionID.INSPECT, ActionID.MOW, ActionID.MOVE_TO, ActionID.STEP_GENTLY, ActionID.LIGHT, ActionID.EXIT])
 	addParsableSubject(SubjectID.WEEDS, ["weeds", "weed", "the bane of my homeowner existence"],
 			[ActionID.INSPECT, ActionID.MOW])
 	addParsableSubject(SubjectID.STUMP, ["stump", "tree stump"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.WINDOW, ["windows", "window", "curtains", "curtain"],
 			[ActionID.INSPECT])
+	addParsableSubject(SubjectID.GAME, ["game"], [ActionID.EXIT])
 
 
 func initParsableModifiers():
@@ -215,6 +228,8 @@ func initParseSubs():
 	addParseSub("into", "in")
 	addParseSub("onto", "on")
 	addParseSubs(["carefully", "lightly", "gingerly", "softly"], "gently")
+	addParseSub("handle", "knob")
+	addParseSub("doorknob","door knob")
 
 
 func parseItems() -> String:
@@ -383,6 +398,19 @@ func parseItems() -> String:
 						"If the curtains weren't closed, you'd be able to see into your bedroom from this window."
 					)
 
+				SubjectID.BEDROOM_DOOR_KNOB:
+					if frontYard.isBedroomDoorOpen:
+						return (
+							"You can feel your proficiency with door knobs increase with each door you open!"
+						)
+					else:
+						return (
+							"The door knob to your bedroom is waiting for your to turn it."
+						)
+				
+				SubjectID.BATHROOM_DOOR_KNOB:
+					return "You've conquered this door knob now! Soon you'll be a door-opening expert!"
+
 
 		ActionID.USE:
 			if subjectID == SubjectID.FLAMETHROWER:
@@ -418,7 +446,24 @@ func parseItems() -> String:
 
 			if subjectID == -1: return requestAdditionalSubjectContext()
 
-			if modifierID == -1: return requestAdditionalContextCustom(
+			if subjectID == SubjectID.BEDROOM_DOOR_KNOB and modifierID == -1:
+				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
+					if frontYard.isBedroomDoorOpen:
+						return "The bedroom door is already open."
+					else:
+						EndingsManager.onSceneBeaten(SceneManager.SceneID.FRONT_YARD)
+						frontYard.openBedroomDoor()
+						return "Your practice with the last door comes in handy, and you open the bedroom door with ease."
+				else:
+					return "You can't reach the bedroom door from your current position."
+
+			if subjectID == SubjectID.BATHROOM_DOOR_KNOB and modifierID == -1:
+				if frontYard.isPlayerOnConcrete():
+					return "You just got out of the bathroom. You need to keep moving forward to get your breakfast!"
+				else:
+					return "You can't reach the bathroom door from your current position."
+
+			elif modifierID == -1: return requestAdditionalContextCustom(
 				"Would you like to turn the " + subjectAlias + " on or off?",
 				REQUEST_MODIFIER
 			)
@@ -574,6 +619,34 @@ func parseItems() -> String:
 				return parseItems()
 
 
+		ActionID.EXIT:
+
+			if subjectID == -1:
+				return requestAdditionalSubjectContext()
+
+			elif subjectID == SubjectID.LAWN:
+				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
+					if frontYard.isBedroomDoorOpen:
+						SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
+						return ""
+					else:
+						return "You need to open the bedroom door first."
+				
+				else:
+					return (
+						"You'll need to enter your house from the upper door to get to your bedroom, but " +
+						"you can't reach it from your current position."
+					)
+			
+			elif subjectID == SubjectID.GAME:
+				if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.QUIT:
+					get_tree().quit()
+				else:
+					parseEventsSinceLastConfirmation = 0
+					confirmingActionID = ActionID.QUIT
+					return requestConfirmation()
+
+
 		ActionID.OPEN, ActionID.ENTER:
 			
 			var playerPos := frontYard.playerPos
@@ -593,19 +666,36 @@ func parseItems() -> String:
 				else:
 					return "You can't reach the bathroom door from your current position."
 			
-			elif subjectID == SubjectID.BEDROOM:
+			elif subjectID == SubjectID.BEDROOM and actionID == ActionID.OPEN:
 				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
-					EndingsManager.onSceneBeaten(SceneManager.SceneID.FRONT_YARD)
-					SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
-					return ""
+					if frontYard.isBedroomDoorOpen:
+						return "The bedroom door is already open."
+					else:
+						EndingsManager.onSceneBeaten(SceneManager.SceneID.FRONT_YARD)
+						frontYard.openBedroomDoor()
+						return "Your practice with the last door comes in handy, and you open the bedroom door with ease."
 				else:
 					return "You can't reach the bedroom door from your current position."
-			
-			elif subjectID == SubjectID.HOUSE:
+
+			elif subjectID == SubjectID.BEDROOM and actionID == ActionID.ENTER:
 				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
-					EndingsManager.onSceneBeaten(SceneManager.SceneID.FRONT_YARD)
-					SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
-					return ""
+					if frontYard.isBedroomDoorOpen:
+						SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
+						return ""
+					else:
+						return "You need to open the bedroom door first."
+					
+				else:
+					return "You can't reach the bedroom door from your current position."
+
+			elif subjectID == SubjectID.HOUSE and actionID == ActionID.ENTER:
+				if frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
+					if frontYard.isBedroomDoorOpen:
+						SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
+						return ""
+					else:
+						return "You need to open the bedroom door first."
+				
 				else:
 					return (
 						"You'll need to enter your house from the upper door to get to your bedroom, but " +
@@ -644,8 +734,18 @@ func parseItems() -> String:
 					REQUEST_SUBJECT, [], [" door"]
 				)
 			
-			elif subjectID == SubjectID.BATHROOM or subjectID == SubjectID.BEDROOM:
+			elif subjectID == SubjectID.BATHROOM:
 				return "That door is already closed."
+
+			elif subjectID == SubjectID.BEDROOM:
+				if not frontYard.isBedroomDoorOpen:
+					return "That door is already closed."
+				elif frontYard.playerPos == frontYard.SpritePos.BEDROOM_DOOR:
+					frontYard.closeBedroomDoor()
+					return "It's a beautiful day today, and it would be a shame to go inside so soon."
+				else:
+					return "You can't reach the bedroom door from where you're standing."
+				
 
 			elif subjectID == SubjectID.MOWER or subjectID == SubjectID.GAS_CAP:
 				if frontYard.isPlayerOnConcrete():

@@ -1,9 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://d20cc824v4s0y"]
+[gd_scene load_steps=8 format=3 uid="uid://d20cc824v4s0y"]
 
 [ext_resource type="Script" uid="uid://dfy1p4vfcgf78" path="res://scripts/splash_screen/SplashScreen.gd" id="1_l8gqt"]
+[ext_resource type="Texture2D" uid="uid://cpxnsk8n8o8iw" path="res://sprites/dr_bean/dr_bean_idle.png" id="2_6b2gt"]
 [ext_resource type="Script" uid="uid://cq8c4vtcq5828" path="res://scripts/splash_screen/SplashScreenParser.gd" id="2_n1w0c"]
+[ext_resource type="Texture2D" uid="uid://u5kupgex1qeb" path="res://sprites/dr_bean/dr_bean_spilling_milk.png" id="2_w42qc"]
+[ext_resource type="Texture2D" uid="uid://bqqhdrbn6re5k" path="res://sprites/dr_bean/dr_bean_with_prepared_cereal.png" id="3_lyxic"]
+[ext_resource type="Texture2D" uid="uid://c07hqpncxl6n6" path="res://sprites/dr_bean/dr_bean_eating_cereal.png" id="4_7kjwb"]
 
-[node name="Splash_Screen" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6b2gt"]
+frequency = 1.0
+
+[node name="Splash_Screen" type="CenterContainer" node_paths=PackedStringArray("drBeanSprite", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -17,6 +24,11 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_l8gqt")
+drBeanSprite = NodePath("VBoxContainer/Background/DrBeanControl/Sprite2D")
+spillingMilkSprite = ExtResource("2_w42qc")
+preparedCerealSprite = ExtResource("3_lyxic")
+eatingCerealSprite = ExtResource("4_7kjwb")
+noise = SubResource("FastNoiseLite_6b2gt")
 inputParser = NodePath("SplashScreenParser")
 
 [node name="Borders" type="ColorRect" parent="."]
@@ -36,30 +48,14 @@ layout_mode = 2
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 
-[node name="TopText" type="Label" parent="VBoxContainer/Background/DrBeanControl"]
-layout_mode = 2
-offset_top = -72.0
-offset_right = 256.0
-theme_override_font_sizes/font_size = 24
-text = "A Game By"
-horizontal_alignment = 1
-vertical_alignment = 2
-
 [node name="Sprite2D" type="Sprite2D" parent="VBoxContainer/Background/DrBeanControl"]
 position = Vector2(128, 128)
-
-[node name="BottomText" type="Label" parent="VBoxContainer/Background/DrBeanControl"]
-layout_mode = 2
-offset_top = 256.0
-offset_right = 256.0
-offset_bottom = 328.0
-theme_override_font_sizes/font_size = 24
-text = "Dr. Bean"
-horizontal_alignment = 1
+scale = Vector2(4, 4)
+texture = ExtResource("2_6b2gt")
 
 [node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
 layout_mode = 2
 
-[node name="SplashScreenParser" type="Node" parent="." node_paths=PackedStringArray("scene")]
+[node name="SplashScreenParser" type="Node" parent="." node_paths=PackedStringArray("splashScreen")]
 script = ExtResource("2_n1w0c")
-scene = NodePath("..")
+splashScreen = NodePath("..")

@@ -22,7 +22,7 @@ enum EndingID {
 	HEARTBURN = 230, GUTBOMB = 240, HIGH_FIRE_BER_DIET = 250, FIRED_AND_FIRED = 260, MICROWAVE_MAYHEM = 270,
 	TNTASTY = 280, KITCHENCINERATOR = 290, REFRIGERATOR_TERMINATOR = 300, BEWARE_OF_BURNOUT = 305, ONE_STAR_REVIEW = 310,
 	EGGSISTENTIAL_CRISIS = 315, DRY_FIRE = 320, CRYING_OVER_SPILLED_MILK = 325, EVAPORATED_MILK = 330,
-	CHAMPION_OF_BREAKFASTS = 340,
+	CHAMPION_OF_BREAKFASTS = 340, FINISHING_STRONG = 350,
 }
 
 const endingsByScene := {
@@ -49,6 +49,9 @@ const endingsByScene := {
 		EndingID.FIRED_AND_FIRED, EndingID.MICROWAVE_MAYHEM, EndingID.TNTASTY, EndingID.KITCHENCINERATOR, EndingID.REFRIGERATOR_TERMINATOR,
 		EndingID.BEWARE_OF_BURNOUT, EndingID.ONE_STAR_REVIEW, EndingID.EGGSISTENTIAL_CRISIS, EndingID.DRY_FIRE,
 		EndingID.CRYING_OVER_SPILLED_MILK, EndingID.EVAPORATED_MILK, EndingID.CHAMPION_OF_BREAKFASTS,
+	],
+	SceneID.ENDING : [
+		EndingID.FINISHING_STRONG,
 	]
 }
 
@@ -178,7 +181,7 @@ func openEndings(openingScene: Scene):
 	openEndingsScene = preloadedEndingsScene.instantiate()
 	pausedScene.add_sibling(openEndingsScene)
 	openEndingsScene.initFromExistingTerminal(openingScene.terminal)
-	if currentScene in endingsByScene:
+	if currentScene in endingsByScene and currentScene != SceneID.ENDING:
 		openEndingsScene.changeLevel(currentScene)
 
 func closeEndings():

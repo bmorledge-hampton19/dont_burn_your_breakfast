@@ -36,6 +36,7 @@ SceneManager="*res://scripts/singletons/SceneManager.gd"
 Options="*res://scripts/singletons/Options.gd"
 EndingsManager="*res://scripts/singletons/EndingsManager.gd"
 Helpers="*res://scripts/singletons/Helpers.gd"
+AudioManager="*res://scenes/main_scenes/audio_manager.tscn"
 
 [debug]
 

@@ -375,9 +375,9 @@ func parseItems() -> String:
 				SceneManager.transitionToScene(
 				SceneManager.SceneID.ENDING,
 				"You could've sworn that the button in the bottom left corner of your computer screen used to say \"Start\", " +
-				"but that's certainly not the case right now... Curiosity gets the better of you and you decide to try clicking on it. " +
+				"but that's certainly not the case right now... Curiosity gets the better of you and you decide to try clicking on it.\n" +
 				"You immediately regret this decision as your beautiful desktop is replaced by an avatar of breakfast-" +
-				"themed wrath. A mixture of ominous laughter and Latin chanting begin to echo from your speakers, and gouts of flame " +
+				"themed wrath. A mixture of ominous laughter and Latin chanting begin to echo from your speakers, and jets of flame " +
 				"erupt from your keyboard. Drat! You should have known that torrenting copies of the bible would come back to bite you...",
 				SceneManager.EndingID.ITS_NOT_A_BUG_ITS_A_FEATURE
 				)
@@ -424,9 +424,9 @@ func parseItems() -> String:
 			SceneManager.transitionToScene(
 				SceneManager.SceneID.ENDING,
 				"You could've sworn that the button in the bottom left corner of your computer screen used to say \"Start\", " +
-				"but that's certainly not the case right now... Curiosity gets the better of you and you decide to try clicking on it. " +
+				"but that's certainly not the case right now... Curiosity gets the better of you and you decide to try clicking on it.\n" +
 				"You immediately regret this decision as your beautiful desktop is replaced by an avatar of breakfast-" +
-				"themed wrath. A mixture of ominous laughter and Latin chanting begin to echo from your speakers, and gouts of flame " +
+				"themed wrath. A mixture of ominous laughter and Latin chanting begin to echo from your speakers, and jets of flame " +
 				"erupt from your keyboard. Drat! You should have known that torrenting copies of the bible would come back to bite you...",
 				SceneManager.EndingID.ITS_NOT_A_BUG_ITS_A_FEATURE
 			)

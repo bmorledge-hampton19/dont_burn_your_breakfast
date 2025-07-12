@@ -155,7 +155,7 @@ func _process(delta: float):
 		SceneManager.transitionToScene(
 			SceneManager.SceneID.ENDING,
 			"You're still desperately trying to corral the chaos that is your computer desktop when things take a turn for the worse. " +
-			"The screen begins to stutter and flicker ominously, and before too long the monitor is almost entirely unresponsive. " +
+			"The screen begins to stutter and flicker ominously, and before too long the monitor is almost entirely unresponsive.\n" +
 			"With a growing sense of dread, you look over at your PC's tower and find smoke billowing out of the exhaust ports. " +
 			"You consider forcing a shutdown but worry that you might not have saved all your spreadsheets and cat pictures. " +
 			"It's probably best to just wait until it starts responding again...",

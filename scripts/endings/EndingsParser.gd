@@ -297,27 +297,43 @@ func parseItems() -> String:
 					SceneManager.SceneID.KITCHEN:
 						endings.changeLevel(SceneManager.SceneID.BEDROOM)
 						return ""
+					SceneManager.SceneID.ENDING:
+						endings.changeLevel(SceneManager.SceneID.KITCHEN)
+						return ""
 
 
 		ActionID.NEXT:
 			if endings.viewingEnding: return "You need to [go back] to the endings first."
 			else:
-				# CHANGE THIS WITH EACH DEMO
 				match endings.currentLevel:
 					SceneManager.SceneID.MAIN_MENU:
 						endings.changeLevel(SceneManager.SceneID.BATHROOM)
 						return ""
 					SceneManager.SceneID.BATHROOM:
-						endings.changeLevel(SceneManager.SceneID.FRONT_YARD)
-						return ""
+						if EndingsManager.isSceneBeaten(SceneManager.SceneID.BATHROOM):
+							endings.changeLevel(SceneManager.SceneID.FRONT_YARD)
+							return ""
+						else:
+							return "Hey! No peeking!\n(You haven't reached the next level yet.)"
 					SceneManager.SceneID.FRONT_YARD:
-						endings.changeLevel(SceneManager.SceneID.BEDROOM)
-						return ""
+						if EndingsManager.isSceneBeaten(SceneManager.SceneID.FRONT_YARD):
+							endings.changeLevel(SceneManager.SceneID.BEDROOM)
+							return ""
+						else:
+							return "Hey! No peeking!\n(You haven't reached the next level yet.)"
 					SceneManager.SceneID.BEDROOM:
-						# endings.changeLevel(SceneManager.SceneID.KITCHEN)
-						# return ""
-						return "The next scene is not available in this demo."
+						if EndingsManager.isSceneBeaten(SceneManager.SceneID.BEDROOM):
+							endings.changeLevel(SceneManager.SceneID.KITCHEN)
+							return ""
+						else:
+							return "Hey! No peeking!\n(You haven't reached the next level yet.)"
 					SceneManager.SceneID.KITCHEN:
+						if EndingsManager.isEndingUnlocked(SceneManager.EndingID.FINISHING_STRONG):
+							endings.changeLevel(SceneManager.SceneID.ENDING)
+							return ""
+						else:
+							return "You get the strange sense that there's a secret ending somewhere still waiting to be unlocked..."
+					SceneManager.SceneID.ENDING:
 						return wrongContextParse()
 
 

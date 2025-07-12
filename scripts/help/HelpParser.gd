@@ -208,7 +208,7 @@ func changePage(pageChangeModifierID: int, goingBackwards: bool = false) -> Stri
 					)
 			6:
 				help.goToNextPage()
-				return "Don't forget, you have to return to the main menu to access the \"endings\" screen."
+				return "Don't forget to check the endings screen for hints if you ever get stuck!"
 			7:
 				return "You're already at the last page. You can't proceed any further."
 

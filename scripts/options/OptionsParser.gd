@@ -9,7 +9,7 @@ enum ActionID {
 }
 
 enum SubjectID {
-	FONT_SIZE, FONT_SPEED, DISPLAY_FORMAT, QUESTION_MARKS,
+	FONT_SIZE, FONT_SPEED, DISPLAY_FORMAT, QUESTION_MARKS, MUSIC_VOLUME, OTHER_SOUND_VOLUME, AMBIGUOUS_VOLUME
 }
 
 enum ModifierID {
@@ -21,7 +21,7 @@ func initParsableActions():
 	addParsableAction(ActionID.ENDINGS,
 			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
 	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
-	addParsableAction(ActionID.SET, ["set", "change", "configure"])
+	addParsableAction(ActionID.SET, ["set", "change", "configure", "slide", "move"], true)
 	addParsableAction(ActionID.DELETE, ["delete save game", "delete save data", "delete save", "delete"])
 	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.MAIN_MENU,
@@ -43,6 +43,16 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.SET])
 	addParsableSubject(SubjectID.QUESTION_MARKS, ["?", "question marks", "question mark", "question"],
 			[ActionID.INSPECT])
+	addParsableSubject(SubjectID.MUSIC_VOLUME,
+			["background music volume", "music volume", "BGM volume", "background music", "music", "BGM"],
+			[ActionID.INSPECT, ActionID.SET])
+	addParsableSubject(SubjectID.OTHER_SOUND_VOLUME,
+			["sound effects volume", "other sounds volume", "sounds volume",
+			 "sound effect volume", "other sound volume", "sound volume",
+			 "sound effects", "sound effect", "other sounds", "other sound", "sounds", "sound"],
+			[ActionID.INSPECT, ActionID.SET])
+	addParsableSubject(SubjectID.AMBIGUOUS_VOLUME, ["volume"],
+			[ActionID.INSPECT, ActionID.SET])
 
 
 func initParsableModifiers():
@@ -117,12 +127,22 @@ func parseItems() -> String:
 							"Strange... These options haven't been revealed to you yet. Legend has it that they will " +
 							"only reveal themselves to someone who has unlocked all the endings in the game."
 						)
+
+				SubjectID.MUSIC_VOLUME:
+					return "Use this option to adjust the volume of background music from 0-100%."
+				
+				SubjectID.MUSIC_VOLUME:
+					return "Use this option to adjust the volume of other sound effects from 0-100%."
+				
+				SubjectID.AMBIGUOUS_VOLUME:
+					return "Use these options to adjust the volume of background music and other sound effects from 0-100%."
 				
 		ActionID.SET:
 			
 			match subjectID:
 
 				SubjectID.FONT_SIZE:
+					if wildCard: return unrecognizedEndingParse()
 					match modifierID:
 
 						ModifierID.SMALL:
@@ -187,7 +207,7 @@ func parseItems() -> String:
 						
 				
 				SubjectID.FONT_SPEED:
-
+					if wildCard: return unrecognizedEndingParse()
 					match modifierID:
 
 						ModifierID.SLOW:
@@ -215,7 +235,7 @@ func parseItems() -> String:
 							return requestAdditionalModifierContext("What", " to")
 				
 				SubjectID.DISPLAY_FORMAT:
-
+					if wildCard: return unrecognizedEndingParse()
 					match modifierID:
 
 						ModifierID.WINDOWED:
@@ -234,6 +254,35 @@ func parseItems() -> String:
 
 						-1:
 							return requestAdditionalModifierContext("What", " to")
+
+				SubjectID.MUSIC_VOLUME, SubjectID.OTHER_SOUND_VOLUME:
+					if not wildCard:
+						return requestAdditionalContextCustom("What % do you want to set the music volume to?", REQUEST_WILDCARD)
+					
+					wildCard = wildCard.replace("slider", "").replace("to", "").replace("%", "").replace("percent", "").strip_edges()
+
+					var newVolumePercent: int
+					if wildCard.is_valid_int():
+						newVolumePercent = int(wildCard)
+						validWildCard = true
+					else:
+						return unrecognizedEndingParse()
+					
+					if newVolumePercent < 0 or newVolumePercent > 100:
+						return "Volume must be set to a value between 0 and 100."
+					
+					if subjectID == SubjectID.MUSIC_VOLUME:
+						optionsScene.setMusicVolume(newVolumePercent)
+						return "Setting music volume to " + str(newVolumePercent) + "%."
+					elif subjectID == SubjectID.OTHER_SOUND_VOLUME:
+						optionsScene.setOtherSoundVolume(newVolumePercent)
+						return "Setting sound effect volume to " + str(newVolumePercent) + "%."
+
+				SubjectID.AMBIGUOUS_VOLUME:
+					return requestAdditionalSubjectContext(
+						"Are you trying to " + actionAlias + " [music] volume or [sound effect] volume?",
+						[], [" volume"]
+					)
 
 
 		ActionID.DELETE:

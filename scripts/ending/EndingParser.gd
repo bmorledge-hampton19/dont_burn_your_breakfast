@@ -10,8 +10,20 @@ const endingMessage = (
 )
 
 enum ActionID {
-	POOP, QUIT, MAIN_MENU, ENDINGS, RETRY, AFFIRM, DENY
+	POOP, QUIT, MAIN_MENU, ENDINGS, RETRY, AFFIRM, DENY, BURN_BREAKFAST,
 }
+
+const BURN_BREAKFAST_ALIASES: Array[String] = [
+	"burn breakfast", "burn cereal bowl", "burn bowl of cereal", "burn cereal", "burn ending", "burn scene",
+	"burn it all", "burn it", "burn baby burn", "burn everything", "burn",
+	"set breakfast on fire", "set cereal bowl on fire", "set bowl of cereal on fire", "set cereal on fire", "set ending on fire",
+	"set scene on fire", "set it on fire", "set everything on fire", "set on fire",
+	"ignite breakfast", "ignite cereal bowl", "ignite bowl of cereal", "ignite cereal", "ignite ending", "ignite scene",
+	"ignite it all", "ignite it", "ignite everything", "ignite",
+	"incinerate breakfast", "incinerate cereal bowl", "incinerate bowl of cereal", "incinerate cereal", "incinerate ending",
+	"incinerate scene", "incinerate it all", "incinerate it", "incinerate everything", "incinerate",
+	"start fire", "let it burn", "fire", "torch"
+]
 
 enum SubjectID {
 
@@ -25,10 +37,13 @@ enum ModifierID {
 func initParsableActions():
 	addParsableAction(ActionID.ENDINGS,
 			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
+	addParsableAction(ActionID.BURN_BREAKFAST, BURN_BREAKFAST_ALIASES)
 	addParsableAction(ActionID.MAIN_MENU,
 			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
 			"go back to main menu", "return to the main menu", "return to main menu", "m"])
-	addParsableAction(ActionID.RETRY, ["retry level", "retry the current level", "retry", "replay level", "r"])
+	addParsableAction(ActionID.RETRY,
+			["retry level", "retry current level", "retry", "replay level",
+			 "back", "restart level", "restart current level", "restart", "r",])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
 	addParsableAction(ActionID.QUIT, ["quit game", "quit the game", "quit", "exit game", "exit the game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
@@ -56,19 +71,23 @@ func receiveInputFromTerminal(input: String):
 			"restart level", "restart the current level", "restart",
 		]:
 			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
+		elif SceneManager.endingID == SceneManager.EndingID.CHAMPION_OF_BREAKFASTS and input.to_lower() in BURN_BREAKFAST_ALIASES:
+			terminal.initMessage(burnBreakfast(), true)
 		else:
 			firstParse = false
 			if SceneManager.endingID == SceneManager.EndingID.CHAMPION_OF_BREAKFASTS:
 				var message: String
 				if EndingsManager.areAllEndingsUnlocked():
 					message = (
-						"Congratulations on reaching the end of the game! It looks like you've found all the endings too! " +
+						"Congratulations on reaching the end of the game! You're a true breakfast champion!\n" + 
+						"It looks like you've found all the endings too! " +
 						"Impressive! Have you visited the options menu or collected all your cereal coins yet?\n\n" +
 						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
 					)
 				else:
 					message = (
-						"Congratulations on reaching the end of the game! But... It looks like you still have some endings left to find. " +
+						"Congratulations on reaching the end of the game! You're a true breakfast champion!\n" + 
+						"But... It looks like you still have some endings left to find. " +
 						"Don't forget that you can buy hints for the ones you're missing.\n" +
 						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
 					)
@@ -139,4 +158,21 @@ func parseItems() -> String:
 					"It's not clear what you want to say no to..."
 				)
 
+		ActionID.BURN_BREAKFAST:
+			if SceneManager.endingID == SceneManager.EndingID.CHAMPION_OF_BREAKFASTS:
+				return burnBreakfast()
+			else:
+				return wrongContextParse()
+
 	return unknownParse()
+
+
+func burnBreakfast():
+	firstParse = true
+	endingScene.burnBreakfast()
+	return (
+		"GAAAH! You just couldn't help yourself, huh? You beat the game, you got your breakfast, and somehow you STILL " +
+		"found a way to burn it. Typical...\nAh well. I suppose it's still impressive in a sad, destructive sort of way. " +
+		"Here's your secret ending. Does this mean you've got them all now?" +
+		"\n(Input any command to continue.)"
+	)

@@ -234,7 +234,7 @@ resource_local_to_scene = true
 atlas = ExtResource("7_lccva")
 region = Rect2(128, 64, 20, 20)
 
-[node name="Bedroom" type="CenterContainer" node_paths=PackedStringArray("playerControl", "playerSprite", "handForeground", "playerClothesControl", "playerMachete", "playerFireExtinguisher", "playerSmokeyHat", "playerPepperFlakes", "playerFlintFlakes", "playerBreadCrumbs", "playerCharcoalPowder", "bedGridControls", "lessMessyBed", "almostMadeBed", "madeBed", "topLeftDrawerControl", "topLeftDrawerClothesControl", "topRightDrawerControl", "topRightDrawerClothesControl", "middleDrawerControl", "middleDrawerClothesControl", "bottomDrawerControl", "bottomDrawerClothesControl", "smokeyBra", "smokeyMessyBeard", "smokeyShavingCream", "smokeyMessyHair", "smokeyHat", "rackedAxe", "rackedMachete", "rackedFireExtinguisher", "rackedHat", "zoomba", "tablePepperFlakes", "tableFlintFlakes", "tableBreadCrumbs", "tableCharcoalPowder", "scatteredPepperFlakes", "scatteredFlintFlakes", "scatteredBreadCrumbs", "scatteredCharcoalPowder", "clutteredScreen", "inputParser")]
+[node name="Bedroom" type="CenterContainer" node_paths=PackedStringArray("playerControl", "playerSprite", "handForeground", "playerClothesControl", "playerMachete", "playerFireExtinguisher", "playerSmokeyHat", "playerPepperFlakes", "playerFlintFlakes", "playerBreadCrumbs", "playerCharcoalPowder", "bedGridControls", "lessMessyBed", "almostMadeBed", "madeBed", "topLeftDrawerControl", "topLeftDrawerClothesControl", "topRightDrawerControl", "topRightDrawerClothesControl", "middleDrawerControl", "middleDrawerClothesControl", "bottomDrawerControl", "bottomDrawerClothesControl", "smokeyBra", "smokeyMessyBeard", "smokeyShavingCream", "smokeyMessyHair", "smokeyHat", "rackedAxe", "rackedMachete", "rackedFireExtinguisher", "rackedHat", "zoomba", "tablePepperFlakes", "tableFlintFlakes", "tableBreadCrumbs", "tableCharcoalPowder", "scatteredPepperFlakes", "scatteredFlintFlakes", "scatteredBreadCrumbs", "scatteredCharcoalPowder", "clutteredScreen", "openedKitchenDoor", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -291,6 +291,7 @@ scatteredFlintFlakes = NodePath("VBoxContainer/Background/ScatteredFood/Scattere
 scatteredBreadCrumbs = NodePath("VBoxContainer/Background/ScatteredFood/ScatteredBreadCrumbs")
 scatteredCharcoalPowder = NodePath("VBoxContainer/Background/ScatteredFood/ScatteredCharcoalPowder")
 clutteredScreen = NodePath("VBoxContainer/Background/GamingStation/ClutteredScreen")
+openedKitchenDoor = NodePath("VBoxContainer/Background/OpenedKitchenDoor")
 inputParser = NodePath("BedroomParser")
 
 [node name="Borders" type="ColorRect" parent="."]
@@ -911,6 +912,14 @@ scale = Vector2(2, 2)
 texture = ExtResource("5_3qhgj")
 region_enabled = true
 region_rect = Rect2(240, 16, 13, 9)
+
+[node name="OpenedKitchenDoor" type="Sprite2D" parent="VBoxContainer/Background"]
+visible = false
+position = Vector2(680, 189)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(256, 0, 22, 105)
 
 [node name="ZoombaTable" type="Control" parent="VBoxContainer/Background"]
 anchors_preset = 0

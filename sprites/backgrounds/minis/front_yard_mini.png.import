@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmdauqu4b35cf"
-path="res://.godot/imported/player_sprite_sheet.png-ecd6e8b34f97a46509692c9936a28659.ctex"
+uid="uid://c4jhb6utmv40d"
+path="res://.godot/imported/front_yard_mini.png-145158abf3fd153f8cd0a33f2ae36e35.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/movable_objects/player_sprite_sheet.png"
-dest_files=["res://.godot/imported/player_sprite_sheet.png-ecd6e8b34f97a46509692c9936a28659.ctex"]
+source_file="res://sprites/backgrounds/minis/front_yard_mini.png"
+dest_files=["res://.godot/imported/front_yard_mini.png-145158abf3fd153f8cd0a33f2ae36e35.ctex"]
 
 [params]
 

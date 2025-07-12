@@ -10,7 +10,7 @@ enum ActionID {
 }
 
 enum SubjectID {
-	SELF, BEN, NICK, CHARLIE, SHIRLEY, CELLAR_DOOR_GAMES
+	SELF, BEN, NICK, CHARLIE, SHIRLEY, CELLAR_DOOR_GAMES, FONT_CREATORS, GODOT, QUAKER_MAN
 }
 
 enum ModifierID {
@@ -35,7 +35,7 @@ func initParsableActions():
 func initParsableSubjects():
 	addParsableSubject(SubjectID.SELF, ["self", "me", "player"],
 			[ActionID.INSPECT, ActionID.THANK])
-	addParsableSubject(SubjectID.BEN, ["ben morledge-hampton", "benjamin", "ben"],
+	addParsableSubject(SubjectID.BEN, ["ben morledge-hampton", "benjamin", "ben", "dr. morledge-hampton", "dr. morledge", "bean", "dr. bean"],
 			[ActionID.INSPECT, ActionID.THANK])
 	addParsableSubject(SubjectID.NICK, ["nicholas", "nick morledge-hampton", "nick"],
 			[ActionID.INSPECT, ActionID.THANK])
@@ -43,13 +43,29 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.THANK])
 	addParsableSubject(SubjectID.SHIRLEY, ["shirley shirley", "shirley", "nanny"],
 			[ActionID.INSPECT, ActionID.THANK])
-	addParsableSubject(SubjectID.CELLAR_DOOR_GAMES, ["cellar door games", "cellar door", "cellar"],
+	addParsableSubject(SubjectID.CELLAR_DOOR_GAMES,
+			["cellar door games", "cellar door", "cellar",
+			 "teddy and kenny lee", "teddy and kenny", "teddy lee", "teddy", "kenny lee", "kenny", "lees"],
+			[ActionID.INSPECT, ActionID.THANK])
+	addParsableSubject(SubjectID.FONT_CREATORS,
+			["font creators", "font creator", "codeman38 and ggbot", "codeman38", "ggbot"],
+			[ActionID.INSPECT, ActionID.THANK])
+	addParsableSubject(SubjectID.GODOT,
+			["godot engine", "godot"],
+			[ActionID.INSPECT, ActionID.THANK])
+	addParsableSubject(SubjectID.QUAKER_MAN,
+			["man", "guy", "corner", "top right corner", "top-right corner", "quaker man", "quaker mascot", "quaker"],
 			[ActionID.INSPECT, ActionID.THANK])
 	
 
 
 func initParsableModifiers():
 	pass
+
+
+func initParseSubs():
+	addParseSub("&", "and")
+	addParseSub("dr", "dr.")
 
 
 func parseItems() -> String:
@@ -94,10 +110,26 @@ func parseItems() -> String:
 						"These guys have made lots of amazing games that are an inspiration to me, but there's one in " +
 						"particular that this game is modeled after. Can you figure out which one?"
 					)
+				SubjectID.FONT_CREATORS:
+					return (
+						"Codeman38 created the kongtext font (which you're looking at right now), and ggbot created the E1234 " +
+						"font used in the kitchen timer. Thanks guys!"
+					)
+				SubjectID.GODOT:
+					return (
+						"This engine has been a joy to work with! You can find its license at godotengine.org/license. " +
+						"Hooray for open source software!"
+					)
+				SubjectID.QUAKER_MAN:
+					return (
+						"The Quaker mascot is filled with gratitude."
+					)
 
 
 		ActionID.THANK:
-			return "<3 " + subjectAlias + " <3"
+			if subjectID == -1: return requestAdditionalSubjectContext("Who")
+
+			return "Thanks " + subjectAlias.capitalize() + "! <3 <3"
 
 
 		ActionID.POOP:

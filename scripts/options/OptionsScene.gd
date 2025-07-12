@@ -17,6 +17,12 @@ var fontSpeedSpoons: Dictionary
 @export var fullscreenSpoon: Sprite2D
 var displayFormatSpoons: Dictionary
 
+@export var musicVolumeSpoon: Sprite2D
+@export var musicVolumePercentLabel: Label
+
+@export var otherSoundVolumeSpoon: Sprite2D
+@export var otherSoundVolumePercentLabel: Label
+
 @export var painfullySmallFontSizeLabel: Label
 @export var painfullyLargeFontSizeLabel: Label
 var painfulOptionsRevealed := false
@@ -61,6 +67,12 @@ func _ready():
 	for displayFormatSpoon in displayFormatSpoons.values(): displayFormatSpoon.hide()
 	displayFormatSpoons[Options.displayMode].show()
 
+	musicVolumeSpoon.position.x = 101 + (243-101)*Options.musicVolume/100
+	musicVolumePercentLabel.text = str(Options.musicVolume) + '%'
+
+	otherSoundVolumeSpoon.position.x = 101 + (243-101)*Options.otherSoundVolume/100
+	otherSoundVolumePercentLabel.text = str(Options.otherSoundVolume) + '%'
+
 
 func setFontSize(newFontSize: Options.FontSize):
 	fontSizeSpoons[Options.fontSize].hide()
@@ -83,3 +95,13 @@ func setDisplayFormat(newDisplayFormat: Options.DisplayMode):
 	displayFormatSpoons[Options.displayMode].hide()
 	Options.displayMode = newDisplayFormat
 	displayFormatSpoons[Options.displayMode].show()
+
+func setMusicVolume(newPercent: int):
+	musicVolumeSpoon.position.x = 101 + (243-101)*newPercent/100
+	musicVolumePercentLabel.text = str(newPercent) + '%'
+	Options.musicVolume = newPercent
+
+func setOtherSoundVolume(newPercent: int):
+	otherSoundVolumeSpoon.position.x = 101 + (243-101)*newPercent/100
+	otherSoundVolumePercentLabel.text = str(newPercent) + '%'
+	Options.otherSoundVolume = newPercent

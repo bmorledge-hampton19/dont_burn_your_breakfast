@@ -48,14 +48,14 @@ func initParsableActions():
 	addParsableAction(ActionID.TAKE, ["take", "get", "obtain", "hold", "pick up", "grab"])
 	addParsableAction(ActionID.EAT, ["eat", "taste", "consume", "monch on"])
 	addParsableAction(ActionID.APPLY, ["apply", "put on"])
-	addParsableAction(ActionID.PLACE, ["place", "return", "put back", "put down", "set down"])
+	addParsableAction(ActionID.PLACE, ["replace", "return", "put back", "put down", "set down"])
 	addParsableAction(ActionID.RINSE, ["rinse off", "rinse", "wash off", "wash"])
 	addParsableAction(ActionID.BRUSH, ["brush"])
 	addParsableAction(ActionID.SPIT, ["spit out","spit"])
 	addParsableAction(ActionID.SWALLOW, ["swallow"])
 	addParsableAction(ActionID.RAISE, ["raise", "lift up", "lift", "put up"])
 	addParsableAction(ActionID.LOWER, ["lower"])
-	addParsableAction(ActionID.PUT, ["put"])
+	addParsableAction(ActionID.PUT, ["put", "place", "set"])
 	addParsableAction(ActionID.FLUSH, ["flush"])
 	addParsableAction(ActionID.AIM, ["aim", "point"])
 	addParsableAction(ActionID.TURN, ["turn and pull", "turn", "rotate"])
@@ -105,6 +105,8 @@ func initParsableSubjects():
 			ActionID.RAISE, ActionID.LOWER, ActionID.PLACE, ActionID.PUT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.KEY, ["key"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TAKE, ActionID.TURN, ActionID.AIM, ActionID.LOOK_AWAY])
+	addParsableSubject(SubjectID.DOOR_HANDLE, ["doorknob", "door knob", "door handle", "knob on door", "handle on door"],
+			[ActionID.INSPECT, ActionID.USE, ActionID.TURN])
 	addParsableSubject(SubjectID.TUB_FAUCET_HANDLE, ["handles", "handle", "knobs", "knob", "faucet handles", "faucet handle"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.TURN])
 	addParsableSubject(SubjectID.TUB_FAUCET, ["faucet", "tub faucet", "bathtub faucet"],
@@ -120,8 +122,6 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.SHAMPOO,
 			["shampoo bottle", "bottle", "shampoo", "4-in-1 shampoo", "soap", "lotion", "lubricant"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.SQUEEZE, ActionID.APPLY, ActionID.PUT, ActionID.SHAMPOO, ActionID.TAKE])
-	addParsableSubject(SubjectID.DOOR_HANDLE, ["doorknob", "door knob", "door handle"],
-			[ActionID.INSPECT, ActionID.USE, ActionID.TURN])
 	addParsableSubject(SubjectID.DOOR, ["door"],
 			[ActionID.INSPECT, ActionID.USE, ActionID.OPEN, ActionID.CLOSE, ActionID.UNLOCK, ActionID.LOCK, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SINK, ["sink"],
@@ -142,7 +142,7 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.EAT, ActionID.TAKE])
 	addParsableSubject(SubjectID.MIRROR, ["mirror", "paper", "sign"],
 			[ActionID.INSPECT])
-	addParsableSubject(SubjectID.OUTSIDE, ["outside", "outdoors", "front yard", "yard"],
+	addParsableSubject(SubjectID.OUTSIDE, ["outside", "outdoors", "front yard", "yard", "next level"],
 			[ActionID.INSPECT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.GAME, ["game"],
 			[ActionID.EXIT])
@@ -393,14 +393,19 @@ func parseItems() -> String:
 					)
 				SubjectID.SINK:
 					return (
-						"You have an extra-long sink for your extra-long counter! " +
+						"You have an extra-long sink for your extra-long counter! It's even got an extra-long cabinet underneath it!" +
 						"It seemed like too much of a hassle to install normal plumbing, " + 
 						"so you just connected the sink faucet directly to the grapefruit juicer."
 					)
 				SubjectID.SPIDER:
-					return (
-						"You refuse to acknowledge the elephant in the room."
-					)
+					if bathroom.isCabinetOpen:
+						return (
+							"You refuse to acknowledge the elephant in the room."
+						)
+					else:
+						return (
+							"You don't see any spiders, so there must not be any spiders around. you refuse to believe otherwise."
+						)
 				SubjectID.PAINTING:
 					return (
 						"This custom painting of the Quaker mascot in nude stares down at you while you bathe. " +
@@ -469,7 +474,7 @@ func parseItems() -> String:
 							SceneManager.transitionToScene(
 								SceneManager.SceneID.ENDING,
 								"You reach for the faucet handle to turn the water on. This immediately proves to be a very " +
-								"poor decision. As water streams into the bathtub, the cereal begins to react violently, " +
+								"poor decision.\nAs water streams into the bathtub, the cereal begins to react violently, " +
 								"bursting into flames and leaping out into the rest of the bathroom. The fire spreads " +
 								"quickly, and it's not long before your entire house is engulfed in flames.",
 								SceneManager.EndingID.BATH_BOMB
@@ -513,7 +518,7 @@ func parseItems() -> String:
 							SceneManager.transitionToScene(
 								SceneManager.SceneID.ENDING,
 								"You reach for the faucet handle to turn the water on. This immediately proves to be a very " +
-								"poor decision. As water streams into the bathtub, the cereal begins to react violently, " +
+								"poor decision.\nAs water streams into the bathtub, the cereal begins to react violently, " +
 								"bursting into flames and leaping out into the rest of the bathroom. The fire spreads " +
 								"quickly, and it's not long before your entire house is engulfed in flames.",
 								SceneManager.EndingID.BATH_BOMB
@@ -528,13 +533,14 @@ func parseItems() -> String:
 						else:
 							bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_DOOR)
 							if bathroom.isDoorUnlocked:
+								EndingsManager.onSceneBeaten(SceneManager.SceneID.BATHROOM)
 								bathroom.openDoor()
 								return (
 									"You turn the handle and pull the door wide open. Freedom is at hand!"
 								)
 							else:
 								return (
-									"You attempt to turn door handle, but it's locked from the outside. You'll need " +
+									"You attempt to " + reconstructCommand() + ", but it's locked from the outside. You'll need " +
 									"to unlock it if you want to leave."
 								)
 					-1: return requestAdditionalSubjectContext()
@@ -881,7 +887,6 @@ func parseItems() -> String:
 
 				SubjectID.BATHROOM:
 					if bathroom.isDoorOpen:
-						EndingsManager.onSceneBeaten(SceneManager.SceneID.BATHROOM)
 						SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
 					else: return attemptOpenDoor()
 
@@ -934,7 +939,6 @@ func parseItems() -> String:
 							if bathroom.isPlayerBlockedByCabinet():
 								transitionToTripEnding("to leave the bathroom")
 							else:
-								EndingsManager.onSceneBeaten(SceneManager.SceneID.BATHROOM)
 								SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
 						else:
 							return "You can't go outside yet. The door is still closed."
@@ -1163,10 +1167,10 @@ func parseItems() -> String:
 							SceneManager.transitionToScene(
 								SceneManager.SceneID.ENDING,
 								"Despite the fact that your mouth is already filled with toothpaste froth, you " +
-								"try to go in for another brushing. At first things seem manageable, but as your mouth " +
+								"try to go in for another brushing.\nAt first things seem manageable, but as your mouth " +
 								"steadily reaches maximum toothpaste capacity you begin to choke and sputter. You endeavor " +
 								"to continue brushing, but you can feel your vision darkening as your body attempts to " +
-								"replace much-needed oxygen with toothpaste fumes. Consciousness gradually slips away from " +
+								"replace much-needed oxygen with toothpaste fumes.\nConsciousness gradually slips away from " +
 								"you, and when you finally come to, you're covered in toothpaste and surrounded by ashes.",
 								SceneManager.EndingID.IRRESPONSIBLE_BRUSHING
 							)
@@ -1215,7 +1219,7 @@ func parseItems() -> String:
 					SceneManager.transitionToScene(
 						SceneManager.SceneID.ENDING,
 						"Without any consideration for where it might end up, you spit out a large glob of toothpaste. " +
-						"It arcs gracefully through the air before plummeting towards the bathtub. " +
+						"It arcs gracefully through the air before plummeting towards the bathtub.\n" +
 						"The massive droplet hits the cereal like a meteorite, flaming impact and all! Whoops...",
 						SceneManager.EndingID.SPICY_SPITTOON
 					)
@@ -1235,7 +1239,7 @@ func parseItems() -> String:
 				SceneManager.transitionToScene(
 					SceneManager.SceneID.ENDING,
 					"With the lid open for the world to see, you flush the toilet. It's an especially energetic flush, " +
-					"swirling vigorously and spewing water droplets all over the bathroom. For a brief moment, you're very " +
+					"swirling vigorously and spewing water droplets all over the bathroom.\nFor a brief moment, you're very " +
 					"satisfied with the \"super deluxe flush\" feature your brother encouraged you to install, but " +
 					"that satisfaction quickly turns to regret as you feel a warmth on the back of your neck and turn " +
 					"around to see roiling flames emanating from your bathtub.",
@@ -1536,6 +1540,10 @@ func attemptOpenDoor() -> String:
 				return (
 					"The key is in the lock, but you haven't actually unlocked the door yet..."
 				)
+			elif bathroom.isDoorOpen:
+				return (
+					"The door is already open."
+				)
 			else:
 				return (
 					"You reach for the handle of the unlocked door and pause momentarily... " +
@@ -1552,7 +1560,7 @@ func attemptExitBathtub() -> String:
 				SceneManager.transitionToScene(
 				SceneManager.SceneID.ENDING,
 				"With the help of your shampoo, you squirm your way out of the cereal and step onto " +
-				"the bathroom floor. Unfortunately, you were a little too overzealous with the shampoo " +
+				"the bathroom floor.\nUnfortunately, you were a little too overzealous with the shampoo " +
 				"earlier, and the puddle you left causes you to slip and fall backwards into the " +
 				"cereal. On your way down, you smack the back of your head on the side of the bathtub, " +
 				"splitting your scalp open and spilling blood into the cereal, which wastes no time in " +
@@ -1569,7 +1577,7 @@ func attemptExitBathtub() -> String:
 			SceneManager.transitionToScene(
 				SceneManager.SceneID.ENDING,
 				"With a few grunts and groans you manage to pull yourself up out of the cereal-filled " +
-				"bathtub. However, you don't leave unscathed, as the rough cereal cuts and scrapes your " +
+				"bathtub.\nHowever, you don't leave unscathed, as the rough cereal cuts and scrapes your " +
 				"unprotected skin. Just as you are about to exit the bathtub for good, the blood pooling " +
 				"on your skin drips into the cereal which instantly begins to combust...",
 				SceneManager.EndingID.FIRST_BLOOD
@@ -1629,7 +1637,7 @@ func transitionToTripEnding(movingTo: String):
 	SceneManager.transitionToScene(
 		SceneManager.SceneID.ENDING,
 		"As you move across the bathroom to " + movingTo + ", you realize that you neglected to close up the cabinet. " +
-		"This catches you by surprise as your leg snags on the open door, throwing you off balance. You hurdle forward " +
+		"This catches you by surprise as your leg snags on the open door, throwing you off balance.\nYou hurdle forward " +
 		"uncontrollably and fall towards the bathtub. Your gut strikes the edge of tub sharply, forcing saliva out " +
 		"of your open mouth and into the cereal, which bursts into flames.",
 		SceneManager.EndingID.HEAD_OVER_HEELS_FOR_CEREAL

@@ -1,11 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://cd27df5ltxigd"]
+[gd_scene load_steps=6 format=3 uid="uid://cd27df5ltxigd"]
 
 [ext_resource type="Script" uid="uid://bg05hxff6e68v" path="res://scripts/options/OptionsScene.gd" id="1_6rfhp"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_4ll71"]
 [ext_resource type="Texture2D" uid="uid://c16j2frhibyjy" path="res://sprites/movable_objects/spoon_checkmark.png" id="3_0xxti"]
 [ext_resource type="Script" uid="uid://x3em0u44v7ht" path="res://scripts/options/OptionsParser.gd" id="4_smppa"]
 
-[node name="Options_Scene" type="CenterContainer" node_paths=PackedStringArray("smallFontSizeSpoon", "mediumFontSizeSpoon", "largeFontSizeSpoon", "painfullySmallFontSizeSpoon", "painfullyLargeFontSizeSpoon", "slowFontSpeedSpoon", "mediumFontSpeedSpoon", "fastFontSpeedSpoon", "windowedSpoon", "fullscreenSpoon", "painfullySmallFontSizeLabel", "painfullyLargeFontSizeLabel", "inputParser")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oswnh"]
+bg_color = Color(0.784314, 0.784314, 0.784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[node name="Options_Scene" type="CenterContainer" node_paths=PackedStringArray("smallFontSizeSpoon", "mediumFontSizeSpoon", "largeFontSizeSpoon", "painfullySmallFontSizeSpoon", "painfullyLargeFontSizeSpoon", "slowFontSpeedSpoon", "mediumFontSpeedSpoon", "fastFontSpeedSpoon", "windowedSpoon", "fullscreenSpoon", "musicVolumeSpoon", "musicVolumePercentLabel", "otherSoundVolumeSpoon", "otherSoundVolumePercentLabel", "painfullySmallFontSizeLabel", "painfullyLargeFontSizeLabel", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -29,6 +37,10 @@ mediumFontSpeedSpoon = NodePath("VBoxContainer/Background/FontSpeed/Option2/Spoo
 fastFontSpeedSpoon = NodePath("VBoxContainer/Background/FontSpeed/Option3/Spoon")
 windowedSpoon = NodePath("VBoxContainer/Background/Display/Option1/Spoon")
 fullscreenSpoon = NodePath("VBoxContainer/Background/Display/Option2/Spoon")
+musicVolumeSpoon = NodePath("VBoxContainer/Background/Volume/Music/Spoon")
+musicVolumePercentLabel = NodePath("VBoxContainer/Background/Volume/Music/Percent")
+otherSoundVolumeSpoon = NodePath("VBoxContainer/Background/Volume/Sound Effects/Spoon")
+otherSoundVolumePercentLabel = NodePath("VBoxContainer/Background/Volume/Sound Effects/Percent")
 painfullySmallFontSizeLabel = NodePath("VBoxContainer/Background/FontSize/Option4/Label")
 painfullyLargeFontSizeLabel = NodePath("VBoxContainer/Background/FontSize/Option5/Label")
 inputParser = NodePath("OptionsParser")
@@ -202,9 +214,9 @@ offset = Vector2(-5, -8)
 [node name="FontSpeed" type="Label" parent="VBoxContainer/Background"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 275.0
-offset_right = 291.0
-offset_bottom = 326.0
+offset_top = 296.0
+offset_right = 336.0
+offset_bottom = 347.0
 theme_override_font_sizes/font_size = 24
 text = "Terminal
 Output speed:"
@@ -337,12 +349,102 @@ texture = ExtResource("3_0xxti")
 centered = false
 offset = Vector2(-5, -8)
 
+[node name="Volume" type="Label" parent="VBoxContainer/Background"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 190.0
+offset_right = 619.0
+offset_bottom = 241.0
+theme_override_font_sizes/font_size = 24
+text = "Volume:"
+vertical_alignment = 2
+
+[node name="Music" type="Control" parent="VBoxContainer/Background/Volume"]
+anchors_preset = 0
+offset_left = -5.0
+offset_top = 50.0
+offset_right = 335.0
+offset_bottom = 94.0
+
+[node name="Title" type="Label" parent="VBoxContainer/Background/Volume/Music"]
+offset_left = 6.0
+offset_top = 16.0
+offset_right = 86.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 16
+text = "Music"
+
+[node name="Slider" type="Panel" parent="VBoxContainer/Background/Volume/Music"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 20.0
+offset_right = 251.0
+offset_bottom = 28.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_oswnh")
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/Volume/Music"]
+position = Vector2(243, 20)
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-7, -8)
+
+[node name="Percent" type="Label" parent="VBoxContainer/Background/Volume/Music"]
+layout_mode = 2
+offset_left = 261.0
+offset_top = 17.0
+offset_right = 338.0
+offset_bottom = 33.0
+theme_override_font_sizes/font_size = 16
+text = "100%"
+horizontal_alignment = 2
+
+[node name="Sound Effects" type="Control" parent="VBoxContainer/Background/Volume"]
+anchors_preset = 0
+offset_left = -5.0
+offset_top = 98.0
+offset_right = 335.0
+offset_bottom = 142.0
+
+[node name="Title" type="Label" parent="VBoxContainer/Background/Volume/Sound Effects"]
+offset_left = 7.0
+offset_top = 6.0
+offset_right = 119.0
+offset_bottom = 41.0
+theme_override_font_sizes/font_size = 16
+text = "Other
+Sound"
+
+[node name="Slider" type="Panel" parent="VBoxContainer/Background/Volume/Sound Effects"]
+offset_left = 97.0
+offset_top = 20.0
+offset_right = 251.0
+offset_bottom = 28.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_oswnh")
+
+[node name="Spoon" type="Sprite2D" parent="VBoxContainer/Background/Volume/Sound Effects"]
+position = Vector2(243, 20)
+scale = Vector2(4, 4)
+texture = ExtResource("3_0xxti")
+centered = false
+offset = Vector2(-7, -8)
+
+[node name="Percent" type="Label" parent="VBoxContainer/Background/Volume/Sound Effects"]
+layout_mode = 2
+offset_left = 261.0
+offset_top = 17.0
+offset_right = 338.0
+offset_bottom = 33.0
+theme_override_font_sizes/font_size = 16
+text = "100%"
+horizontal_alignment = 2
+
 [node name="DeleteSaveData" type="Label" parent="VBoxContainer/Background"]
 layout_mode = 0
-offset_left = 460.0
-offset_top = 275.0
-offset_right = 700.0
-offset_bottom = 326.0
+offset_left = 429.0
+offset_top = 341.0
+offset_right = 669.0
+offset_bottom = 392.0
 theme_override_colors/font_color = Color(0.698039, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "[Delete]

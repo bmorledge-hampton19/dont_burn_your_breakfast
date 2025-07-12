@@ -144,28 +144,28 @@ region_rect = Rect2(0, 288, 39, 45)
 [node name="CerealBoxes" type="Control" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard"]
 anchors_preset = 0
 
-[node name="CerealBox1" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+[node name="CerealBox4" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
 position = Vector2(61, 70)
 scale = Vector2(2, 2)
 texture = ExtResource("4_vskr0")
 region_enabled = true
 region_rect = Rect2(48, 272, 17, 28)
 
-[node name="CerealBox2" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+[node name="CerealBox3" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
 position = Vector2(49, 76)
 scale = Vector2(2, 2)
 texture = ExtResource("4_vskr0")
 region_enabled = true
 region_rect = Rect2(79, 272, 17, 28)
 
-[node name="CerealBox3" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+[node name="CerealBox2" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
 position = Vector2(37, 82)
 scale = Vector2(2, 2)
 texture = ExtResource("4_vskr0")
 region_enabled = true
 region_rect = Rect2(48, 272, 17, 28)
 
-[node name="CerealBox4" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
+[node name="CerealBox1" type="Sprite2D" parent="VBoxContainer/Background/CupboardsAndDrawers/TopLeftCupboard/CerealBoxes"]
 position = Vector2(25, 88)
 scale = Vector2(2, 2)
 texture = ExtResource("4_vskr0")
@@ -759,7 +759,7 @@ offset_bottom = 102.0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_vskr0")
 theme_override_font_sizes/font_size = 40
-text = "5"
+text = "6"
 
 [node name="Colon" type="Label" parent="VBoxContainer/Background/Timer/TimerText"]
 layout_mode = 0

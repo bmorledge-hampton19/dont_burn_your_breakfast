@@ -56,6 +56,7 @@ var requestingHelperPrefixes: Array
 var requestingHelperSuffixes: Array
 var requestingExtraneousPrefixes: Array
 var requestingExtraneousSuffixes: Array
+var combineRequestingPrefixesAndSuffixes: bool
 
 var storeThisMessage: bool
 
@@ -118,8 +119,8 @@ func initParseSubs():
 func invokeParseSubs(input: String) -> String:
 	var inputPieces := input.split(' ')
 	for i in range(len(inputPieces)):
-		if inputPieces[i] in parseSubs:
-			inputPieces[i] = parseSubs[inputPieces[i]]
+		if inputPieces[i].to_lower() in parseSubs:
+			inputPieces[i] = parseSubs[inputPieces[i].to_lower()]
 	
 	return ' '.join(inputPieces)
 
@@ -205,7 +206,7 @@ func parseInput(input: String) -> String:
 				wildCard = workingInput.strip_edges()
 				return parseItems()
 			else:
-				requestingWildCard = true
+				requestingWildCard = true # I'm starting to think this is unnecessary... But I'm too afraid to try and remove it, lol.
 		else: return unrecognizedResponseParse(input)
 
 	if requestingModifier:
@@ -219,7 +220,7 @@ func parseInput(input: String) -> String:
 				wildCard = workingInput.strip_edges()
 				return parseItems()
 			else:
-				requestingWildCard = true
+				requestingWildCard = true # I'm starting to think this is unnecessary... But I'm too afraid to try and remove it, lol.
 		else: return unrecognizedResponseParse(input)
 
 	if requestingWildCard:
@@ -236,6 +237,9 @@ func parseInput(input: String) -> String:
 			wildCard = workingInput.strip_edges() + suffix
 			parseResult = parseItems()
 			if validWildCard: return parseResult
+		# Missing implementation for extraneous prefixes/suffixes and combined helper prefixes/suffixes...
+		# It seems like they're never needed though?
+
 		# This was a tricky bug...
 		# Since we can run parseItems without returning the result, it's possible to reset "requesting" flags unintentionally...
 		# Make sure to do it manually.
@@ -298,13 +302,12 @@ func findAction(exactMatchOnly: bool = false) -> int:
 	var inputForComparison = workingInput.to_lower()
 	for action in parsableActions:
 		for alias in action.aliases:
-			if exactMatchOnly:
-				if inputForComparison == alias:
+			if inputForComparison.begins_with(alias):
+				if len(alias) == len(inputForComparison): # exact match
 					workingInput = ""
 					actionAlias = alias
 					return action.id
-			else:
-				if inputForComparison.begins_with(alias):
+				elif not exactMatchOnly and inputForComparison[len(alias)] == " ": # not exact match but still word break
 					workingInput = workingInput.erase(0,alias.length()).strip_edges()
 					actionAlias = alias
 					return action.id
@@ -314,13 +317,12 @@ func findSubject(exactMatchOnly: bool = false) -> int:
 	var inputForComparison = workingInput.to_lower()
 	for subject in parsableSubjects[actionID]:
 		for alias in subject.aliases:
-			if exactMatchOnly:
-				if inputForComparison == alias:
+			if inputForComparison.begins_with(alias):
+				if len(alias) == len(inputForComparison): # exact match
 					workingInput = ""
 					subjectAlias = alias
 					return subject.id
-			else:
-				if inputForComparison.begins_with(alias):
+				elif not exactMatchOnly and inputForComparison[len(alias)] == " ": # not exact match but still word break
 					workingInput = workingInput.erase(0,alias.length()).strip_edges()
 					subjectAlias = alias
 					return subject.id
@@ -330,13 +332,12 @@ func findModifier(exactMatchOnly: bool = false) -> int:
 	var inputForComparison = workingInput.to_lower()
 	for modifier in parsableModifiers[actionID]:
 		for alias in modifier.aliases:
-			if exactMatchOnly:
-				if inputForComparison == alias:
+			if inputForComparison.begins_with(alias):
+				if len(alias) == len(inputForComparison): # exact match
 					workingInput = ""
 					modifierAlias = alias
 					return modifier.id
-			else:
-				if inputForComparison.begins_with(alias):
+				elif not exactMatchOnly and inputForComparison[len(alias)] == " ": # not exact match but still word break
 					workingInput = workingInput.erase(0,alias.length()).strip_edges()
 					modifierAlias = alias
 					return modifier.id
@@ -369,7 +370,14 @@ func findBestMatch(findFunction: Callable, exactMatchOnly: bool):
 		workingInput = originalWorkingInput + suffix
 		foundMatch = findFunction.call(exactMatchOnly)
 		if foundMatch != -1: return foundMatch
-	
+
+	if combineRequestingPrefixesAndSuffixes:
+		for prefix in requestingHelperPrefixes:
+			for suffix in requestingHelperSuffixes:
+				workingInput = prefix + originalWorkingInput + suffix
+				foundMatch = findFunction.call(exactMatchOnly)
+				if foundMatch != -1: return foundMatch
+
 	for prefix in requestingExtraneousPrefixes:
 		if originalWorkingInput.begins_with(prefix):
 			workingInput = originalWorkingInput.right(-len(prefix)).strip_edges()
@@ -381,6 +389,16 @@ func findBestMatch(findFunction: Callable, exactMatchOnly: bool):
 			workingInput = originalWorkingInput.left(-len(suffix)).strip_edges()
 			foundMatch = findFunction.call(exactMatchOnly)
 			if foundMatch != -1: return foundMatch
+
+	if combineRequestingPrefixesAndSuffixes:
+		for prefix in requestingExtraneousPrefixes:
+			for suffix in requestingExtraneousSuffixes:
+				if originalWorkingInput.begins_with(prefix):
+					workingInput = originalWorkingInput.right(-len(prefix)).strip_edges()
+					if originalWorkingInput.ends_with(suffix):
+						workingInput = originalWorkingInput.left(-len(suffix)).strip_edges()
+						foundMatch = findFunction.call(exactMatchOnly)
+						if foundMatch != -1: return foundMatch
 
 	workingInput = originalWorkingInput
 	return -1
@@ -427,28 +445,33 @@ func unrecognizedResponseParse(input: String) -> String:
 	else: return result
 
 func requestAdditionalSubjectContext(
-	questionStart := "What", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
+	questionStart := "What", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := [],
+	combinePrefixesAndSuffixes := false,
 ) -> String:
 	requestingSubject = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
 	requestingExtraneousPrefixes = extraneousPrefixes
 	requestingExtraneousSuffixes = extraneousSuffixes
+	combineRequestingPrefixesAndSuffixes = combinePrefixesAndSuffixes
 	return questionStart + " would you like to " + reconstructCommand() + "?"
 
 func requestAdditionalModifierContext(
-	questionStart := "How", questionEnd := "", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
+	questionStart := "How", questionEnd := "", prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := [],
+	combinePrefixesAndSuffixes := false,
 ) -> String:
 	requestingModifier = true
 	requestingHelperPrefixes = prefixes
 	requestingHelperSuffixes = suffixes
 	requestingExtraneousPrefixes = extraneousPrefixes
 	requestingExtraneousSuffixes = extraneousSuffixes
+	combineRequestingPrefixesAndSuffixes = combinePrefixesAndSuffixes
 	if questionEnd and not questionEnd.begins_with(' '): questionEnd = ' ' + questionEnd
 	return questionStart + " would you like to " + reconstructCommand() + questionEnd + "?"
 
 func requestAdditionalContextCustom(
-	question: String, requestType: int, prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := []
+	question: String, requestType: int, prefixes := [], suffixes := [], extraneousPrefixes := [], extraneousSuffixes := [],
+	combinePrefixesAndSuffixes := false,
 ) -> String:
 	if requestType == REQUEST_SUBJECT: requestingSubject = true
 	if requestType == REQUEST_MODIFIER: requestingModifier = true
@@ -457,6 +480,7 @@ func requestAdditionalContextCustom(
 	requestingHelperSuffixes = suffixes
 	requestingExtraneousPrefixes = extraneousPrefixes
 	requestingExtraneousSuffixes = extraneousSuffixes
+	combineRequestingPrefixesAndSuffixes = combinePrefixesAndSuffixes
 	return question
 
 func requestSpecificAction() -> String:

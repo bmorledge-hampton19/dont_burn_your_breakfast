@@ -22,7 +22,7 @@ extends Scene
 var currentLevel := SceneManager.SceneID.MAIN_MENU
 
 var visualCerealCoinNumber: int
-var timeSinceLastCerealCoinUpdate: float = 0
+var fractionalCerealCoinNumber: float
 
 var currentLevelEndingPreviews: Array[EndingPreview] = []
 
@@ -43,7 +43,7 @@ func _init():
 	)
 
 func _ready():
-	visualCerealCoinNumber = EndingsManager.getCerealCoins()
+	fractionalCerealCoinNumber = EndingsManager.getCerealCoins()
 	cerealCoinCounter.text = str(visualCerealCoinNumber)
 	changeLevel(SceneManager.SceneID.MAIN_MENU)
 
@@ -53,20 +53,19 @@ func initFromExistingTerminal(existingTerminal):
 	inputParser.connectTerminal(existingTerminal)
 
 func _process(delta):
-	timeSinceLastCerealCoinUpdate += delta
-	if timeSinceLastCerealCoinUpdate > 0.5:
+	visualCerealCoinNumber = int(fractionalCerealCoinNumber)
+	cerealCoinCounter.text = str(visualCerealCoinNumber)
 
-		if visualCerealCoinNumber > EndingsManager.getCerealCoins():
-			timeSinceLastCerealCoinUpdate = 0
-			visualCerealCoinNumber -= 1
-			cerealCoinCounter.text = str(visualCerealCoinNumber)
-			cerealCoinCounter.add_theme_color_override("font_color", Color.DARK_RED)
-		elif visualCerealCoinNumber < EndingsManager.getCerealCoins():
-			timeSinceLastCerealCoinUpdate = 0
-			visualCerealCoinNumber += 1
-			cerealCoinCounter.text = str(visualCerealCoinNumber)
-			cerealCoinCounter.add_theme_color_override("font_color", Color.ROYAL_BLUE)
-		else: cerealCoinCounter.add_theme_color_override("font_color", Color.WHITE)
+	if visualCerealCoinNumber > EndingsManager.getCerealCoins():
+		cerealCoinCounter.add_theme_color_override("font_color", Color.DARK_RED)
+		fractionalCerealCoinNumber = lerp(fractionalCerealCoinNumber, EndingsManager.getCerealCoins()*0.96, delta/2)
+		if fractionalCerealCoinNumber < EndingsManager.getCerealCoins(): fractionalCerealCoinNumber = EndingsManager.getCerealCoins()
+	elif visualCerealCoinNumber < EndingsManager.getCerealCoins():
+		cerealCoinCounter.add_theme_color_override("font_color", Color.ROYAL_BLUE)
+		fractionalCerealCoinNumber = lerp(fractionalCerealCoinNumber, EndingsManager.getCerealCoins()*1.05, delta/2)
+		if fractionalCerealCoinNumber > EndingsManager.getCerealCoins(): fractionalCerealCoinNumber = EndingsManager.getCerealCoins()
+	else:
+		cerealCoinCounter.add_theme_color_override("font_color", Color.WHITE)
 
 
 func getBackgroundTexture() -> Texture2D:
@@ -85,10 +84,11 @@ func changeLevel(sceneID: SceneManager.SceneID):
 
 	background.texture = getBackgroundTexture()
 
-	if currentLevel == SceneManager.SceneID.MAIN_MENU: hideShortcut()
+	if currentLevel == SceneManager.SceneID.MAIN_MENU or currentLevel == SceneManager.SceneID.ENDING: hideShortcut()
 	else: showShortcut()
 
-	titleText.text = SceneManager.SceneID.keys()[sceneID].capitalize()
+	if currentLevel == SceneManager.SceneID.ENDING: titleText.text = "Bonus!!"
+	else: titleText.text = SceneManager.SceneID.keys()[sceneID].capitalize()
 
 	for endingPreview in currentLevelEndingPreviews: endingPreview.queue_free()
 	currentLevelEndingPreviews.clear()
@@ -100,8 +100,7 @@ func changeLevel(sceneID: SceneManager.SceneID):
 	if sceneID == SceneManager.SceneID.MAIN_MENU: prevText.hide()
 	else: prevText.show()
 
-	# CHANGE THIS WITH EACH DEMO
-	if sceneID == SceneManager.SceneID.BEDROOM: nextText.hide()
+	if sceneID == SceneManager.SceneID.ENDING: nextText.hide()
 	else: nextText.show()
 
 
@@ -153,13 +152,12 @@ func returnFromEnding():
 	viewingEnding = false
 	grayFilter.show()
 	lockedEnding.hide()
-	if currentLevel != SceneManager.SceneID.MAIN_MENU: showShortcut()
+	if currentLevel != SceneManager.SceneID.MAIN_MENU and currentLevel != SceneManager.SceneID.ENDING: showShortcut()
 	titleText.show()
 	endingsGrid.show()
 	if currentLevel == SceneManager.SceneID.MAIN_MENU: prevText.hide()
 	else: prevText.show()
-	# CHANGE THIS WITH EACH DEMO
-	if currentLevel == SceneManager.SceneID.BEDROOM: nextText.hide()
+	if currentLevel == SceneManager.SceneID.ENDING: nextText.hide()
 	else: nextText.show()
 
 	background.texture = getBackgroundTexture()

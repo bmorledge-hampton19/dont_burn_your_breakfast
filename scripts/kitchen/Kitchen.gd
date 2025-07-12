@@ -56,11 +56,11 @@ var isOvenDoorOpen: bool
 var isOvenOn: bool
 
 @export var ovenCereal: Sprite2D
-var isCerealInOven: bool
+var isCerealInOven: bool = true
 
 @export var ovenFrozenStrategyGuide: Control
 var isStrategyGuideInOven: bool
-var isStrategyGuideFrozen: bool
+var isStrategyGuideFrozen: bool = true
 
 @export var ovenThawedStrategyGuide: Sprite2D
 @export var ovenDriedStrategyGuide: Sprite2D
@@ -75,17 +75,14 @@ const OVEN_FRYING_PAN_POSITIONS: Dictionary[int, Vector2] = {
 	FRONT_LEFT : Vector2(514, 161), BACK_LEFT : Vector2(544, 147),
 	BACK_RIGHT : Vector2(580, 165), FRONT_RIGHT : Vector2(550, 179)
 }
-var ovenFryingPanPos: int
+var ovenFryingPanPos: int = FRONT_RIGHT
 
 @export var frontLeftOnDial: Sprite2D
 @export var backLeftOnDial: Sprite2D
 @export var backRightOnDial: Sprite2D
 @export var frontRightOnDial: Sprite2D
-var dials: Dictionary[int, Sprite2D] = {
-	FRONT_LEFT : frontLeftOnDial, BACK_LEFT : backLeftOnDial,
-	BACK_RIGHT : backRightOnDial, FRONT_RIGHT : frontRightOnDial
-}
-var activeBurner: int
+var dials: Dictionary[int, Sprite2D]
+var activeBurner: int = NONE
 
 
 @export_group("Frying Pan")
@@ -123,7 +120,7 @@ var inputtedFridgeButtons: Array[Color]
 var isFridgeUnlocked: bool
 
 @export var fridgeFrozenStrategyGuide: Control
-var isStrategyGuideInFridge: bool
+var isStrategyGuideInFridge: bool = true
 
 @export var spoons: Array[Sprite2D]
 var spoonNum: int
@@ -185,10 +182,10 @@ const BOWL_REGION_RECTS: Dictionary[int, Rect2] = {
 var bowlState: int:
 	set(newState):
 		bowlState = newState
-		cleanedCerealBowl.region_rect = CEREAL_BOX_NUMBER_RECTS[bowlState]
-		tableCerealBowl.region_rect = CEREAL_BOX_NUMBER_RECTS[bowlState]
-		microwaveCerealBowl.region_rect = CEREAL_BOX_NUMBER_RECTS[bowlState]
-		playerCerealBowl.region_rect = CEREAL_BOX_NUMBER_RECTS[bowlState]
+		cleanedCerealBowl.region_rect = BOWL_REGION_RECTS[bowlState]
+		tableCerealBowl.region_rect = BOWL_REGION_RECTS[bowlState]
+		microwaveCerealBowl.region_rect = BOWL_REGION_RECTS[bowlState]
+		playerCerealBowl.region_rect = BOWL_REGION_RECTS[bowlState]
 var isCerealBowlOnFan: bool
 var isCerealBowlOnTable: bool
 var bowlHasMilk: bool:
@@ -296,6 +293,7 @@ func _removePlayerHeldItem():
 	playerAshes.hide()
 	playerCerealBowl.hide()
 func _givePlayerHeldItem(item: PlayerHeldItem):
+	playerHeldItem = item
 	match item:
 		PlayerHeldItem.CEREAL_BOX:
 			playerCerealBox.show()
@@ -309,6 +307,8 @@ func _givePlayerHeldItem(item: PlayerHeldItem):
 			playerSpoon.show()
 		PlayerHeldItem.FRYING_PAN:
 			fryingPanControl.reparent(playerFryingPanControl, false)
+			rightFryingPan.hide()
+			leftFryingPan.show()
 		PlayerHeldItem.FROZEN_STRATEGY_GUIDE:
 			playerFrozenStrategyGuide.show()
 			_setPlayerTexture(HOLDING_ICE)
@@ -352,9 +352,10 @@ func _ready():
 	for i in range(4):
 		cerealBoxNumberSprites[i].region_rect = CEREAL_BOX_NUMBER_RECTS[cerealBoxNumbers[i]]
 
-
-	ovenFryingPanPos = FRONT_RIGHT
-
+	dials = {
+		FRONT_LEFT : frontLeftOnDial, BACK_LEFT : backLeftOnDial,
+		BACK_RIGHT : backRightOnDial, FRONT_RIGHT : frontRightOnDial
+	}
 
 	spoonNum = randi_range(2,7)
 	for i in range(len(spoons)):
@@ -372,7 +373,7 @@ func _ready():
 		else: grapefruitJuices[i].hide()
 
 
-	var idealMilkHeat = randi_range(40, 59)
+	var idealMilkHeat = randi_range(30, 59)
 	minMilkHeat = idealMilkHeat - 2
 	maxMilkHeat = idealMilkHeat + 2
 
@@ -385,12 +386,12 @@ func _process(delta):
 
 	if isTimeReverting:
 		timeSinceReversionStart += delta
-		if timeSinceReversionStart >= 5:
+		if timeSinceReversionStart >= 10:
 			isTimeReverting = false
 			hasTimeReverted = true
-			timeRemaining = 639
+			timeRemaining = 639.9
 		else:
-			timeRemaining = timeBeforeReversion + (639-timeBeforeReversion)*(timeSinceReversionStart/5)
+			timeRemaining = timeBeforeReversion + (639.9-timeBeforeReversion)*(timeSinceReversionStart/10)
 	else:
 		timeRemaining -= delta
 
@@ -401,7 +402,7 @@ func _process(delta):
 			"It's too late! Breakfast time is here, and YOU HAVE NO BREAKFAST!!\nThe next few hours pass in a blur as you rush to your job " +
 			"and try your best to work on an empty stomach. It's no use though. With the gaping hole in your nutritional intake, your " +
 			"performance slips into an all time low, and at the end of the day, your boss approaches you to inform you that you're being laid " +
-			"off. Unfortunately for you, corporate policy mandates that all firing must be performed both figuratively and literally, so an " +
+			"off.\nUnfortunately for you, corporate policy mandates that all firing must be performed both figuratively and literally, so an " +
 			"arsonist is dispatched to your house to burn it to the ground. It's a bit inconvenient, but hey, that's just business for ya!",
 			SceneManager.EndingID.FIRED_AND_FIRED
 		)
@@ -422,9 +423,9 @@ func _process(delta):
 	if fridgeHeat > 60:
 		SceneManager.transitionToScene(
 			SceneManager.SceneID.ENDING,
-			"The whirring from your fridge's motor has been getting louder for a while, and now the steady whirring has " +
+			"The whirring from your fridge's motor has been getting louder for a while, and now the steady thrum has " +
 			"transitioned to a frantic, high-pitched buzzing. You don't usually leave the doors open for this long, " +
-			"and it seems like the fridge is NOT happy about it. You reach out your hand to close the door, and as if on cue the " +
+			"and it seems like the fridge is NOT happy about it.\nYou reach out your hand to close the door, and as if on cue, the " +
 			"motor behind the fridge starts expelling flames at an alarming rate. With a yelp, you slam the door shut, " +
 			"but bright red flames have already latched onto the wall behind the fridge and started to spread throughout the kitchen...",
 			SceneManager.EndingID.BEWARE_OF_BURNOUT
@@ -673,8 +674,9 @@ func pressButton(whichButton: Color):
 	movePlayer(PlayerPos.FRIDGE)
 func checkFridgeLock():
 	if len(inputtedFridgeButtons) != 4: return false
-	for number in cerealBoxNumbers:
-		if inputtedFridgeButtons[number] != cerealBoxColors[number]: return false
+	for i in range(len(cerealBoxNumbers)):
+		var number := cerealBoxNumbers[i]
+		if inputtedFridgeButtons[number-1] != cerealBoxColors[i]: return false
 	fridgeLockLight.color = UNLOCKED_LIGHT_COLOR
 	isFridgeUnlocked = true
 	inputtedFridgeButtons.clear()
@@ -793,6 +795,7 @@ func cleanCerealBowl():
 	dirtyCerealBowl.hide()
 	cleanedCerealBowl.show()
 	bowlState = CLEAN
+	isCerealBowlOnFan = true
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
 
 func isCerealBowlAccessible():

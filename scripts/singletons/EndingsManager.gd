@@ -67,14 +67,16 @@ func unlockEnding(endingID: SceneManager.EndingID):
 	saveData()
 
 func onSceneBeaten(sceneID: SceneManager.SceneID):
-	if not _endingsSaveData.isSceneBeaten[sceneID]:
-		_endingsSaveData.isSceneBeaten[sceneID] = true
-		for endingID in SceneManager.endingsByScene[sceneID]:
-			var endingSaveData := _getEndingSaveData(endingID)
-			if endingSaveData.unlocked:
-				endingSaveData.boughtAvoidingHints = _getEndingData(endingID).avoidingHints.size()
-		_checkShortcutUnlock(sceneID)
-		saveData()
+	_endingsSaveData.isSceneBeaten[sceneID] = true
+	for endingID in SceneManager.endingsByScene[sceneID]:
+		var endingSaveData := _getEndingSaveData(endingID)
+		if endingSaveData.unlocked:
+			endingSaveData.boughtAvoidingHints = _getEndingData(endingID).avoidingHints.size()
+	_checkShortcutUnlock(sceneID)
+	saveData()
+
+func isSceneBeaten(sceneID: SceneManager.SceneID) -> bool:
+	return _endingsSaveData.isSceneBeaten[sceneID]
 
 
 func haveCoinsBeenCollected(endingID: SceneManager.EndingID) -> bool:
@@ -93,6 +95,7 @@ func areAllCoinsCollected() -> bool:
 
 func maximizeCerealCoins():
 	_endingsSaveData.cerealCoins = 999
+	saveData()
 
 
 func _getHintArray(endingID: SceneManager.EndingID, unlockingOrAvoiding, textOrCost = TEXT) -> Array:
@@ -172,6 +175,8 @@ func loadData() -> Resource:
 				FileAccess.open(saveFilePath, FileAccess.READ).get_as_text()
 			)
 			data = _defaultLoader()
+		else:
+			data.checkSceneBeatenDict()
 	else: data = _defaultLoader()
 	return data
 

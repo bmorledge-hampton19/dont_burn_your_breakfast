@@ -72,6 +72,12 @@ extends Scene
 @export_group("Gaming Station")
 @export var clutteredScreen: Sprite2D
 
+
+# Kitchen (Just the door)
+@export_group("Kitchen")
+@export var openedKitchenDoor: Sprite2D
+
+
 enum PlayerPos {
 	FRONT_YARD_DOOR, KITCHEN_DOOR,
 	COMPUTER_DESK, LEGO_TABLE,
@@ -256,6 +262,9 @@ var roombaSatisfied: bool
 
 var isComputerCleaned: bool
 
+
+var isKitchenDoorOpen: bool
+
 func _init():
 	var sid := SceneManager.SceneID
 	sceneTransitions = [sid.MAIN_MENU, sid.ENDING, sid.KITCHEN]
@@ -270,6 +279,14 @@ func _init():
 func _ready():
 	super()
 	initClothes()
+
+	# For testing. Use to force-complete chores.
+	# for depth in clothesByDepth:
+	# 	clothesByDepth[depth].clear()
+	# isSmokeysHairCut = true; isSmokeysBeardTrimmed = true; isSmokeyWearingHat = true; isSmokeyWearingBra = true;
+	# roombaSatisfied = true
+	# isComputerCleaned = true
+
 
 func initClothes():
 	var clothingTypes := [Clothing.PANTS, Clothing.SHIRT, Clothing.SOCK, Clothing.UNDERWEAR]
@@ -624,3 +641,14 @@ func accessComputer():
 func cleanComputer():
 	clutteredScreen.hide()
 	isComputerCleaned = true
+
+
+func openKitchenDoor():
+	movePlayer(PlayerPos.KITCHEN_DOOR)
+	openedKitchenDoor.show()
+	isKitchenDoorOpen = true
+
+func closeKitchenDoor():
+	movePlayer(PlayerPos.KITCHEN_DOOR)
+	openedKitchenDoor.hide()
+	isKitchenDoorOpen = false

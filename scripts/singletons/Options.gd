@@ -28,6 +28,24 @@ var displayMode: DisplayMode:
 		config.set_value("display", "mode", value)
 		config.save(_getOptionsFilePath())
 
+var _musicVolume := 100
+var musicVolume: int:
+	get: return _musicVolume
+	set(value):
+		_musicVolume = value
+		AudioServer.set_bus_volume_linear(1, float(_musicVolume)/100.0)
+		config.set_value("volume", "music", value)
+		config.save(_getOptionsFilePath())
+
+var _otherSoundVolume := 100
+var otherSoundVolume: int:
+	get: return _otherSoundVolume
+	set(value):
+		_otherSoundVolume = value
+		AudioServer.set_bus_volume_linear(2, float(_otherSoundVolume)/100.0)
+		config.set_value("volume", "otherSound", value)
+		config.save(_getOptionsFilePath())
+
 var config := ConfigFile.new()
 
 
@@ -49,6 +67,8 @@ func loadOptions():
 		fontSize = config.get_value("terminal", "fontSize", fontSize)
 		fontSpeed = config.get_value("terminal", "fontSpeed", fontSpeed)
 		displayMode = config.get_value("display", "mode", displayMode)
+		musicVolume = config.get_value("volume", "music", musicVolume)
+		otherSoundVolume = config.get_value("volume", "otherSound", otherSoundVolume)
 	else:
 		print(filePath, " not found. Using default values.")
 		config.set_value("terminal", "fontSize", fontSize)
@@ -56,6 +76,10 @@ func loadOptions():
 		config.set_value("terminal", "fontSpeed", fontSpeed)
 		config.save(_getOptionsFilePath())
 		config.set_value("display", "mode", displayMode)
+		config.save(_getOptionsFilePath())
+		config.set_value("volume", "music", musicVolume)
+		config.save(_getOptionsFilePath())
+		config.set_value("volume", "otherSound", otherSoundVolume)
 		config.save(_getOptionsFilePath())
 
 func _getOptionsFilePath(malformed = false) -> String:

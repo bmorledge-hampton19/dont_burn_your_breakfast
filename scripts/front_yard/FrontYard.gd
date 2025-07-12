@@ -27,6 +27,8 @@ extends Scene
 @export var mownGrass: Sprite2D
 @export var unmownGrass: Sprite2D
 
+@export var openedBedroomDoor: Sprite2D
+
 enum SpritePos {
 	BATHROOM_DOOR, IN_FRONT_OF_SHELF, ON_SHELF,
 	STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, BEDROOM_DOOR
@@ -70,6 +72,8 @@ var playerHasGasoline := false
 var mowerHasCap := true
 var mowerHasGas := false
 var isMowerRunning := false
+
+var isBedroomDoorOpen := false
 
 
 func _init():
@@ -326,3 +330,12 @@ func mowStep():
 func entanglePlayer():
 
 	isPlayerEntangled = true
+
+
+func openBedroomDoor():
+	openedBedroomDoor.show()
+	isBedroomDoorOpen = true
+
+func closeBedroomDoor():
+	openedBedroomDoor.hide()
+	isBedroomDoorOpen = false
