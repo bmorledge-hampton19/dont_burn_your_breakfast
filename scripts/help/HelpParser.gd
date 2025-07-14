@@ -72,6 +72,7 @@ func parseItems() -> String:
 						return requestAdditionalSubjectContext()
 				SubjectID.QUAKER_MAN:
 					if help.currentPage == 5:
+						AudioManager.playSound(AudioManager.quakerWhisper, true)
 						return (
 							"It seems the Quaker mascot has come to offer you some advice. " +
 							"He whispers surreptitiously into your ear: \"Don't forget about your oats. " +
@@ -196,6 +197,7 @@ func changePage(pageChangeModifierID: int, goingBackwards: bool = false) -> Stri
 			5:
 				if pageChangeModifierID == ModifierID.WITH_OATS:
 					help.goToNextPage()
+					AudioManager.playSound(AudioManager.oatMunch, true)
 					return (
 						"Aha! Your oats! You'd almost forgotten! You reach into your back pocket and fish out a handful of " +
 						"instant oats. You shovel them into your mouth and chew hungrily. Delicious! Now you're ready to " +

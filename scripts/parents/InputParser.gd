@@ -170,11 +170,15 @@ func testParsables():
 
 func receiveInputFromTerminal(input: String):
 	storeThisMessage = true
+	AudioManager.playTextInputSound()
 	if input.to_lower() in replayPrompts:
 		terminal.initMessage(terminal.lastReplayableMessage, false)
 	elif input:
 		var message := parseInput(input)
-		if not message: storeThisMessage = false
+		if not message:
+			storeThisMessage = false
+		elif message.begins_with(unknownParse()) or message.begins_with(wrongContextParse()) or message == "Your response is not valid.":
+			AudioManager.playSound(AudioManager.badTextInput, true)
 		terminal.initMessage(message, storeThisMessage)
 
 func parseInput(input: String) -> String:

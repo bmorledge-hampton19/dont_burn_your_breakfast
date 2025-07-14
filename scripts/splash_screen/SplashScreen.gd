@@ -95,11 +95,13 @@ func spillMilk():
 	beanState = BeanState.SPILLING
 	drBeanSprite.texture = spillingMilkSprite
 	jittering = true
+	AudioManager.playSound(AudioManager.drBeanSpillingMilk, true)
 
 
 func pourMilkInCereal():
 	beanState = BeanState.PREPARED
 	drBeanSprite.texture = preparedCerealSprite
+	AudioManager.playSound(AudioManager.drBeanPouringMilkInCereal, true)
 
 
 func eatCereal():
@@ -107,6 +109,7 @@ func eatCereal():
 	beanState = BeanState.SPILLING
 	drBeanSprite.texture = eatingCerealSprite
 	jittering = true
+	AudioManager.playSound(AudioManager.drBeanEatingCereal, true)
 
 
 func transitionToMainMenu():

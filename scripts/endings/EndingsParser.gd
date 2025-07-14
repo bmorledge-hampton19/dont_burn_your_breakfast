@@ -205,10 +205,13 @@ func parseItems() -> String:
 			else:
 				var collectedCoins := endings.collectCoins()
 				if collectedCoins > 100:
+					AudioManager.playSound(AudioManager.collectLotsOfCerealCoins, true)
 					return "Wow! You're a breakfast superstar! Have ALL the cereal coins!"
 				elif collectedCoins > 1:
+					AudioManager.playSound(AudioManager.collectCerealCoins, true)
 					return "Collected " + str(collectedCoins) + " cereal coins!"
 				elif collectedCoins == 1:
+					AudioManager.playSound(AudioManager.collectCerealCoins, true)
 					return "Collected 1 cereal coin."
 				else:
 					return "There are no cereal coins to collect for this level."
@@ -239,6 +242,7 @@ func parseItems() -> String:
 				if EndingsManager.getCerealCoins() < endings.confirmingHintCost:
 					return "Sorry... You're too poor to buy this hint!"
 				else:
+					AudioManager.playSound(AudioManager.buyHint, true)
 					return (
 						"Enjoy your new hint! Here it is:\n" +
 						EndingsManager.buyHint(endings.viewingEndingID, endings.confirmingHintType)
@@ -387,6 +391,7 @@ func parseItems() -> String:
 						if EndingsManager.getCerealCoins() < endings.confirmingHintCost:
 							return "Sorry... You're too poor to buy this hint!"
 						else:
+							AudioManager.playSound(AudioManager.buyHint, true)
 							return (
 								"Enjoy your new hint! Here it is:\n" +
 								EndingsManager.buyHint(endings.viewingEndingID, endings.confirmingHintType)

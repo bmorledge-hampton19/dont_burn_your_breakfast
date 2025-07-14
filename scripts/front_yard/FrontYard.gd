@@ -93,6 +93,7 @@ func _ready():
 
 
 func movePlayer(newPos: SpritePos):
+	if newPos == SpritePos.STEP_2: AudioManager.playSound(AudioManager.creakingStep, true)
 	playerPos = newPos
 	playerControl.position = playerSpritePositions[newPos]
 
@@ -194,6 +195,7 @@ func takeOffLeftShoe():
 
 func tieRightShoe():
 
+	AudioManager.playSound(AudioManager.tyingShoe, true)
 	isRightShoeTied = true
 
 	if isPlayerWearingRightShoe:
@@ -209,6 +211,7 @@ func tieRightShoe():
 
 func tieLeftShoe():
 
+	AudioManager.playSound(AudioManager.tyingShoe, true)
 	isLeftShoeTied = true
 
 	if isPlayerWearingLeftShoe:
@@ -224,6 +227,7 @@ func tieLeftShoe():
 
 func tieShoesTogether():
 
+	AudioManager.playSound(AudioManager.tyingShoe, true)
 	areShoesTiedTogether = true
 	isRightShoeTied = true
 	isLeftShoeTied = true
@@ -306,20 +310,23 @@ func replaceCap():
 	else: movePlayer(SpritePos.IN_FRONT_OF_SHELF)
 
 func refuelMower():
+	AudioManager.playSound(AudioManager.fillingMower, true)
 	movePlayer(SpritePos.IN_FRONT_OF_SHELF)
 	mowerHasGas = true
 
 func startMower():
+	AudioManager.playSound(AudioManager.startingMower, true).finished.connect(AudioManager.playMowerLoop)
 	isMowerRunning = true
 	mowerWithCap.hide()
 	mowerRunning.show()
 
 func turnOffMower():
+	assert(false, "NOT ALLOWED")
 	isMowerRunning = false
 
 
 func mowStep():
-	
+	AudioManager.playSound(AudioManager.mowingGrass, true)
 	mowerControl.position = Vector2(340, 242)
 
 	unmownGrass.hide()
@@ -333,9 +340,12 @@ func entanglePlayer():
 
 
 func openBedroomDoor():
+	AudioManager.fadeOutMusic()
+	AudioManager.playSound(AudioManager.openingDoor, true)
 	openedBedroomDoor.show()
 	isBedroomDoorOpen = true
 
 func closeBedroomDoor():
+	AudioManager.playSound(AudioManager.closingDoor, true)
 	openedBedroomDoor.hide()
 	isBedroomDoorOpen = false

@@ -3,12 +3,17 @@ extends Node2D
 @export var musicPlayer: AudioStreamPlayer2D
 @export var soundEffectsNode: Node2D
 @export var textInputPlayer: AudioStreamPlayer2D
+@export var mowerPlayer: AudioStreamPlayer2D
+@export var clippyPlayer: AudioStreamPlayer2D
+@export var fanPlayer: AudioStreamPlayer2D
+@export var ovenPlayer: AudioStreamPlayer2D
 
 @export var oneShotAudioPrefab: PackedScene
 
 # Terminal
 @export_group("Terminal")
 @export var keystrokes: Array[AudioStream]
+@export var reversedKeystrokes: Array[AudioStream]
 @export var defaultTextInput: AudioStream
 @export var badTextInput: AudioStream
 @export var goodTextInput: AudioStream
@@ -32,7 +37,6 @@ extends Node2D
 @export_subgroup("Sound Effects")
 
 @export var startGame: AudioStream
-@export var otherMainMenuButtons: AudioStream
 
 
 # Options
@@ -47,14 +51,16 @@ extends Node2D
 
 # Tutorial
 @export_group("Tutorial")
-
 @export var quakerWhisper: AudioStream
 @export var oatMunch: AudioStream
+
 
 # Endings
 @export_group("Endings") # Music for endings adapts from opening scene
 @export var collectCerealCoins: AudioStream
+@export var collectLotsOfCerealCoins: AudioStream
 @export var buyHint: AudioStream
+
 
 # Ending
 @export_group("Ending")
@@ -66,7 +72,8 @@ extends Node2D
 @export var victoriousEndingMusic: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
-@export var youBurnedYourBreakfast: Array[AudioStream]
+@export var youBurnedYourBreakfast: AudioStream
+
 
 # Bathroom
 @export_group("Bathroom")
@@ -77,9 +84,20 @@ extends Node2D
 @export var bathroomShortMusic: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
-@export var shampooSquirt: AudioStream
-@export var cerealShifting: AudioStream
-
+@export var squirtingShampoo: AudioStream
+@export var shiftingCereal: AudioStream
+@export var openingVanity: AudioStream
+@export var closingVanity: AudioStream
+@export var openingBathroomDrawer: AudioStream
+@export var closingBathroomDrawer: AudioStream
+@export var brushingTeeth: AudioStream
+@export var spittingToothpaste: AudioStream
+@export var rinsingToothbrush: AudioStream
+@export var openingToilet: AudioStream
+@export var closingToilet: AudioStream
+@export var flushingToilet: AudioStream
+@export var ejectingKey: AudioStream
+@export var unlockingDoorWithKey: AudioStream
 
 
 # Front Yard
@@ -91,6 +109,12 @@ extends Node2D
 @export var frontYardShortMusic: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
+@export var fillingMower: AudioStream
+@export var startingMower: AudioStream
+@export var runningMowerLoop: AudioStream
+@export var mowingGrass: AudioStream
+@export var tyingShoe: AudioStream
+@export var creakingStep: AudioStream
 
 
 # Bedroom
@@ -102,6 +126,36 @@ extends Node2D
 @export var bedroomShortMusic: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
+@export var movingPillows: AudioStream
+@export var movingSheet: AudioStream
+@export var movingComforter: AudioStream # Maybe?
+@export var openingBedroomDrawer: AudioStream
+@export var closingBedroomDrawer: AudioStream
+@export var dresserError: AudioStream # Made orally?
+@export var shakingFlakes: AudioStream
+@export var shakingBoxes: AudioStream
+@export var tappingBowl: AudioStream
+@export var feedingZoomba: AudioStream
+@export var sprayingSmokey: AudioStream
+@export var cuttingSmokeyBeard: AudioStream
+@export var cuttingSmokeyHair: AudioStream
+
+
+# Computer Cleaning 
+@export_group("Computer") # Uses same music as bedroom.
+
+@export var startingComputer: AudioStream
+@export var clippyTalking: Array[AudioStream] # XP Ringin and XP Ringout
+@export var clippyLoggingOn: AudioStream
+@export var clippyLoggingOff: AudioStream
+@export var tada: AudioStream # On presentation start and computer cleaned
+@export var spawningMouse: AudioStream # Balloon
+@export var activatingCheese: AudioStream # Shutdown
+@export var explodingMouse: AudioStream # Critical Stop
+@export var eatingMouse: AudioStream # XP Recycle
+@export var angryCat: AudioStream # Error
+@export var closingWindow: Array[AudioStream] # Anything else that has a "closing" feel to it.
+@export var fanLoop: AudioStream # Actual fan noise
 
 
 # Kitchen
@@ -113,12 +167,41 @@ extends Node2D
 @export var kitchenShortMusic: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
+@export var openingKitchenCupboard: AudioStream
+@export var closingKitchenCupboard: AudioStream
+@export var openingKitchenDrawer: AudioStream
+@export var closingKitchenDrawer: AudioStream
+@export var openingMicrowave: AudioStream
+@export var closingMicrowave: AudioStream
+@export var openingFridge: AudioStream
+@export var closingFridge: AudioStream
+@export var openingOven: AudioStream
+@export var closingOven: AudioStream
+@export var runningMicrowave: AudioStream
+@export var talkingDemon: AudioStream
+@export var muffledTalkingDemon: AudioStream
+@export var demonEating: AudioStream
+@export var crackingEgg: AudioStream
+@export var fryingEgg: AudioStream
+@export var scramblingEgg: AudioStream
+@export var startingOvenOrStove: AudioStream
+@export var ovenOrStoveLoop: AudioStream
+@export var washingAndDryingBowl: AudioStream
+@export var pressFridgeButton: Array[AudioStream]
+@export var unlockFridge: AudioStream
+@export var unlockMilk: AudioStream
+@export var lockMilk: AudioStream
+@export var pourMilk: AudioStream
+@export var pourCereal: AudioStream
+@export var flippingLarry: AudioStream
 
 
-# Misc.
-@export_group("Misc")
+# Global
+@export_group("Global")
 
-@export var doorOpenAndClose: AudioStream
+@export var minorSceneTransition: AudioStream
+@export var openingDoor: AudioStream
+@export var closingDoor: AudioStream
 
 
 var musicScene := SceneManager.SceneID.UNINITIALIZED
@@ -126,14 +209,27 @@ var playingFanfare: bool
 var victory: bool
 var timeUntilNextMusic: float
 var consecutiveShortMusics: int
+var musicFadeTween: Tween
 
 enum {LONG, SHORT}
 var lastMusicType: int
 var lastLongMusic: AudioStream
 var lastShortMusic: AudioStream
 
+var waitingActions: Dictionary[Callable, float]
+
+var earlyRemoveOvenNoiseCalls: int
 
 func _process(delta):
+
+	var readyActions: Array[Callable]
+	for waitingAction in waitingActions:
+		waitingActions[waitingAction] -= delta
+		if waitingActions[waitingAction] <= 0:
+			readyActions.append(waitingAction)
+	for readyAction in readyActions:
+		readyAction.call()
+		waitingActions.erase(readyAction)
 
 	if musicScene == SceneManager.SceneID.UNINITIALIZED or musicPlayer.playing: return
 
@@ -205,19 +301,58 @@ func _process(delta):
 					consecutiveShortMusics += 1
 
 
-func playSound(stream: AudioStream, busName: String = "OtherSounds", volume_db: float = 0):
-	var oneShotAudio = oneShotAudioPrefab.instantiate()
-	add_child(oneShotAudio)
-	oneShotAudio.init(stream, busName, volume_db)
+func queueAction(action: Callable, delay: float):
+	waitingActions[action] = delay
+
+
+func playSound(stream: AudioStream, overrideTextInputSound := false, busName: String = "OtherSounds", volume_linear: float = 1) -> OneShotAudio:
+	var oneShotAudio: OneShotAudio = oneShotAudioPrefab.instantiate()
+	soundEffectsNode.add_child(oneShotAudio)
+	oneShotAudio.init(stream, busName, volume_linear)
+
+	if overrideTextInputSound: textInputPlayer.stop()
+	return oneShotAudio
+
+func playTextInputSound():
+	textInputPlayer.play()
+
+func playMowerLoop():
+	mowerPlayer.play()
+
+func playClippySound():
+	clippyPlayer.stream = clippyTalking.pick_random()
+	clippyPlayer.play()
+
+func playFan():
+	fanPlayer.play()
+
+func addOvenNoise():
+
+	if earlyRemoveOvenNoiseCalls > 0:
+		earlyRemoveOvenNoiseCalls -= 1
+		return
+
+	if not ovenPlayer.playing:
+		ovenPlayer.volume_linear = 1
+		ovenPlayer.play()
+	else:
+		ovenPlayer.volume_linear = 1.5
+
+func removeOvenNoise():
+	if not ovenPlayer.playing:
+		earlyRemoveOvenNoiseCalls += 1
+	elif ovenPlayer.volume_linear > 1.4:
+		ovenPlayer.volume_linear = 1
+	else:
+		ovenPlayer.stop()
 
 func clearSounds():
 	for soundEffect in soundEffectsNode.get_children():
 		soundEffect.queue_free()
-
-func overrideTextInputSound(replacementSound: AudioStream = null):
 	textInputPlayer.stop()
-	if replacementSound != null:
-		playSound(replacementSound)
+	mowerPlayer.stop()
+	clippyPlayer.stop()
+	fanPlayer.stop()
 
 
 func startNewMusic(scene: SceneManager.SceneID, p_victory := false):
@@ -225,6 +360,8 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false):
 	playingFanfare = true
 	victory = p_victory
 	consecutiveShortMusics = 0
+	if musicFadeTween.is_valid(): musicFadeTween.kill()
+	musicPlayer.volume_linear = 1
 
 	match musicScene:
 
@@ -285,3 +422,9 @@ func _getNextMusic(choices: Array[AudioStream], longOrShort: int) -> AudioStream
 func stopMusic():
 	musicPlayer.stop()
 	musicScene = SceneManager.SceneID.UNINITIALIZED
+
+func fadeOutMusic(duration := 2.0):
+	if musicFadeTween.is_valid(): musicFadeTween.kill()
+	musicFadeTween = create_tween()
+	musicFadeTween.tween_property(musicPlayer, "volume_linear", 0, duration)
+	musicFadeTween.tween_callback(stopMusic)

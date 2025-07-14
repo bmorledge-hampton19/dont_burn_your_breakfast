@@ -3,18 +3,32 @@
 [ext_resource type="Script" uid="uid://b2pgg0mlt84sd" path="res://scripts/singletons/AudioManager.gd" id="1_k015v"]
 [ext_resource type="PackedScene" uid="uid://cqotsm4bdbn6a" path="res://scenes/scene_modules/one_shot_audio.tscn" id="2_x0den"]
 
-[node name="AudioManager" type="Node2D" node_paths=PackedStringArray("musicPlayer", "soundEffectsNode")]
+[node name="AudioManager" type="Node2D" node_paths=PackedStringArray("musicPlayer", "soundEffectsNode", "textInputPlayer", "mowerPlayer", "clippyPlayer", "fanPlayer")]
 script = ExtResource("1_k015v")
 musicPlayer = NodePath("MusicPlayer")
 soundEffectsNode = NodePath("SoundEffects")
+textInputPlayer = NodePath("TextInputPlayer")
+mowerPlayer = NodePath("MowerPlayer")
+clippyPlayer = NodePath("ClippyPlayer")
+fanPlayer = NodePath("FanPlayer")
 oneShotAudioPrefab = ExtResource("2_x0den")
 
 [node name="MusicPlayer" type="AudioStreamPlayer2D" parent="."]
 panning_strength = 0.0
 
+[node name="SoundEffects" type="Node2D" parent="."]
+
 [node name="TextInputPlayer" type="AudioStreamPlayer2D" parent="."]
 panning_strength = 0.0
 
-[node name="SoundEffects" type="Node2D" parent="."]
+[node name="MowerPlayer" type="AudioStreamPlayer2D" parent="."]
+volume_db = 6.0
+panning_strength = 0.0
+
+[node name="ClippyPlayer" type="AudioStreamPlayer2D" parent="."]
+panning_strength = 0.0
+
+[node name="FanPlayer" type="AudioStreamPlayer2D" parent="."]
+panning_strength = 0.0
 
 [connection signal="finished" from="MusicPlayer" to="." method="_onMusicStreamFinished"]

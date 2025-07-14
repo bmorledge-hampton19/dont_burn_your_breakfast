@@ -162,6 +162,33 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 	if customStartingMessage and endingID != EndingID.NONE:
 		customStartingMessage += "\n(Input any command to continue.)"
 
+	AudioManager.clearSounds()
+	AudioManager.waitingActions.clear()
+
+	match sceneID:
+
+		SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS:
+			AudioManager.playSound(AudioManager.minorSceneTransition)
+
+		SceneID.MAIN_MENU:
+			if lastScene not in [SceneID.HELP, SceneID.OPTIONS, SceneID.CREDITS]:
+				AudioManager.startNewMusic(SceneID.MAIN_MENU)
+		
+		SceneID.ENDING:
+			AudioManager.startNewMusic(SceneID.ENDING, endingID == EndingID.CHAMPION_OF_BREAKFASTS)
+
+		SceneID.BATHROOM:
+			AudioManager.startNewMusic(SceneID.BATHROOM)
+		
+		SceneID.FRONT_YARD:
+			AudioManager.startNewMusic(SceneID.FRONT_YARD)
+		
+		SceneID.BEDROOM:
+			AudioManager.startNewMusic(SceneID.BEDROOM)
+		
+		SceneID.KITCHEN:
+			AudioManager.startNewMusic(SceneID.KITCHEN)
+
 	if sceneID == currentScene:
 		get_tree().reload_current_scene()
 	else:
@@ -174,7 +201,8 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 		# currentScene.free()
 		# currentScene = newScene.instantiate()
 		# get_tree().root.add_child(currentScene)
-	
+
+
 func openEndings(openingScene: Scene):
 	openingScene.pause()
 	pausedScene = openingScene
@@ -183,11 +211,17 @@ func openEndings(openingScene: Scene):
 	openEndingsScene.initFromExistingTerminal(openingScene.terminal)
 	if currentScene in endingsByScene and currentScene != SceneID.ENDING:
 		openEndingsScene.changeLevel(currentScene)
+	AudioManager.clearSounds()
+	AudioManager.playSound(AudioManager.minorSceneTransition)
+	AudioManager.waitingActions.clear()
 
 func closeEndings():
 	openEndingsScene.inputParser.disconnectTerminal()
 	pausedScene.resume()
 	openEndingsScene.queue_free()
+	AudioManager.clearSounds()
+	AudioManager.playSound(AudioManager.minorSceneTransition)
+	AudioManager.waitingActions.clear()
 
 func openComputerCleaning(openingScene: Scene):
 	openingScene.pause()
@@ -196,10 +230,15 @@ func openComputerCleaning(openingScene: Scene):
 	pausedScene.add_sibling(openComputerScene)
 	openComputerScene.initFromExistingTerminal(openingScene.terminal)
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	AudioManager.clearSounds()
+	AudioManager.waitingActions.clear()
 
 func closeComputerCleaning():
 	openComputerScene.inputParser.disconnectTerminal()
 	pausedScene.resume()
 	(pausedScene as Bedroom).cleanComputer()
 	openComputerScene.queue_free()
+	AudioManager.clearSounds()
+	AudioManager.playSound(AudioManager.minorSceneTransition)
+	AudioManager.waitingActions.clear()
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT

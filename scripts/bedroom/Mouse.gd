@@ -62,6 +62,7 @@ func _process(delta: float):
 		if jitterTime <= 0:
 			jittering = false
 			exploding = true
+			AudioManager.playSound(AudioManager.explodingMouse)
 			textureRect.hide()
 			explosionAnimation.play()
 			explosionAnimation.animation_finished.connect(destroy)
@@ -113,6 +114,7 @@ func exposeToAntimatter():
 
 func exposeToHungryCat():
 	beingEaten = true
+	AudioManager.playSound(AudioManager.eatingMouse)
 	var tween := create_tween()
 	tween.tween_property(self, "modulate", Color.RED, 0.25)
 	tween.tween_property(self, "modulate", Color(modulate, 0), 2)

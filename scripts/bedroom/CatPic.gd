@@ -107,6 +107,7 @@ func manualProcess(delta):
 
 	if angryTimer <= 0 and not angry:
 		angry = true
+		AudioManager.playSound(AudioManager.angryCat)
 		onAngry.emit()
 		headerText.text = "HISSSSSSSSSS"
 		laserEyesControl.show()

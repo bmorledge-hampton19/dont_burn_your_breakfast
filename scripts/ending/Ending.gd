@@ -87,7 +87,7 @@ func setMainEndingTexture():
 func burnBreakfast():
 	if not EndingsManager.isEndingUnlocked(SceneManager.EndingID.FINISHING_STRONG):
 		EndingsManager.unlockEnding(SceneManager.EndingID.FINISHING_STRONG)
-	
+
 	SceneManager.endingID = SceneManager.EndingID.FINISHING_STRONG
 	finalEndingOverlay.hide()
 	backgroundTextureRect.texture = preload(bonusEndingFilePath)

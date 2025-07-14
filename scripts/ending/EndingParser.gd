@@ -93,6 +93,8 @@ func receiveInputFromTerminal(input: String):
 					)
 				terminal.initMessage(message, true)
 			else:
+				AudioManager.stopMusic()
+				AudioManager.playSound(AudioManager.youBurnedYourBreakfast, true)
 				endingScene.setMainEndingTexture()
 				terminal.initMessage(endingMessage, true)
 	else: super(input)
@@ -170,6 +172,8 @@ func parseItems() -> String:
 func burnBreakfast():
 	firstParse = true
 	endingScene.burnBreakfast()
+	AudioManager.stopMusic()
+	AudioManager.startNewMusic(SceneManager.SceneID.ENDING, false)
 	return (
 		"GAAAH! You just couldn't help yourself, huh? You beat the game, you got your breakfast, and somehow you STILL " +
 		"found a way to burn it. Typical...\nAh well. I suppose it's still impressive in a sad, destructive sort of way. " +

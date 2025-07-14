@@ -72,9 +72,11 @@ func attemptRemoveCharacter():
 	if caretPosition > 0:
 		caretPosition -= 1
 		text = text.erase(caretPosition)
+		AudioManager.playSound(AudioManager.reversedKeystrokes.pick_random())
 
 
 func attemptAddCharacter(newChar: String):
 	if text.length() < maxInputCharacters:
 		text = text.insert(caretPosition, newChar)
 		caretPosition += 1
+		AudioManager.playSound(AudioManager.keystrokes.pick_random())

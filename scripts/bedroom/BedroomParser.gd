@@ -906,6 +906,7 @@ func parseItems() -> String:
 				return "The door is already open."
 			else:
 				bedroom.openKitchenDoor()
+				AudioManager.fadeOutMusic()
 				EndingsManager.onSceneBeaten(SceneManager.SceneID.BEDROOM)
 				return (
 					"You flip the latch on the strange fence-door, and it slowly swings open, revealing the birthplace of breakfast: Your kitchen!"

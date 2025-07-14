@@ -433,60 +433,73 @@ func _process(delta):
 
 
 func openTopLeftCupboard():
+	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	topLeftCupboard.show()
 	isTopLeftCupboardOpen = true
 	movePlayer(PlayerPos.MICROWAVE)
 func closeTopLeftCupboard():
+	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	topLeftCupboard.hide()
 	isTopLeftCupboardOpen = false
 	movePlayer(PlayerPos.MICROWAVE)
 
 func openBottomLeftCupboard():
+	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	bottomLeftCupboard.show()
 	isBottomLeftCupboardOpen = true
 	movePlayer(PlayerPos.MICROWAVE)
 func closeBottomLeftCupboard():
+	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	bottomLeftCupboard.hide()
 	isBottomLeftCupboardOpen = false
 	movePlayer(PlayerPos.MICROWAVE)
 
 func openBottomDrawer():
+	AudioManager.playSound(AudioManager.openingKitchenDrawer, true)
 	bottomDrawer.show()
 	isBottomDrawerOpen = true
 	movePlayer(PlayerPos.DRAWERS)
 func closeBottomDrawer():
+	AudioManager.playSound(AudioManager.closingKitchenDrawer, true)
 	bottomDrawer.hide()
 	isBottomDrawerOpen = false
 	movePlayer(PlayerPos.DRAWERS)
 
 func openMiddleDrawer():
+	AudioManager.playSound(AudioManager.openingKitchenDrawer, true)
 	middleDrawer.show()
 	isMiddleDrawerOpen = true
 	movePlayer(PlayerPos.DRAWERS)
 func closeMiddleDrawer():
+	AudioManager.playSound(AudioManager.closingKitchenDrawer, true)
 	middleDrawer.hide()
 	isMiddleDrawerOpen = false
 	movePlayer(PlayerPos.DRAWERS)
 
 func openTopDrawer():
+	AudioManager.playSound(AudioManager.openingKitchenDrawer, true)
 	topDrawer.show()
 	isTopDrawerOpen = true
 	movePlayer(PlayerPos.DRAWERS)
 func closeTopDrawer():
+	AudioManager.playSound(AudioManager.closingKitchenDrawer, true)
 	topDrawer.hide()
 	isTopDrawerOpen = false
 	movePlayer(PlayerPos.DRAWERS)
 
 func openMiddleLeftCupboard():
+	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	middleLeftCupboard.show()
 	isMiddleLeftCupboardOpen = true
 	movePlayer(PlayerPos.MIDDLE_LEFT_CUPBOARD)
 func closeMiddleLeftCupboard():
+	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	middleLeftCupboard.hide()
 	isMiddleLeftCupboardOpen = false
 	movePlayer(PlayerPos.MIDDLE_LEFT_CUPBOARD)
 
 func feedDemon():
+	AudioManager.playSound(AudioManager.demonEating, true)
 	hungryDemon.hide()
 	satisfiedDemon.show()
 	isDemonSatisfied = true
@@ -496,10 +509,12 @@ func feedDemon():
 func satisfyDemon(): feedDemon() ## An alias for feedDemon.
 
 func openMiddleRightCupboard():
+	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	middleRightCupboard.show()
 	isMiddleRightCupboardOpen = true
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
 func closeMiddleRightCupboard():
+	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	middleRightCupboard.hide()
 	isMiddleRightCupboardOpen = false
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
@@ -514,31 +529,37 @@ func putForkBack():
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
 
 func openBottomRightCupboard():
+	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	bottomRightCupboard.show()
 	isBottomRightCupboardOpen = true
 	movePlayer(PlayerPos.RIGHT_CUPBOARD)
 func closeBottomRightCupboard():
+	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	bottomRightCupboard.hide()
 	isBottomRightCupboardOpen = false
 	movePlayer(PlayerPos.RIGHT_CUPBOARD)
 
 
 func openOvenDoor():
+	AudioManager.playSound(AudioManager.openingOven, true)
 	closedOvenDoor.hide()
 	openedOvenDoor.show()
 	isOvenDoorOpen = true
 	movePlayer(PlayerPos.OVEN)
 func closeOvenDoor():
+	AudioManager.playSound(AudioManager.closingOven, true)
 	closedOvenDoor.show()
 	openedOvenDoor.hide()
 	isOvenDoorOpen = false
 	movePlayer(PlayerPos.OVEN)
 
 func turnOvenOn():
+	AudioManager.playSound(AudioManager.startingOvenOrStove, true).finished.connect(AudioManager.addOvenNoise)
 	ovenFlames.show()
 	isOvenOn = true
 	movePlayer(PlayerPos.OVEN)
 func turnOvenOff():
+	AudioManager.removeOvenNoise()
 	ovenFlames.hide()
 	isOvenOn = false
 	movePlayer(PlayerPos.OVEN)
@@ -612,12 +633,14 @@ func moveFryingPan(whichBurner: int):
 	movePlayer(PlayerPos.OVEN)
 
 func turnOnBurner(whichBurner: int):
+	AudioManager.playSound(AudioManager.startingOvenOrStove, true).finished.connect(AudioManager.addOvenNoise)
 	activeBurner = whichBurner
 	dials[whichBurner].show()
 	if whichBurner in [FRONT_LEFT, BACK_LEFT]: leftActiveBurner.show()
 	else: rightActiveBurner.show()
 	movePlayer(PlayerPos.OVEN)
 func turnOffBurner():
+	AudioManager.removeOvenNoise()
 	dials[activeBurner].hide()
 	leftActiveBurner.hide()
 	rightActiveBurner.hide()
@@ -625,14 +648,22 @@ func turnOffBurner():
 	movePlayer(PlayerPos.OVEN)
 
 
-func addRawEggToPan():
+func addRawEggToPan(alsoFry := false):
 	playerEgg.hide()
 	isPlayerWearingEgg = false
 	rawEgg.show()
 	isEggInPan = true
 	movePlayer(PlayerPos.OVEN)
+	if not alsoFry:
+		AudioManager.playSound(AudioManager.crackingEgg, true)
+	else:
+		AudioManager.playSound(AudioManager.crackingEgg, true).finished.connect(
+			func(): AudioManager.playSound(AudioManager.fryingEgg)
+		)
+		fryEgg(true)
 
-func fryEgg():
+func fryEgg(audioAlreadyHandled := false):
+	if not audioAlreadyHandled: AudioManager.playSound(AudioManager.fryingEgg, true)
 	if isEggScrambled:
 		rawScrambledEgg.hide()
 		friedScrambledEgg.show()
@@ -643,6 +674,7 @@ func fryEgg():
 	movePlayer(PlayerPos.OVEN)
 
 func scrambleEgg():
+	AudioManager.playSound(AudioManager.scramblingEgg, true)
 	if isEggFried:
 		friedEgg.hide()
 		friedScrambledEgg.show()
@@ -659,11 +691,13 @@ func addAshes():
 
 
 func openTopFridgeDoor():
+	AudioManager.playSound(AudioManager.openingFridge, true)
 	closedTopFridgeDoor.hide()
 	openedTopFridgeDoor.show()
 	isTopFridgeDoorOpen = true
 	movePlayer(PlayerPos.FRIDGE)
 func closeTopFridgeDoor():
+	AudioManager.playSound(AudioManager.closingFridge, true)
 	closedTopFridgeDoor.show()
 	openedTopFridgeDoor.hide()
 	isTopFridgeDoorOpen = false
@@ -673,22 +707,29 @@ func pressButton(whichButton: Color):
 	inputtedFridgeButtons.append(whichButton)
 	movePlayer(PlayerPos.FRIDGE)
 func checkFridgeLock():
-	if len(inputtedFridgeButtons) != 4: return false
+	if len(inputtedFridgeButtons) != 4:
+		AudioManager.playSound(AudioManager.pressFridgeButton.pick_random(), true)
+		return false
 	for i in range(len(cerealBoxNumbers)):
 		var number := cerealBoxNumbers[i]
 		if inputtedFridgeButtons[number-1] != cerealBoxColors[i]: return false
+	AudioManager.playSound(AudioManager.pressFridgeButton.pick_random(), true).finished.connect(
+		func(): AudioManager.playSound(AudioManager.unlockFridge)
+	)
 	fridgeLockLight.color = UNLOCKED_LIGHT_COLOR
 	isFridgeUnlocked = true
 	inputtedFridgeButtons.clear()
 	return true
 
 func openBottomFridgeDoor():
+	AudioManager.playSound(AudioManager.openingFridge, true)
 	closedBottomFridgeDoor.hide()
 	fridgeLockLight.hide()
 	openedBottomFridgeDoor.show()
 	isBottomFridgeDoorOpen = true
 	movePlayer(PlayerPos.FRIDGE)
 func closeBottomFridgeDoor():
+	AudioManager.playSound(AudioManager.closingFridge, true)
 	closedBottomFridgeDoor.show()
 	fridgeLockLight.show()
 	fridgeLockLight.color = LOCKED_LIGHT_COLOR
@@ -737,9 +778,11 @@ func checkMilkCombo(combo: String):
 	milkLocked.hide()
 	milkUnlocked.show()
 	isMilkUnlocked = true
+	AudioManager.playSound(AudioManager.unlockMilk, true)
 	return true
 
 func lockMilk():
+	AudioManager.playSound(AudioManager.lockMilk, true)
 	movePlayer(PlayerPos.FRIDGE)
 	milkLocked.show()
 	milkUnlocked.hide()
@@ -756,17 +799,20 @@ func putMilkBack():
 
 
 func openMicrowaveDoor():
+	AudioManager.playSound(AudioManager.openingMicrowave, true)
 	openedMicrowaveDoor.show()
 	closedMicrowaveDoor.hide()
 	isMicrowaveDoorOpen = true
 	movePlayer(PlayerPos.MICROWAVE)
 func closeMicrowaveDoor():
+	AudioManager.playSound(AudioManager.closingMicrowave, true)
 	openedMicrowaveDoor.hide()
 	closedMicrowaveDoor.show()
 	isMicrowaveDoorOpen = false
 	movePlayer(PlayerPos.MICROWAVE)
 
 func addHeatToMilk(heat: int):
+	AudioManager.playSound(AudioManager.runningMicrowave, true)
 	currentMilkHeat += heat
 	if currentMilkHeat > maxMilkHeat:
 		milkVapor.show()
@@ -784,6 +830,7 @@ func turnTimerOn():
 	isTimerOn = true
 
 func flipLarryTheLightSwitch():
+	AudioManager.playSound(AudioManager.flippingLarry, true)
 	larryOff.hide()
 	timeBeforeReversion = timeRemaining
 	timeSinceReversionStart = 0
@@ -792,6 +839,7 @@ func flipLarryTheLightSwitch():
 
 
 func cleanCerealBowl():
+	AudioManager.playSound(AudioManager.washingAndDryingBowl, true)
 	dirtyCerealBowl.hide()
 	cleanedCerealBowl.show()
 	bowlState = CLEAN
@@ -868,6 +916,7 @@ func putCerealOnTable():
 	movePlayer(PlayerPos.TABLE)
 
 func pourMilkInBowl():
+	AudioManager.playSound(AudioManager.pourMilk, true)
 	if bowlState == CLEAN: bowlState = JUST_MILK
 	elif bowlState == JUST_CEREAL: bowlState = UNHATCHED
 
@@ -877,6 +926,7 @@ func pourMilkInBowl():
 		movePlayer(PlayerPos.TABLE)
 
 func pourCerealInBowl():
+	AudioManager.playSound(AudioManager.pourCereal, true)
 	if bowlState == CLEAN: bowlState = JUST_CEREAL
 	elif bowlState == JUST_MILK:
 		if currentMilkHeat > minMilkHeat: bowlState = HATCHED
@@ -922,6 +972,7 @@ func takeAshesFromCounter():
 	movePlayer(PlayerPos.OVEN)
 
 func crackEggOnFloor():
+	AudioManager.playSound(AudioManager.crackingEgg, true)
 	floorEgg.show()
 	isEggOnFloor = true
 	playerEgg.hide()

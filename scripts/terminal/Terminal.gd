@@ -21,8 +21,11 @@ var currentMessageChunkIndex: int
 var fastUpdateThreshold = 0.05
 var slowUpdateThreshold = 0.4
 var newlineUpdateThreshold = 2
+var forcedPauseUpdateThreshold = 2
 
 var lastReplayableMessage: String
+
+signal onFinishOutput()
 
 
 func setFontSpeed():
@@ -60,6 +63,9 @@ func _process(delta):
 		if currentChar == '\n':
 			nextUpdateThreshold = newlineUpdateThreshold
 			preparingPause = false
+		elif currentChar == '\a':
+			nextUpdateThreshold = forcedPauseUpdateThreshold
+			preparingPause = false
 		else:
 			terminalLines[lineCount-1].text += currentMessageChunk[currentMessageChunkIndex]
 		currentMessageChunkIndex += 1
@@ -79,6 +85,7 @@ func getNextMessageChunk():
 
 	if not remainingMessage:
 		currentMessageChunk = ""
+		onFinishOutput.emit()
 
 	elif nextNewlineIndex != -1 and nextNewlineIndex <= lineCharacterMax:
 		currentMessageChunk = remainingMessage.substr(0, nextNewlineIndex+1)
@@ -114,6 +121,7 @@ func receiveInput(input: String):
 
 
 func initMessage(message: String, storeMessageForReplay: bool):
+	if message.ends_with('\a'): message += ' '
 	currentMessage = message
 	remainingMessage = message
 	if storeMessageForReplay: lastReplayableMessage = message
@@ -125,6 +133,7 @@ func initMessage(message: String, storeMessageForReplay: bool):
 func fastTrackCurrentMessage():
 	if currentMessageChunkIndex == 0: scrollTerminalLines()
 	terminalLines[lineCount-1].text = currentMessageChunk.strip_edges()
+	if not remainingMessage: onFinishOutput.emit()
 	while remainingMessage:
 		getNextMessageChunk()
 		scrollTerminalLines()

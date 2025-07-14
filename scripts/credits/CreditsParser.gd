@@ -127,9 +127,11 @@ func parseItems() -> String:
 
 
 		ActionID.THANK:
-			if subjectID == -1: return requestAdditionalSubjectContext("Who")
-
-			return "Thanks " + subjectAlias.capitalize() + "! <3 <3"
+			if subjectID == -1:
+				return requestAdditionalSubjectContext("Who")
+			else:
+				AudioManager.playSound(AudioManager.applause, true)
+				return "Thanks " + subjectAlias.capitalize() + "! <3 <3"
 
 
 		ActionID.POOP:

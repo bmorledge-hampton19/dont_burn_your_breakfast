@@ -14,6 +14,9 @@ var clippyAskingForSpeed: bool
 var clippyAwaitingCommand: bool
 var clippyTextTween: Tween
 
+var clippyTalking: bool
+var timeUntilNextClippySound: float
+
 signal finished()
 
 func _ready():
@@ -24,6 +27,13 @@ func _ready():
     summonClippy()
 
 func _process(delta):
+
+    if clippyTalking:
+        timeUntilNextClippySound -= delta
+        if timeUntilNextClippySound <= 0:
+            AudioManager.playClippySound()
+            timeUntilNextClippySound = randf_range(0.3,0.4)
+
     if infoTextState == SLOW_SCROLL:
         infoBoxText.position.y -= 5 * delta
     elif infoTextState == FAST_SCROLL:
@@ -34,15 +44,23 @@ func _process(delta):
         infoTextState = PAUSED
         displayClippyOutro()
 
-    
 
 func summonClippy():
     var tween = create_tween()
-    tween.tween_interval(1)
+    tween.tween_interval(5)
+    tween.tween_callback(func(): AudioManager.playSound(AudioManager.clippyLoggingOn))
     tween.tween_property(clippy, "scale", Vector2.ONE, 2).set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
     tween.tween_property(speechBubble, "scale", Vector2.ONE, 1).set_trans(Tween.TRANS_CUBIC)
     tween.tween_interval(1)
     tween.tween_callback(displayFirstClippyMessage)
+
+func startClippyTalking():
+    clippyTalking = true
+    timeUntilNextClippySound = 0
+
+func stopClippyTalking():
+    clippyTalking = false
+    AudioManager.clippyPlayer.stop()
 
 func displayFirstClippyMessage():
     speechBubbleText.text = (
@@ -51,7 +69,9 @@ func displayFirstClippyMessage():
     )
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
     clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(displaySecondClippyMessage)
 
@@ -62,7 +82,9 @@ func displaySecondClippyMessage():
     )
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
     clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(displayThirdClippyMessage)
 
@@ -74,12 +96,18 @@ func displayThirdClippyMessage():
     )
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
     clippyTextTween.tween_callback(beginSlowInfoScroll)
+
+func playPresentationNoise():
+    AudioManager.playSound(AudioManager.tada)
 
 func beginSlowInfoScroll():
     infoTextState = SLOW_SCROLL
     infoBoxText.size.y = 0
+    get_tree().create_timer(4).timeout.connect(playPresentationNoise)
     get_tree().create_timer(10).timeout.connect(displayClippyAskForSpeedPreamble)
 
 func displayClippyAskForSpeedPreamble():
@@ -90,7 +118,9 @@ func displayClippyAskForSpeedPreamble():
     )
     speechBubbleText.visible_ratio = 0
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
     clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(displayClippyAskForSpeed)
 
@@ -102,7 +132,9 @@ func displayClippyAskForSpeed():
     speechBubbleText.visible_ratio = 0
     clippyAskingForSpeed = true
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
 
 func displayClippyAskForAssurance():
     speechBubbleText.text = (
@@ -114,7 +146,9 @@ func displayClippyAskForAssurance():
     clippyAwaitingCommand = false
     if clippyTextTween: clippyTextTween.kill()
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
 
 func displayClippyConfirmSpeed():
     speechBubbleText.text = (
@@ -124,7 +158,9 @@ func displayClippyConfirmSpeed():
     clippyAskingForSpeed = false
     if clippyTextTween: clippyTextTween.kill()
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
     clippyTextTween.tween_callback(func(): infoTextState = FAST_SCROLL)
 
 func displayClippyDenySpeed():
@@ -136,7 +172,9 @@ func displayClippyDenySpeed():
     clippyAwaitingCommand = true
     if clippyTextTween: clippyTextTween.kill()
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
 
 func displayClippyOutro():
     speechBubbleText.text = (
@@ -147,10 +185,14 @@ func displayClippyOutro():
     clippyAwaitingCommand = false
     if clippyTextTween: clippyTextTween.kill()
     clippyTextTween = create_tween()
+    clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
+    clippyTextTween.tween_callback(stopClippyTalking)
     clippyTextTween.tween_interval(3)
     clippyTextTween.tween_callback(finish)
 
 func finish():
+    stopClippyTalking()
+    AudioManager.playSound(AudioManager.clippyLoggingOff, true)
     finished.emit()
     queue_free()

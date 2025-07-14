@@ -435,40 +435,51 @@ func putAwayClothing(clothing: Clothing):
 	handForeground.hide()
 	setPlayerTexture(RELAXED)
 
+func playDrawerNoise(opening):
+	if opening: AudioManager.playSound(AudioManager.openingBedroomDrawer, true)
+	else: if opening: AudioManager.playSound(AudioManager.closingBedroomDrawer, true)
 
 func toggleTopLeftDrawer():
 	movePlayer(PlayerPos.DRESSER)
 	topLeftDrawerControl.visible = not topLeftDrawerControl.visible
+	playDrawerNoise(topLeftDrawerControl.visible)
 
 func toggleTopRightDrawer():
 	movePlayer(PlayerPos.DRESSER)
 	topRightDrawerControl.visible = not topRightDrawerControl.visible
+	playDrawerNoise(topRightDrawerControl.visible)
 
 func toggleMiddleDrawer():
 	movePlayer(PlayerPos.DRESSER)
 	middleDrawerControl.visible = not middleDrawerControl.visible
+	playDrawerNoise(middleDrawerControl.visible)
 
 func toggleBottomDrawer():
 	movePlayer(PlayerPos.DRESSER)
 	bottomDrawerControl.visible = not bottomDrawerControl.visible
+	playDrawerNoise(bottomDrawerControl.visible)
 
 func angerDresser():
+	AudioManager.playSound(AudioManager.dresserError, true)
 	movePlayer(PlayerPos.DRESSER)
 	dresserPatience -= 1
 
 
 func tidyUpPillows():
+	AudioManager.playSound(AudioManager.movingPillows, true)
 	movePlayer(PlayerPos.BED_RIGHT_SIDE)
 	lessMessyBed.show()
 	bedState = LESS_MESSY
 
 func pullUpSheet():
+	AudioManager.playSound(AudioManager.movingSheet, true)
 	movePlayer(PlayerPos.BED_LEFT_SIDE)
 	lessMessyBed.hide()
 	almostMadeBed.show()
 	bedState = ALMOST_MADE
 
 func pullUpComforter():
+	AudioManager.playSound(AudioManager.movingComforter, true)
 	movePlayer(PlayerPos.BED_LEFT_SIDE)
 	almostMadeBed.hide()
 	madeBed.show()
@@ -498,6 +509,7 @@ func replaceAxe():
 	playerHeldItem = PlayerHeldItem.NONE
 
 func giveSmokeyAHaircut():
+	AudioManager.playSound(AudioManager.cuttingSmokeyHair, true)
 	movePlayer(PlayerPos.SMOKEY)
 	smokeyMessyHair.hide()
 	isSmokeysHairCut = true
@@ -516,6 +528,7 @@ func replaceFireExtinguisher():
 	playerHeldItem = PlayerHeldItem.NONE
 
 func applyShavingCreamToSmokey():
+	AudioManager.playSound(AudioManager.sprayingSmokey, true)
 	movePlayer(PlayerPos.SMOKEY)
 	smokeyShavingCream.show()
 	isSmokeysBeardShavingCreamed = true
@@ -533,6 +546,7 @@ func replaceMachete():
 	playerHeldItem = PlayerHeldItem.NONE
 
 func trimSmokeysBeard():
+	AudioManager.playSound(AudioManager.cuttingSmokeyBeard, true)
 	movePlayer(PlayerPos.SMOKEY)
 	smokeyShavingCream.hide()
 	smokeyMessyBeard.hide()
@@ -618,14 +632,23 @@ func replaceCharcoalPowder():
 
 func scatterZoombaFood(scattered: Scattered):
 	match scattered:
-		Scattered.PEPPER_FLAKES: scatteredPepperFlakes.show()
-		Scattered.FLINT_FLAKES: scatteredFlintFlakes.show()
-		Scattered.BREAD_CRUMBS: scatteredBreadCrumbs.show()
-		Scattered.CHARCOAL_POWDER: scatteredCharcoalPowder.show()
+		Scattered.PEPPER_FLAKES:
+			AudioManager.playSound(AudioManager.shakingFlakes, true)
+			scatteredPepperFlakes.show()
+		Scattered.FLINT_FLAKES:
+			AudioManager.playSound(AudioManager.shakingBoxes, true)
+			scatteredFlintFlakes.show()
+		Scattered.BREAD_CRUMBS:
+			AudioManager.playSound(AudioManager.shakingBoxes, true)
+			scatteredBreadCrumbs.show()
+		Scattered.CHARCOAL_POWDER:
+			AudioManager.playSound(AudioManager.tappingBowl, true)
+			scatteredCharcoalPowder.show()
 	scatteredOnFloor.append(scattered)
 	movePlayer(PlayerPos.SCATTERING_FOOD)
 
 func feedZoomba():
+	AudioManager.playSound(AudioManager.feedingZoomba, true)
 	zoomba.position = Vector2(563,244)
 	scatteredPepperFlakes.hide()
 	scatteredFlintFlakes.hide()

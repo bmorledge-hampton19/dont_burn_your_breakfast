@@ -135,9 +135,13 @@ func _ready():
 	for window in windowPriorityList:
 		addTaskbarItem(window)
 
+	AudioManager.fanPlayer.volume_linear = 0
+	AudioManager.fanPlayer.play()
+	AudioManager.playSound(AudioManager.startingComputer, true)
+
 
 func startClutter():
-	spawnMice(randi_range(4,6))
+	spawnMice(randi_range(4,6), false)
 
 
 func _process(delta: float):
@@ -221,6 +225,7 @@ func _process(delta: float):
 
 	resourceMonitor.manual_process(delta)
 	heatVFX.modulate.a = resourceMonitor.heat
+	AudioManager.fanPlayer.volume_linear = resourceMonitor.heat
 
 	for window in taskbarItems:
 		taskbarItems[window].manualProcess(delta)
@@ -250,18 +255,23 @@ func decreaseCatCpuLoad():
 	resourceMonitor.targetCpuUsage -= ANGRY_CAT_CPU_USAGE
 
 
-func spawnMice(count: int):
+func spawnMouse(withAudio: bool):
+	if len(mice) >= 50: return
+	var newMouse: Mouse
+	if randi_range(0,4): newMouse = mouseCursorPrefab.instantiate()
+	else: newMouse = normalMousePrefab.instantiate()
+	if withAudio: AudioManager.playSound(AudioManager.spawningMouse)
+	miceControl.add_child(newMouse)
+	mice.append(newMouse)
+	newMouse.position = Vector2(randf_range(0, newMouse.maxX), randf_range(0, newMouse.maxY))
+	newMouse.onReproduction.connect(func(): spawnMice(1))
+	newMouse.onDestroy.connect(decreaseMouseRamLoad)
+
+func spawnMice(count: int, withAudio = true):
+	var mouseSpawnTween = create_tween()
 	for i in range(count):
-		if len(mice) >= 50: return
-		var newMouse: Mouse
-		if randi_range(0,4): newMouse = mouseCursorPrefab.instantiate()
-		else: newMouse = normalMousePrefab.instantiate()
-		miceControl.add_child(newMouse)
-		mice.append(newMouse)
-		newMouse.position = Vector2(randf_range(0, newMouse.maxX), randf_range(0, newMouse.maxY))
-		newMouse.onReproduction.connect(func(): spawnMice(1))
-		newMouse.onDestroy.connect(decreaseMouseRamLoad)
-		increaseMouseRamLoad()
+		mouseSpawnTween.tween_interval(randf_range(0.1,0.2))
+		mouseSpawnTween.tween_callback(spawnMouse.bind(withAudio))
 
 func increaseMouseRamLoad():
 	resourceMonitor.targetRamUsage += MOUSE_RAM_USAGE
@@ -271,6 +281,9 @@ func decreaseMouseRamLoad():
 
 
 func attemptCloseCatPic():
+
+	if not catPics: return false
+
 	var closingCatPic: CatPic
 	for i in range(len(catPics)-1,-1,-1):
 		if catPics[i].angry:
@@ -279,12 +292,15 @@ func attemptCloseCatPic():
 			closingCatPic = catPics.pop_at(i)
 			break
 
-	if not closingCatPic: return false
+	if not closingCatPic:
+		AudioManager.playSound(AudioManager.angryCat, true)
+		return false
 
 	resourceMonitor.targetCpuUsage += CLOSING_CAT_CPU_USAGE
 	catPicsBeingClosed.append(CLOSING_CAT_CPU_USAGE)
 	removeTaskbarItem(closingCatPic)
 	closingCatPic.queue_free()
+	AudioManager.playSound(AudioManager.closingWindow.pick_random(), true)
 	return true
 
 func attemptCloseSpreadsheet():
@@ -297,9 +313,11 @@ func attemptCloseSpreadsheet():
 	spreadsheetsBeingClosed.append(CLOSING_SPREADSHEET_RAM_USAGE)
 	removeTaskbarItem(closingSpreadsheet)
 	closingSpreadsheet.queue_free()
+	AudioManager.playSound(AudioManager.closingWindow.pick_random(), true)
 	return true
 
 func activateAntimatterCheese():
+	AudioManager.playSound(AudioManager.activatingCheese, true)
 	for mouse in mice:
 		mouse.exposeToAntimatter()
 	mice.clear()

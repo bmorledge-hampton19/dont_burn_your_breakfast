@@ -81,7 +81,12 @@ func initParsableModifiers():
 			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
 
 
+var transitionQueued: bool
+
+
 func parseItems() -> String:
+
+	if transitionQueued: return ""
 
 	parseEventsSinceLastConfirmation += 1
 
@@ -245,18 +250,27 @@ func attemptStartGame(startGameModifierID: ModifierID):
 
 	match startGameModifierID:
 		-1, ModifierID.BATHROOM:
-			SceneManager.transitionToScene(SceneManager.SceneID.BATHROOM)
+			return queueLevelStart(SceneManager.SceneID.BATHROOM)
+			
 		ModifierID.FRONT_YARD:
 			if EndingsManager.isSceneShortcutUnlocked(SceneManager.SceneID.FRONT_YARD):
-				SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
+				return queueLevelStart(SceneManager.SceneID.FRONT_YARD)
 		ModifierID.BEDROOM:
 			if EndingsManager.isSceneShortcutUnlocked(SceneManager.SceneID.BEDROOM):
-				SceneManager.transitionToScene(SceneManager.SceneID.BEDROOM)
+				return queueLevelStart(SceneManager.SceneID.BEDROOM)
 		ModifierID.KITCHEN:
 			if EndingsManager.isSceneShortcutUnlocked(SceneManager.SceneID.KITCHEN):
-				SceneManager.transitionToScene(SceneManager.SceneID.KITCHEN)
+				return queueLevelStart(SceneManager.SceneID.KITCHEN)
 		
 	return (
 		"You haven't unlocked the ability to skip to this level yet. For more information, " +
 		"inspect the shortcut in the Endings screen."
 	)
+
+
+func queueLevelStart(whichLevel: SceneManager.SceneID) -> String:
+	AudioManager.fadeOutMusic()
+	AudioManager.playSound(AudioManager.startGame, true)
+	transitionQueued = true
+	terminal.onFinishOutput.connect(func(): SceneManager.transitionToScene(whichLevel), 4)
+	return "Away we go! Try not to burn your breakfast!\a"

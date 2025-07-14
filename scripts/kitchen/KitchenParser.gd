@@ -565,6 +565,7 @@ func parseItems() -> String:
 								"At least he's not blocking your plumbing any more!"
 							)
 						else:
+							AudioManager.playSound(AudioManager.talkingDemon, true)
 							return (
 								"Drat... It looks like the breakfast demon under your sink is still hanging around. " +
 								"Upon seeing you, he begins shouting his usual tirade in a frantic, high-pitched voice:\n" +
@@ -903,6 +904,7 @@ func parseItems() -> String:
 					elif kitchen.isDemonSatisfied:
 						return "The pipes have been freed from the grip of Cheeriofel. The faucet should work now!"
 					else:
+						AudioManager.playSound(AudioManager.talkingDemon, true)
 						return (
 							"Ah. You can see the problem now. That cereal demon that's been hanging around has latched onto the plumbing again... " +
 							"Upon seeing you, he begins shouting his usual tirade in a frantic, high-pitched voice:\n" +
@@ -919,6 +921,7 @@ func parseItems() -> String:
 							"At least he's not blocking your plumbing any more!"
 						)
 					else:
+						AudioManager.playSound(AudioManager.talkingDemon, true)
 						return (
 							"You accidentally summoned this breakfast demon after making your 6666th bowl of cereal. " +
 							"As a housemate, he leaves a little something to be desired... " +
@@ -3105,15 +3108,15 @@ func attemptPlaceEgg(opening: bool) -> String:
 			return "That's already where it is, silly!"
 
 	if crackingEggInPan:
-		kitchen.addRawEggToPan()
 		if kitchen.playerHeldItem != Kitchen.PlayerHeldItem.FRYING_PAN and kitchen.activeBurner == kitchen.ovenFryingPanPos:
-			kitchen.fryEgg()
+			kitchen.addRawEggToPan(true)
 			return (
 				"You expertly flip the egg off your head and karate chop it open in midair, " +
 				"ejecting the innards into the frying pan. The egg sizzles loudly as it begins to fry. " +
 				"Not wanting to be wasteful, you pop the pieces of the broken shell into your mouth and chew vigorously. Mmmm! Calcium!"
 			)
 		else:
+			kitchen.addRawEggToPan()
 			return (
 				"You expertly flip the egg off your head and karate chop it open in midair, " +
 				"ejecting the innards into the frying pan with a soft plop. " +
@@ -3255,12 +3258,14 @@ func attemptCleanBowl() -> String:
 	if not kitchen.isDemonSatisfied:
 		kitchen.movePlayer(Kitchen.PlayerPos.MIDDLE_LEFT_CUPBOARD)
 		if kitchen.isMiddleLeftCupboardOpen:
+			AudioManager.playSound(AudioManager.talkingDemon, true)
 			return (
 				"You try turning on the kitchen sink to wash the bowl, but the faucet just rattles ominously... " +
 				"At the same time, the creature below your sink begins shouting his usual tirade in a frantic, high-pitched voice:\n" +
 				HUNGRY_DEMON_SPIEL + "\nIt looks like you'll have to make his breakfast first if you want access to running water again..."
 			)
 		else:
+			AudioManager.playSound(AudioManager.muffledTalkingDemon, true)
 			return (
 				"You try turning on the kitchen sink to wash the bowl, but the faucet just rattles ominously... " +
 				"At the same time you hear muffled yelling from the cabinet under the sink. What is going on?"

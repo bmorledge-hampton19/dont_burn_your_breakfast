@@ -100,15 +100,18 @@ func movePlayer(newPlayerPosition: PlayerPosition):
 
 
 func lubeUp():
+	AudioManager.playSound(AudioManager.squirtingShampoo, true)
 	playerInTub.hide()
 	lubedPlayerInTub.show()
 	isPlayerLubed = true
 
 func spillShampoo():
+	AudioManager.playSound(AudioManager.squirtingShampoo, true)
 	spilledShampoo.show()
 	isShampooSpilled = true
 
 func exitTub():
+	AudioManager.playSound(AudioManager.shiftingCereal, true)
 	movePlayer(PlayerPosition.ON_MAT)
 	player.show()
 	lubedPlayerInTub.hide()
@@ -116,12 +119,14 @@ func exitTub():
 
 
 func openCabinet():
+	AudioManager.playSound(AudioManager.openingVanity, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_CABINET)
 	openedCabinet.show()
 	if not playerHasToothpaste: toothpaste.show()
 	isCabinetOpen = true
 
 func closeCabinet():
+	AudioManager.playSound(AudioManager.closingVanity, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_CABINET)
 	openedCabinet.hide()
 	toothpaste.hide()
@@ -147,33 +152,39 @@ func returnToothpaste():
 
 
 func openTopDrawer():
+	AudioManager.playSound(AudioManager.openingBathroomDrawer, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedTopDrawer.show()
 	isTopDrawerOpen = true
 
 func closeTopDrawer():
+	AudioManager.playSound(AudioManager.closingBathroomDrawer, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedTopDrawer.hide()
 	isTopDrawerOpen = false
 
 func openMiddleDrawer():
+	AudioManager.playSound(AudioManager.openingBathroomDrawer, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedMiddleDrawer.show()
 	if not playerHasToothbrush: toothbrush.show()
 	isMiddleDrawerOpen = true
 
 func closeMiddleDrawer():
+	AudioManager.playSound(AudioManager.closingBathroomDrawer, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedMiddleDrawer.hide()
 	toothbrush.hide()
 	isMiddleDrawerOpen = false
 
 func openBottomDrawer():
+	AudioManager.playSound(AudioManager.openingBathroomDrawer, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedBottomDrawer.show()
 	isBottomDrawerOpen = true
 
 func closeBottomDrawer():
+	AudioManager.playSound(AudioManager.closingBathroomDrawer, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedBottomDrawer.hide()
 	isBottomDrawerOpen = false
@@ -192,11 +203,13 @@ func returnToothbrush():
 
 
 func openToiletSeat():
+	AudioManager.playSound(AudioManager.openingToilet, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedToiletSeat.show()
 	isToiletSeatOpened = true
 
 func closeToiletSeat():
+	AudioManager.playSound(AudioManager.closingToilet, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedToiletSeat.hide()
 	isToiletSeatOpened = false
@@ -207,21 +220,25 @@ func applyToothpasteToToothbrush():
 	isToothbrushToothpasted = true
 
 func rinseToothbrush():
+	AudioManager.playSound(AudioManager.rinsingToothbrush, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	isToothbrushRinsed = true
 	isToiletToothpasted = true
 
 func flushToilet():
+	AudioManager.playSound(AudioManager.flushingToilet, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	isToiletToothpasted = false
 
 func brushTeeth():
+	AudioManager.playSound(AudioManager.brushingTeeth, true)
 	player.hide()
 	toothpastedPlayer.show()
 	isPlayerToothpasted = true
 	isToothbrushToothpasted = false
 
 func spitToothpaste(spittingInToilet := false):
+	AudioManager.playSound(AudioManager.spittingToothpaste, true)
 	player.show()
 	toothpastedPlayer.hide()
 	isPlayerToothpasted = false
@@ -238,23 +255,29 @@ func lookDownBarrelOfToothpaste():
 	aimingToothpasteAway = false
 
 func ejectKey():
+	AudioManager.playSound(AudioManager.ejectingKey, true)
 	isKeyInLock = true
 	keyInLock.show()
 
 func unlockDoor():
+	AudioManager.playSound(AudioManager.unlockingDoorWithKey, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_DOOR)
 	isDoorUnlocked = true
 
 func lockDoor():
+	AudioManager.playSound(AudioManager.unlockingDoorWithKey, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_DOOR)
 	isDoorUnlocked = false
 
 func openDoor():
+	AudioManager.playSound(AudioManager.openingDoor, true)
+	AudioManager.fadeOutMusic()
 	movePlayer(PlayerPosition.IN_FRONT_OF_DOOR)
 	isDoorOpen = true
 	openedDoor.show()
 
 func closeDoor():
+	AudioManager.playSound(AudioManager.closingDoor, true)
 	movePlayer(PlayerPosition.IN_FRONT_OF_DOOR)
 	isDoorOpen = false
 	openedDoor.hide()
