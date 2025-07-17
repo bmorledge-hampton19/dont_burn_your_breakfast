@@ -65,12 +65,14 @@ func receiveInputFromTerminal(input: String):
 				terminal.lastReplayableMessage +
 				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT one that replays the last message " +
 				"to continue.)", false
-				)
+			)
+			AudioManager.playTextInputSound()
 		elif input.to_lower() in [
 			"retry level", "retry the current level", "retry", "replay level", "r", "back",
 			"restart level", "restart the current level", "restart",
 		]:
 			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
+			return ""
 		elif SceneManager.endingID == SceneManager.EndingID.CHAMPION_OF_BREAKFASTS and input.to_lower() in BURN_BREAKFAST_ALIASES:
 			terminal.initMessage(burnBreakfast(), true)
 		else:
@@ -91,6 +93,7 @@ func receiveInputFromTerminal(input: String):
 						"Don't forget that you can buy hints for the ones you're missing.\n" +
 						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
 					)
+				AudioManager.playTextInputSound()
 				terminal.initMessage(message, true)
 			else:
 				AudioManager.stopMusic()
@@ -108,6 +111,7 @@ func parseItems() -> String:
 
 		ActionID.RETRY:
 			SceneManager.transitionToScene(SceneManager.SceneID.LAST_SCENE)
+			return ""
 	
 		ActionID.POOP:
 			return (
@@ -117,6 +121,7 @@ func parseItems() -> String:
 		ActionID.MAIN_MENU:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.MAIN_MENU:
 				SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+				return ""
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.MAIN_MENU
@@ -142,6 +147,7 @@ func parseItems() -> String:
 
 					ActionID.MAIN_MENU:
 						SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+						return ""
 					ActionID.QUIT:
 						get_tree().quit()
 

@@ -168,11 +168,13 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 	match sceneID:
 
 		SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS:
-			AudioManager.playSound(AudioManager.minorSceneTransition)
+			AudioManager.playSound(AudioManager.minorSceneTransitionIn)
 
 		SceneID.MAIN_MENU:
-			if lastScene not in [SceneID.HELP, SceneID.OPTIONS, SceneID.CREDITS]:
+			if currentScene not in [SceneID.HELP, SceneID.OPTIONS, SceneID.CREDITS]:
 				AudioManager.startNewMusic(SceneID.MAIN_MENU)
+			else:
+				AudioManager.playSound(AudioManager.minorSceneTransitionOut)
 		
 		SceneID.ENDING:
 			AudioManager.startNewMusic(SceneID.ENDING, endingID == EndingID.CHAMPION_OF_BREAKFASTS)
@@ -212,7 +214,7 @@ func openEndings(openingScene: Scene):
 	if currentScene in endingsByScene and currentScene != SceneID.ENDING:
 		openEndingsScene.changeLevel(currentScene)
 	AudioManager.clearSounds()
-	AudioManager.playSound(AudioManager.minorSceneTransition)
+	AudioManager.playSound(AudioManager.minorSceneTransitionIn)
 	AudioManager.waitingActions.clear()
 
 func closeEndings():
@@ -220,8 +222,13 @@ func closeEndings():
 	pausedScene.resume()
 	openEndingsScene.queue_free()
 	AudioManager.clearSounds()
-	AudioManager.playSound(AudioManager.minorSceneTransition)
+	AudioManager.playSound(AudioManager.minorSceneTransitionOut)
 	AudioManager.waitingActions.clear()
+	if pausedScene is FrontYard:
+		if (pausedScene as FrontYard).isMowerRunning: AudioManager.playMowerLoop()
+	elif pausedScene is Kitchen:
+		if (pausedScene as Kitchen).isOvenOn: AudioManager.addOvenNoise()
+		if (pausedScene as Kitchen).activeBurner != Kitchen.NONE: AudioManager.addOvenNoise()
 
 func openComputerCleaning(openingScene: Scene):
 	openingScene.pause()
@@ -232,6 +239,7 @@ func openComputerCleaning(openingScene: Scene):
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 	AudioManager.clearSounds()
 	AudioManager.waitingActions.clear()
+	AudioManager.fadeOutMusic()
 
 func closeComputerCleaning():
 	openComputerScene.inputParser.disconnectTerminal()
@@ -239,6 +247,9 @@ func closeComputerCleaning():
 	(pausedScene as Bedroom).cleanComputer()
 	openComputerScene.queue_free()
 	AudioManager.clearSounds()
-	AudioManager.playSound(AudioManager.minorSceneTransition)
+	AudioManager.computerCleaningMusicPlayer.stop()
+	AudioManager.playSound(AudioManager.minorSceneTransitionOut).finished.connect(
+		AudioManager.startNewMusic(SceneID.BEDROOM, false, true)
+	)
 	AudioManager.waitingActions.clear()
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT

@@ -75,7 +75,7 @@ func _ready():
 
 
 func setFontSize(newFontSize: Options.FontSize):
-	AudioManager.playSound(AudioManager.changeOption, true)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 	fontSizeSpoons[Options.fontSize].hide()
 	Options.fontSize = newFontSize
 	fontSizeSpoons[Options.fontSize].show()
@@ -87,14 +87,14 @@ func revealPainfulOptions():
 	painfulOptionsRevealed = true
 
 func setFontSpeed(newFontSpeed: Options.FontSpeed):
-	AudioManager.playSound(AudioManager.changeOption, true)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 	fontSpeedSpoons[Options.fontSpeed].hide()
 	Options.fontSpeed = newFontSpeed
 	fontSpeedSpoons[Options.fontSpeed].show()
 	terminal.setFontSpeed()
 
 func setDisplayFormat(newDisplayFormat: Options.DisplayMode):
-	AudioManager.playSound(AudioManager.changeOption, true)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 	displayFormatSpoons[Options.displayMode].hide()
 	Options.displayMode = newDisplayFormat
 	displayFormatSpoons[Options.displayMode].show()
@@ -106,7 +106,7 @@ func setMusicVolume(newPercent: int):
 	Options.musicVolume = newPercent
 
 func setOtherSoundVolume(newPercent: int):
-	AudioManager.playSound(AudioManager.changeOption, true)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 	otherSoundVolumeSpoon.position.x = 101 + (243-101)*newPercent/100
 	otherSoundVolumePercentLabel.text = str(newPercent) + '%'
 	Options.otherSoundVolume = newPercent

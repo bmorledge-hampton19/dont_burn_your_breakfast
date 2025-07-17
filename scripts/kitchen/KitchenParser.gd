@@ -2860,6 +2860,7 @@ func parseItems() -> String:
 		ActionID.MAIN_MENU:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.MAIN_MENU:
 				SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+				return ""
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.MAIN_MENU
@@ -2886,6 +2887,7 @@ func parseItems() -> String:
 
 					ActionID.MAIN_MENU:
 						SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+						return ""
 					ActionID.QUIT:
 						get_tree().quit()
 

@@ -367,6 +367,7 @@ offset_right = 335.0
 offset_bottom = 94.0
 
 [node name="Title" type="Label" parent="VBoxContainer/Background/Volume/Music"]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 16.0
 offset_right = 86.0
@@ -407,6 +408,7 @@ offset_right = 335.0
 offset_bottom = 142.0
 
 [node name="Title" type="Label" parent="VBoxContainer/Background/Volume/Sound Effects"]
+layout_mode = 0
 offset_left = 7.0
 offset_top = 6.0
 offset_right = 119.0
@@ -416,6 +418,7 @@ text = "Other
 Sound"
 
 [node name="Slider" type="Panel" parent="VBoxContainer/Background/Volume/Sound Effects"]
+layout_mode = 0
 offset_left = 97.0
 offset_top = 20.0
 offset_right = 251.0

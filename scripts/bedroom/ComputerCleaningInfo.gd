@@ -48,7 +48,11 @@ func _process(delta):
 func summonClippy():
     var tween = create_tween()
     tween.tween_interval(5)
-    tween.tween_callback(func(): AudioManager.playSound(AudioManager.clippyLoggingOn))
+    tween.tween_callback(
+        func(): AudioManager.playSound(AudioManager.clippyLoggingOn).finished.connect(
+            AudioManager.startClippyMusic()
+        )
+    )
     tween.tween_property(clippy, "scale", Vector2.ONE, 2).set_trans(Tween.TRANS_SPRING).set_ease(Tween.EASE_OUT)
     tween.tween_property(speechBubble, "scale", Vector2.ONE, 1).set_trans(Tween.TRANS_CUBIC)
     tween.tween_interval(1)
@@ -188,11 +192,16 @@ func displayClippyOutro():
     clippyTextTween.tween_callback(startClippyTalking)
     clippyTextTween.tween_property(speechBubbleText, "visible_ratio", 1, len(speechBubbleText.text)*CLIPPY_TEXT_DELAY)
     clippyTextTween.tween_callback(stopClippyTalking)
-    clippyTextTween.tween_interval(3)
+    clippyTextTween.tween_interval(1)
+    clippyTextTween.tween_callback(AudioManager.fadeOutComputerCleaningMusic)
+    clippyTextTween.tween_interval(2)
     clippyTextTween.tween_callback(finish)
 
 func finish():
     stopClippyTalking()
-    AudioManager.playSound(AudioManager.clippyLoggingOff, true)
+    AudioManager.computerCleaningMusicPlayer.stop()
+    AudioManager.playSound(AudioManager.clippyLoggingOff, true).finished.connect(
+        AudioManager.startComputerCleaningMusic()
+    )
     finished.emit()
     queue_free()

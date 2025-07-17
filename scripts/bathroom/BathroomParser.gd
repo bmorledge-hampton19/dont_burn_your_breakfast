@@ -469,7 +469,7 @@ func parseItems() -> String:
 					-1: return requestAdditionalSubjectContext()
 					SubjectID.TUB_FAUCET, SubjectID.WATER:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the bathtub faucet")
+							return transitionToTripEnding("the bathtub faucet")
 						else:
 							SceneManager.transitionToScene(
 								SceneManager.SceneID.ENDING,
@@ -479,6 +479,7 @@ func parseItems() -> String:
 								"quickly, and it's not long before your entire house is engulfed in flames.",
 								SceneManager.EndingID.BATH_BOMB
 							)
+							return ""
 
 					SubjectID.SINK_FAUCET, SubjectID.SINK, SubjectID.MACHINE:
 						if bathroom.playerPosition != bathroom.PlayerPosition.IN_TUB:
@@ -497,7 +498,7 @@ func parseItems() -> String:
 					SubjectID.KEY:
 						if bathroom.isKeyInLock:
 							if bathroom.isPlayerBlockedByCabinet():
-								transitionToTripEnding("the key in the door")
+								return transitionToTripEnding("the key in the door")
 							if bathroom.isDoorUnlocked:
 								bathroom.lockDoor()
 								return (
@@ -513,7 +514,7 @@ func parseItems() -> String:
 						else: return wrongContextParse()
 					SubjectID.TUB_FAUCET_HANDLE:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the bathtub faucet")
+							return transitionToTripEnding("the bathtub faucet")
 						else:
 							SceneManager.transitionToScene(
 								SceneManager.SceneID.ENDING,
@@ -523,9 +524,10 @@ func parseItems() -> String:
 								"quickly, and it's not long before your entire house is engulfed in flames.",
 								SceneManager.EndingID.BATH_BOMB
 							)
+							return ""
 					SubjectID.DOOR_HANDLE:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the door handle")
+							return transitionToTripEnding("the door handle")
 						elif bathroom.playerPosition == bathroom.PlayerPosition.IN_TUB:
 							return (
 								"You can't reach that while you're still in the bathtub."
@@ -591,6 +593,7 @@ func parseItems() -> String:
 											"your list of worries...",
 											SceneManager.EndingID.MUZZLE_DISCIPLINE
 										)
+										return ""
 							-1:
 								if bathroom.remainingToothpaste == 0:
 									return (
@@ -790,13 +793,7 @@ func parseItems() -> String:
 							"You should still be able to use it from here though."
 						)
 					elif bathroom.isPlayerBlockedByCabinet():
-						transitionToTripEnding("the shampoo")
-						return (
-							"You try to pick up the bottle of shampoo, but it's firmly stuck in place. " +
-							"You vaguely remember supergluing it to the edge of the tub so that you " +
-							"wouldn't lose track of it... " +
-							"Oh well! You don't really need it now that you're out of the tub."
-						)
+						return transitionToTripEnding("the shampoo")
 
 				SubjectID.CEREAL_BOX:
 					if bathroom.isCabinetOpen: return "You don't see a good reason to take these boxes of cereal with you."
@@ -829,7 +826,7 @@ func parseItems() -> String:
 				SubjectID.KEY:
 					if bathroom.isKeyInLock:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the key in the bathroom door")
+							return transitionToTripEnding("the key in the bathroom door")
 						else:
 							bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_DOOR)
 							return (
@@ -864,7 +861,7 @@ func parseItems() -> String:
 
 				SubjectID.BATHTUB, SubjectID.CEREAL:
 					if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the bathtub")
+							return transitionToTripEnding("the bathtub")
 					else:
 						SceneManager.transitionToScene(
 							SceneManager.SceneID.ENDING,
@@ -874,6 +871,7 @@ func parseItems() -> String:
 							"it, you, and your house to erupt into flames.",
 							SceneManager.EndingID.SECOND_BLOOD
 						)
+						return ""
 
 				-1:
 					return requestAdditionalSubjectContext()
@@ -888,6 +886,7 @@ func parseItems() -> String:
 				SubjectID.BATHROOM:
 					if bathroom.isDoorOpen:
 						SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
+						return ""
 					else: return attemptOpenDoor()
 
 				SubjectID.GAME:
@@ -915,21 +914,21 @@ func parseItems() -> String:
 
 					SubjectID.RUG:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the bath mat")
+							return transitionToTripEnding("the bath mat")
 						else:
 							bathroom.movePlayer(bathroom.PlayerPosition.ON_MAT)
 							return "You move onto the bath mat."
 
 					SubjectID.BATHTUB:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the bathtub")
+							return transitionToTripEnding("the bathtub")
 						else:
 							bathroom.movePlayer(bathroom.PlayerPosition.ON_MAT)
 							return "You walk over to the bathtub."
 
 					SubjectID.DOOR:
 						if bathroom.isPlayerBlockedByCabinet():
-							transitionToTripEnding("the door")
+							return transitionToTripEnding("the door")
 						else:
 							bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_DOOR)
 							return "You move to the door."
@@ -937,9 +936,10 @@ func parseItems() -> String:
 					SubjectID.OUTSIDE:
 						if bathroom.isDoorOpen:
 							if bathroom.isPlayerBlockedByCabinet():
-								transitionToTripEnding("to leave the bathroom")
+								return transitionToTripEnding("to leave the bathroom")
 							else:
 								SceneManager.transitionToScene(SceneManager.SceneID.FRONT_YARD)
+								return ""
 						else:
 							return "You can't go outside yet. The door is still closed."
 
@@ -1174,6 +1174,7 @@ func parseItems() -> String:
 								"you, and when you finally come to, you're covered in toothpaste and surrounded by ashes.",
 								SceneManager.EndingID.IRRESPONSIBLE_BRUSHING
 							)
+							return ""
 						else:
 							bathroom.brushTeeth()
 							return (
@@ -1223,6 +1224,7 @@ func parseItems() -> String:
 						"The massive droplet hits the cereal like a meteorite, flaming impact and all! Whoops...",
 						SceneManager.EndingID.SPICY_SPITTOON
 					)
+					return ""
 
 
 		ActionID.SWALLOW:
@@ -1245,6 +1247,7 @@ func parseItems() -> String:
 					"around to see roiling flames emanating from your bathtub.",
 					SceneManager.EndingID.FLAMMABLE_FLUSH
 				)
+				return ""
 			else:
 				bathroom.flushToilet()
 				return "FFFLLLLRLRSRSRSSHHHSHSHSHHshshshhhhh"
@@ -1279,7 +1282,7 @@ func parseItems() -> String:
 
 			if bathroom.isKeyInLock:
 				if bathroom.isPlayerBlockedByCabinet():
-					transitionToTripEnding("unlock the door")
+					return transitionToTripEnding("unlock the door")
 				if bathroom.isDoorUnlocked:
 					return "The door is already unlocked."
 				else:
@@ -1297,7 +1300,7 @@ func parseItems() -> String:
 
 			if bathroom.isKeyInLock:
 				if bathroom.isPlayerBlockedByCabinet():
-					transitionToTripEnding("lock the door")
+					return transitionToTripEnding("lock the door")
 				if bathroom.isDoorUnlocked:
 					bathroom.lockDoor()
 					return (
@@ -1318,6 +1321,7 @@ func parseItems() -> String:
 		ActionID.MAIN_MENU:
 			if parseEventsSinceLastConfirmation <= 1 and confirmingActionID == ActionID.MAIN_MENU:
 				SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+				return ""
 			else:
 				parseEventsSinceLastConfirmation = 0
 				confirmingActionID = ActionID.MAIN_MENU
@@ -1346,6 +1350,7 @@ func parseItems() -> String:
 
 					ActionID.MAIN_MENU:
 						SceneManager.transitionToScene(SceneManager.SceneID.MAIN_MENU)
+						return ""
 					ActionID.QUIT:
 						get_tree().quit()
 
@@ -1443,7 +1448,7 @@ func useToothpaste(toothpasteModifierID: int) -> String:
 		ModifierID.AT_DOOR:
 			if bathroom.remainingToothpaste == 0 and not bathroom.isKeyInLock:
 				if bathroom.isPlayerBlockedByCabinet():
-					transitionToTripEnding("the door")
+					return transitionToTripEnding("the door")
 				else:
 					bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_DOOR)
 					bathroom.aimToothpasteAway()
@@ -1528,7 +1533,7 @@ func attemptOpenDoor() -> String:
 		return "You'll have to get out of this cereal before you can even think about leaving the bathroom."
 	else:
 		if bathroom.isPlayerBlockedByCabinet():
-			transitionToTripEnding("the door")
+			return transitionToTripEnding("the door")
 		else:
 			bathroom.movePlayer(bathroom.PlayerPosition.IN_FRONT_OF_DOOR)
 			if not bathroom.isKeyInLock:
@@ -1550,7 +1555,6 @@ func attemptOpenDoor() -> String:
 					"How are you supposed to use this handle to open the door? You really don't want to " +
 					"mess things up and would like additional instructions."
 				)
-	return unknownParse()
 
 
 func attemptExitBathtub() -> String:
@@ -1558,15 +1562,16 @@ func attemptExitBathtub() -> String:
 		if bathroom.isPlayerLubed:
 			if bathroom.isShampooSpilled:
 				SceneManager.transitionToScene(
-				SceneManager.SceneID.ENDING,
-				"With the help of your shampoo, you squirm your way out of the cereal and step onto " +
-				"the bathroom floor.\nUnfortunately, you were a little too overzealous with the shampoo " +
-				"earlier, and the puddle you left causes you to slip and fall backwards into the " +
-				"cereal. On your way down, you smack the back of your head on the side of the bathtub, " +
-				"splitting your scalp open and spilling blood into the cereal, which wastes no time in " +
-				"igniting...",
-				SceneManager.EndingID.SLIPPERY_SURPRISE
-			)
+					SceneManager.SceneID.ENDING,
+					"With the help of your shampoo, you squirm your way out of the cereal and step onto " +
+					"the bathroom floor.\nUnfortunately, you were a little too overzealous with the shampoo " +
+					"earlier, and the puddle you left causes you to slip and fall backwards into the " +
+					"cereal. On your way down, you smack the back of your head on the side of the bathtub, " +
+					"splitting your scalp open and spilling blood into the cereal, which wastes no time in " +
+					"igniting...",
+					SceneManager.EndingID.SLIPPERY_SURPRISE
+				)
+				return ""
 			else:
 				bathroom.exitTub()
 				return (
@@ -1582,9 +1587,9 @@ func attemptExitBathtub() -> String:
 				"on your skin drips into the cereal which instantly begins to combust...",
 				SceneManager.EndingID.FIRST_BLOOD
 			)
+			return ""
 	else:
 		return "You're already out of the bathtub."
-	return unknownParse()
 
 
 func attemptRinseToothbrush(rinseModifierID: int) -> String:
@@ -1642,3 +1647,4 @@ func transitionToTripEnding(movingTo: String):
 		"of your open mouth and into the cereal, which bursts into flames.",
 		SceneManager.EndingID.HEAD_OVER_HEELS_FOR_CEREAL
 	)
+	return ""

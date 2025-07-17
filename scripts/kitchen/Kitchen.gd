@@ -589,6 +589,7 @@ func takeThawedStrategyGuideFromOven():
 	isStrategyGuideInOven = false
 	_givePlayerHeldItem(PlayerHeldItem.THAWED_STRATEGY_GUIDE)
 	movePlayer(PlayerPos.OVEN)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 func putThawedStrategyGuideInOven():
 	ovenDriedStrategyGuide.show()
 	isStrategyGuideInOven = true
@@ -674,7 +675,6 @@ func fryEgg(audioAlreadyHandled := false):
 	movePlayer(PlayerPos.OVEN)
 
 func scrambleEgg():
-	AudioManager.playSound(AudioManager.scramblingEgg, true)
 	if isEggFried:
 		friedEgg.hide()
 		friedScrambledEgg.show()
@@ -683,11 +683,13 @@ func scrambleEgg():
 		rawScrambledEgg.show()
 	isEggScrambled = true
 	movePlayer(PlayerPos.OVEN)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 func addAshes():
 	eggAshes.show()
 	areAshesOnEgg = true
 	movePlayer(PlayerPos.OVEN)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 
 func openTopFridgeDoor():
@@ -916,9 +918,12 @@ func putCerealOnTable():
 	movePlayer(PlayerPos.TABLE)
 
 func pourMilkInBowl():
-	AudioManager.playSound(AudioManager.pourMilk, true)
-	if bowlState == CLEAN: bowlState = JUST_MILK
-	elif bowlState == JUST_CEREAL: bowlState = UNHATCHED
+	if bowlState == CLEAN:
+		AudioManager.playSound(AudioManager.pouringMilkInEmptyBowl, true)
+		bowlState = JUST_MILK
+	elif bowlState == JUST_CEREAL:
+		AudioManager.playSound(AudioManager.addingMilkToCereal, true)
+		bowlState = UNHATCHED
 
 	if isCerealBowlOnFan:
 		movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
@@ -926,9 +931,11 @@ func pourMilkInBowl():
 		movePlayer(PlayerPos.TABLE)
 
 func pourCerealInBowl():
-	AudioManager.playSound(AudioManager.pourCereal, true)
-	if bowlState == CLEAN: bowlState = JUST_CEREAL
+	if bowlState == CLEAN:
+		AudioManager.playSound(AudioManager.pouringCerealInEmptyBowl, true)
+		bowlState = JUST_CEREAL
 	elif bowlState == JUST_MILK:
+		AudioManager.playSound(AudioManager.addingCerealToMilk, true)
 		if currentMilkHeat > minMilkHeat: bowlState = HATCHED
 		else: bowlState = UNHATCHED
 	

@@ -161,6 +161,7 @@ func parseItems() -> String:
 						"lose the game...",
 						SceneManager.EndingID.FALSE_START
 					)
+					return ""
 
 
 		ActionID.SELECT:
@@ -171,10 +172,13 @@ func parseItems() -> String:
 					return attemptStartGame(modifierID)
 				SubjectID.CREDITS_BUTTON:
 					SceneManager.transitionToScene(SceneManager.SceneID.CREDITS)
+					return ""
 				SubjectID.HELP_BUTTON:
 					SceneManager.transitionToScene(SceneManager.SceneID.HELP)
+					return ""
 				SubjectID.OPTIONS_BUTTON:
 					SceneManager.transitionToScene(SceneManager.SceneID.OPTIONS)
+					return ""
 				SubjectID.AMBIGUOUS_BUTTON:
 					return requestAdditionalContextCustom("Which button would you like to select?", REQUEST_SUBJECT)
 			
@@ -193,12 +197,15 @@ func parseItems() -> String:
 
 		ActionID.HELP:
 			SceneManager.transitionToScene(SceneManager.SceneID.HELP)
+			return ""
 
 		ActionID.OPTIONS:
 			SceneManager.transitionToScene(SceneManager.SceneID.OPTIONS)
+			return ""
 
 		ActionID.CREDITS:
 			SceneManager.transitionToScene(SceneManager.SceneID.CREDITS)
+			return ""
 
 
 		ActionID.POOP:
@@ -272,5 +279,5 @@ func queueLevelStart(whichLevel: SceneManager.SceneID) -> String:
 	AudioManager.fadeOutMusic()
 	AudioManager.playSound(AudioManager.startGame, true)
 	transitionQueued = true
-	terminal.onFinishOutput.connect(func(): SceneManager.transitionToScene(whichLevel), 4)
+	terminal.onFinishOutput.connect(func(): SceneManager.transitionToScene(whichLevel), ConnectFlags.CONNECT_ONE_SHOT)
 	return "Away we go! Try not to burn your breakfast!\a"

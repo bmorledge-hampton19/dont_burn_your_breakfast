@@ -218,6 +218,7 @@ func applyToothpasteToToothbrush():
 	remainingToothpaste -= 1
 	isToothbrushRinsed = false
 	isToothbrushToothpasted = true
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 func rinseToothbrush():
 	AudioManager.playSound(AudioManager.rinsingToothbrush, true)

@@ -94,6 +94,14 @@ func _ready():
 
 func movePlayer(newPos: SpritePos):
 	if newPos == SpritePos.STEP_2: AudioManager.playSound(AudioManager.creakingStep, true)
+	if (
+		(newPos == SpritePos.STEP_1 and playerPos != SpritePos.STEP_2) or
+		(newPos == SpritePos.STEP_3 and playerPos != SpritePos.STEP_4) or
+		(newPos == SpritePos.STEP_4 and playerPos != SpritePos.STEP_5) or
+		(newPos == SpritePos.STEP_5 and playerPos != SpritePos.BEDROOM_DOOR) or
+		(newPos == SpritePos.BEDROOM_DOOR)
+	):
+		AudioManager.playSound(AudioManager.goodTextInput, true)
 	playerPos = newPos
 	playerControl.position = playerSpritePositions[newPos]
 
@@ -297,6 +305,8 @@ func removeCap():
 	mowerWithoutCap.show()
 	mowerHasCap = false
 
+	AudioManager.playSound(AudioManager.goodTextInput, true)
+
 	if isStepMown: movePlayer(SpritePos.BATHROOM_DOOR)
 	else: movePlayer(SpritePos.IN_FRONT_OF_SHELF)
 
@@ -305,6 +315,8 @@ func replaceCap():
 	mowerWithCap.show()
 	mowerWithoutCap.hide()
 	mowerHasCap = true
+
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 	if isStepMown: movePlayer(SpritePos.BATHROOM_DOOR)
 	else: movePlayer(SpritePos.IN_FRONT_OF_SHELF)

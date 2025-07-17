@@ -28,7 +28,7 @@ func _unhandled_key_input(event: InputEvent):
 		if keyEvent.keycode == KEY_BACKSPACE:
 			attemptRemoveCharacter()
 
-		elif keyEvent.keycode == KEY_ENTER:
+		elif keyEvent.keycode == KEY_ENTER or keyEvent.keycode == KEY_KP_ENTER:
 			sendInput.emit(text.strip_edges())
 			if text.strip_edges(): updateStoredInputs()
 			text = ""
@@ -72,11 +72,11 @@ func attemptRemoveCharacter():
 	if caretPosition > 0:
 		caretPosition -= 1
 		text = text.erase(caretPosition)
-		AudioManager.playSound(AudioManager.reversedKeystrokes.pick_random())
+		AudioManager.playSound(AudioManager.reversedKeystrokes.pick_random(), false, "OtherSounds", 0.5)
 
 
 func attemptAddCharacter(newChar: String):
 	if text.length() < maxInputCharacters:
 		text = text.insert(caretPosition, newChar)
 		caretPosition += 1
-		AudioManager.playSound(AudioManager.keystrokes.pick_random())
+		AudioManager.playSound(AudioManager.keystrokes.pick_random(), false, "OtherSounds", 0.5)

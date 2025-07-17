@@ -25,6 +25,7 @@ func goToNextPage():
 	assert(currentPage != 8, "Can't proceed to next page. Already at final page.")
 	_getCurrentPage().show()
 	if currentPage == 5: peepingQuaker.show()
+	if currentPage != 6: AudioManager.playSound(AudioManager.goodTextInput, true)
 
 func goToPreviousPage():
 	_getCurrentPage().hide()

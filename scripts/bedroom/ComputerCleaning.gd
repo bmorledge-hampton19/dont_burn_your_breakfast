@@ -149,7 +149,9 @@ func _process(delta: float):
 
 	if not finished and not catPics and not spreadsheets and resourceMonitor.allTargetsBelowOne:
 		finished = true
-		activateAntimatterCheese()
+		if mice: activateAntimatterCheese(false)
+		AudioManager.computerCleaningMusicPlayer.stop()
+		AudioManager.playSound(AudioManager.tada, true)
 		cows.dance()
 		farewellClippy.summonClippy()
 		resourceMonitor.hide()
@@ -316,8 +318,8 @@ func attemptCloseSpreadsheet():
 	AudioManager.playSound(AudioManager.closingWindow.pick_random(), true)
 	return true
 
-func activateAntimatterCheese():
-	AudioManager.playSound(AudioManager.activatingCheese, true)
+func activateAntimatterCheese(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.activatingCheese, true)
 	for mouse in mice:
 		mouse.exposeToAntimatter()
 	mice.clear()

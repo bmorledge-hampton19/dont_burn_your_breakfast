@@ -4,6 +4,7 @@ extends Node2D
 @export var soundEffectsNode: Node2D
 @export var textInputPlayer: AudioStreamPlayer2D
 @export var mowerPlayer: AudioStreamPlayer2D
+@export var computerCleaningMusicPlayer: AudioStreamPlayer2D
 @export var clippyPlayer: AudioStreamPlayer2D
 @export var fanPlayer: AudioStreamPlayer2D
 @export var ovenPlayer: AudioStreamPlayer2D
@@ -41,7 +42,6 @@ extends Node2D
 
 # Options
 @export_group("Options")
-@export var changeOption: AudioStream
 @export var changeMusicVolume: AudioStream
 
 
@@ -144,6 +144,13 @@ extends Node2D
 # Computer Cleaning 
 @export_group("Computer") # Uses same music as bedroom.
 
+@export_subgroup("Music")
+@export var clippyIntroMusicIntro: AudioStream
+@export var clippyIntroMusicLoop: AudioStream
+@export var computerCleaningMusicIntro: AudioStream
+@export var computerCleaningMusicLoop: AudioStream
+
+@export_subgroup("Sound Effects")
 @export var startingComputer: AudioStream
 @export var clippyTalking: Array[AudioStream] # XP Ringin and XP Ringout
 @export var clippyLoggingOn: AudioStream
@@ -183,7 +190,6 @@ extends Node2D
 @export var demonEating: AudioStream
 @export var crackingEgg: AudioStream
 @export var fryingEgg: AudioStream
-@export var scramblingEgg: AudioStream
 @export var startingOvenOrStove: AudioStream
 @export var ovenOrStoveLoop: AudioStream
 @export var washingAndDryingBowl: AudioStream
@@ -191,15 +197,18 @@ extends Node2D
 @export var unlockFridge: AudioStream
 @export var unlockMilk: AudioStream
 @export var lockMilk: AudioStream
-@export var pourMilk: AudioStream
-@export var pourCereal: AudioStream
+@export var pouringMilkInEmptyBowl: AudioStream
+@export var pouringCerealInEmptyBowl: AudioStream
+@export var addingMilkToCereal: AudioStream
+@export var addingCerealToMilk: AudioStream
 @export var flippingLarry: AudioStream
 
 
 # Global
 @export_group("Global")
 
-@export var minorSceneTransition: AudioStream
+@export var minorSceneTransitionIn: AudioStream
+@export var minorSceneTransitionOut: AudioStream
 @export var openingDoor: AudioStream
 @export var closingDoor: AudioStream
 
@@ -210,6 +219,7 @@ var victory: bool
 var timeUntilNextMusic: float
 var consecutiveShortMusics: int
 var musicFadeTween: Tween
+var computerCleaningMusicFadeTween: Tween
 
 enum {LONG, SHORT}
 var lastMusicType: int
@@ -353,14 +363,16 @@ func clearSounds():
 	mowerPlayer.stop()
 	clippyPlayer.stop()
 	fanPlayer.stop()
+	ovenPlayer.stop()
+	earlyRemoveOvenNoiseCalls = 0
 
 
-func startNewMusic(scene: SceneManager.SceneID, p_victory := false):
+func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare := false):
 	musicScene = scene
 	playingFanfare = true
 	victory = p_victory
 	consecutiveShortMusics = 0
-	if musicFadeTween.is_valid(): musicFadeTween.kill()
+	if musicFadeTween and musicFadeTween.is_valid(): musicFadeTween.kill()
 	musicPlayer.volume_linear = 1
 
 	match musicScene:
@@ -386,7 +398,12 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false):
 			musicPlayer.play()
 
 		SceneManager.SceneID.BEDROOM:
-			musicPlayer.stream = bedroomOpeningFanfare
+			if skipFanfare:
+				musicPlayer.stream = bedroomShortMusic.pick_random()
+				consecutiveShortMusics += 1
+				playingFanfare = false
+			else:
+				musicPlayer.stream = bedroomOpeningFanfare
 			musicPlayer.play()
 
 		SceneManager.SceneID.KITCHEN:
@@ -424,7 +441,34 @@ func stopMusic():
 	musicScene = SceneManager.SceneID.UNINITIALIZED
 
 func fadeOutMusic(duration := 2.0):
-	if musicFadeTween.is_valid(): musicFadeTween.kill()
+	if musicFadeTween and musicFadeTween.is_valid(): musicFadeTween.kill()
 	musicFadeTween = create_tween()
 	musicFadeTween.tween_property(musicPlayer, "volume_linear", 0, duration)
 	musicFadeTween.tween_callback(stopMusic)
+
+
+func startClippyMusic():
+	computerCleaningMusicPlayer.stream = clippyIntroMusicIntro
+	if computerCleaningMusicPlayer.finished.is_connected(_startComputerCleaningLoop):
+		computerCleaningMusicPlayer.finished.disconnect(_startComputerCleaningLoop)
+	computerCleaningMusicPlayer.finished.connect(_startClippyMusicLoop, ConnectFlags.CONNECT_ONE_SHOT)
+
+func _startClippyMusicLoop():
+	computerCleaningMusicPlayer.stream = clippyIntroMusicLoop
+	computerCleaningMusicPlayer.play()
+
+func startComputerCleaningMusic():
+	if computerCleaningMusicPlayer.finished.is_connected(_startClippyMusicLoop):
+		computerCleaningMusicPlayer.finished.disconnect(_startClippyMusicLoop)
+	computerCleaningMusicPlayer.stream = computerCleaningMusicIntro
+	computerCleaningMusicPlayer.finished.connect(_startComputerCleaningLoop, ConnectFlags.CONNECT_ONE_SHOT)
+
+func _startComputerCleaningLoop():
+	computerCleaningMusicPlayer.stream = computerCleaningMusicLoop
+	computerCleaningMusicPlayer.play()
+
+func fadeOutComputerCleaningMusic(duration := 2.0):
+	if computerCleaningMusicFadeTween and computerCleaningMusicFadeTween.is_valid(): computerCleaningMusicFadeTween.kill()
+	computerCleaningMusicFadeTween = create_tween()
+	computerCleaningMusicFadeTween.tween_property(computerCleaningMusicPlayer, "volume_linear", 0, duration)
+	computerCleaningMusicFadeTween.tween_callback(func(): computerCleaningMusicPlayer.stop())

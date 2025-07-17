@@ -434,6 +434,7 @@ func putAwayClothing(clothing: Clothing):
 	playerHeldItem = PlayerHeldItem.NONE
 	handForeground.hide()
 	setPlayerTexture(RELAXED)
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 func playDrawerNoise(opening):
 	if opening: AudioManager.playSound(AudioManager.openingBedroomDrawer, true)
@@ -494,6 +495,7 @@ func putBraOnSmokey():
 	movePlayer(PlayerPos.SMOKEY)
 	smokeyBra.show()
 	isSmokeyWearingBra = true
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 
 func pickUpAxe():
@@ -571,6 +573,7 @@ func putHatOnSmokey():
 	isPlayerWearingHat = false
 	smokeyHat.show()
 	isSmokeyWearingHat = true
+	AudioManager.playSound(AudioManager.goodTextInput, true)
 
 
 func pickUpPepperFlakes():
