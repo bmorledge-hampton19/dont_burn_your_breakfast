@@ -128,7 +128,7 @@ func initParsableSubjects():
 			[ActionID.INSPECT, ActionID.USE, ActionID.TURN_ON, ActionID.TURN, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.SPIDER, ["spiderweb", "spider web", "spider", "web"],
 			[ActionID.INSPECT, ActionID.TAKE, ActionID.EAT])
-	addParsableSubject(SubjectID.PAINTING, ["painting", "portrait", "art", "quaker man", "quaker"],
+	addParsableSubject(SubjectID.PAINTING, ["painting", "portrait", "art", "quaker man", "quaker", "picture", "naked man", "man"],
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.PLANT, ["plant", "potted plant", "pot", "sticks"],
 			[ActionID.INSPECT])
@@ -359,7 +359,7 @@ func parseItems() -> String:
 					)
 				SubjectID.TOILET:
 					return (
-						"You usually clean this toilet on World Toilet Day (November 19th), but you " +
+						"You usually clean this toilet on World Toilet Day, but you " +
 						"forgot last time because you were too busy celebrating International Men's Day."
 					)
 				SubjectID.KEY:
@@ -574,12 +574,25 @@ func parseItems() -> String:
 									)
 								else:
 									if bathroom.aimingToothpasteAway:
-										bathroom.ejectKey()
-										return (
-											"While carefully aiming the tube of toothpaste away from you, you firmly " +
-											"grasp it and squeeze with all your might. With a satisfying *pop*, the key " +
-											"is ejected from the tube and flies straight into the keyhole on the door."
-										)
+										if bathroom.isPlayerToothpasted:
+											SceneManager.transitionToScene(
+												SceneManager.SceneID.ENDING,
+												"You're carefully aiming the tube of toothpaste away from you, " +
+												"but the sudden release of the key still startles you. " +
+												"You try to yelp in surprise but just end up spitting out the glob of toothpaste " +
+												"in your mouth instead. " +
+												"It arcs gracefully through the air before plummeting towards the bathtub.\n" +
+												"The massive droplet hits the cereal like a meteorite, flaming impact and all! Whoops...",
+												SceneManager.EndingID.SPICY_SPITTOON
+											)
+											return ""
+										else:
+											bathroom.ejectKey()
+											return (
+												"While carefully aiming the tube of toothpaste away from you, you firmly " +
+												"grasp it and squeeze with all your might. With a satisfying *pop*, the key " +
+												"is ejected from the tube and flies straight into the keyhole on the door."
+											)
 									else:
 										SceneManager.transitionToScene(
 											SceneManager.SceneID.ENDING,

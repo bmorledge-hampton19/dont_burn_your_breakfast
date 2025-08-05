@@ -35,7 +35,7 @@ enum ModifierID {
 func initParsableActions():
 	addParsableAction(ActionID.ENDINGS,
 			["endings", "view endings", "achievements", "view achievements", "help", "hints", "hint"])
-	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"])
+	addParsableAction(ActionID.INSPECT, ["inspect", "look at", "look in", "look", "read", "view"], true)
 	addParsableAction(ActionID.MAIN_MENU,
 			["main menu", "menu", "main", "go to main menu", "go back to main menu", "return to main menu"])
 	addParsableAction(ActionID.POOP, ["poop", "crap", "shit your pants", "shit"])
@@ -44,7 +44,7 @@ func initParsableActions():
 	addParsableAction(ActionID.SPEED_UP, ["speed up", "go fast", "ask clippy to speed up", "ask clippy to go fast"])
 	addParsableAction(ActionID.SLOW_DOWN, ["slow down", "go slow", "slow", "ask clippy to slow down", "ask clippy to go slow"])
 	addParsableAction(ActionID.SKIP, ["skip clippy", "skip", "shut up clippy", "shut up"])
-	addParsableAction(ActionID.CLOSE, ["close", "delete", "destroy"])
+	addParsableAction(ActionID.CLOSE, ["close", "delete", "destroy"], true)
 	addParsableAction(ActionID.OPEN, ["open"])
 	addParsableAction(ActionID.EXECUTE,
 					  ["execute", "run", "click on", "click", "double click on", "double click", "double-click on", "double-click", "activate"])
@@ -129,6 +129,21 @@ func parseItems() -> String:
 	match actionID:
 
 		ActionID.INSPECT:
+
+			if wildCard:
+				var potentialHeaderText: String
+				if subjectAlias: potentialHeaderText = subjectAlias + ' ' + wildCard.to_lower()
+				else: potentialHeaderText = wildCard.to_lower()
+
+				if computerCleaning.getCatPicByHeader(potentialHeaderText):
+					validWildCard = true
+					return "These cats keep you company while you make more breakfast-themed spreadsheets."
+				elif computerCleaning.getSpreadsheetByHeader(potentialHeaderText):
+					validWildCard = true
+					return "These spreadsheets help keep your mind busy when you come to check on your cats."
+				else:
+					return unrecognizedEndingParse()
+
 			match subjectID:
 
 				-1:
@@ -258,6 +273,35 @@ func parseItems() -> String:
 
 
 		ActionID.CLOSE:
+
+			if wildCard:
+				var potentialHeaderText: String
+				if subjectAlias: potentialHeaderText = subjectAlias + ' ' + wildCard.to_lower()
+				else: potentialHeaderText = wildCard.to_lower()
+
+				var potentialCatPic := computerCleaning.getCatPicByHeader(potentialHeaderText)
+				var potentialSpreadsheet := computerCleaning.getSpreadsheetByHeader(potentialHeaderText)
+
+				if potentialCatPic:
+					validWildCard = true
+					if computerCleaning.infoWindow:
+						return INFO_LOCKED_MESSAGE
+					elif potentialCatPic.angry:
+						return "That cat is too hungry and refuses to be closed. Quick! Get it a mouse!"
+					else:
+						computerCleaning.attemptCloseCatPic(potentialCatPic)
+						return "Reluctantly, the cat closes as your CPU works to appease it."
+				elif potentialSpreadsheet:
+					validWildCard = true
+					if computerCleaning.infoWindow:
+						return INFO_LOCKED_MESSAGE
+					else:
+						computerCleaning.attemptCloseSpreadsheet(potentialSpreadsheet)
+						return "The spreadsheet blinks out of existence, and its contents are temporarily transferred to RAM while it saves."
+				else:
+					AudioManager.playSound(AudioManager.badTextInput, true)
+					return "You can't find a window to close with that name."
+
 			match subjectID:
 
 				-1:

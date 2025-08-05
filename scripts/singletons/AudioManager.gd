@@ -1,8 +1,9 @@
 extends Node2D
 
 @export var musicPlayer: AudioStreamPlayer2D
+@export var backgroundNoisePlayer: AudioStreamPlayer2D
 @export var soundEffectsNode: Node2D
-@export var textInputPlayer: AudioStreamPlayer2D
+@export var defaultTextInputPlayer: AudioStreamPlayer2D
 @export var mowerPlayer: AudioStreamPlayer2D
 @export var computerCleaningMusicPlayer: AudioStreamPlayer2D
 @export var clippyPlayer: AudioStreamPlayer2D
@@ -15,7 +16,7 @@ extends Node2D
 @export_group("Terminal")
 @export var keystrokes: Array[AudioStream]
 @export var reversedKeystrokes: Array[AudioStream]
-@export var defaultTextInput: AudioStream
+@export var defaultTextInput: Array[AudioStream]
 @export var badTextInput: AudioStream
 @export var goodTextInput: AudioStream
 
@@ -30,14 +31,16 @@ extends Node2D
 # Main Menu
 @export_group("Main Menu")
 
-@export_subgroup("Music")
+@export_subgroup("Music") # Also plays in options, credits, and endings.
 @export var mainMenuOpeningFanfare: AudioStream
-@export var mainMenuLongMusic: Array[AudioStream] # Also plays in options, credits, and endings.
-@export var mainMenuShortMusic: Array[AudioStream] # Also plays in options, credits, and endings.
+@export var mainMenuLongMusic: Array[AudioStream]
+@export var mainMenuShortMusic: Array[AudioStream]
+@export var mainMenuAmbiance: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
 
 @export var startGame: AudioStream
+@export var dontBurnYourBreakfastSong: AudioStream
 
 
 # Options
@@ -82,6 +85,7 @@ extends Node2D
 @export var bathroomOpeningFanfare: AudioStream
 @export var bathroomLongMusic: Array[AudioStream]
 @export var bathroomShortMusic: Array[AudioStream]
+@export var bathroomAmbiance: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
 @export var squirtingShampoo: AudioStream
@@ -107,11 +111,13 @@ extends Node2D
 @export var frontYardOpeningFanfare: AudioStream
 @export var frontYardLongMusic: Array[AudioStream]
 @export var frontYardShortMusic: Array[AudioStream]
+@export var frontYardAmbiance: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
 @export var fillingMower: AudioStream
 @export var startingMower: AudioStream
 @export var runningMowerLoop: AudioStream
+@export var stoppingMower: AudioStream
 @export var mowingGrass: AudioStream
 @export var tyingShoe: AudioStream
 @export var creakingStep: AudioStream
@@ -124,6 +130,7 @@ extends Node2D
 @export var bedroomOpeningFanfare: AudioStream
 @export var bedroomLongMusic: Array[AudioStream]
 @export var bedroomShortMusic: Array[AudioStream]
+@export var bedroomAmbiance: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
 @export var movingPillows: AudioStream
@@ -149,6 +156,8 @@ extends Node2D
 @export var clippyIntroMusicLoop: AudioStream
 @export var computerCleaningMusicIntro: AudioStream
 @export var computerCleaningMusicLoop: AudioStream
+@export var ccVictoryMusicIntro: AudioStream
+@export var ccVictoryMusicLoop: AudioStream
 
 @export_subgroup("Sound Effects")
 @export var startingComputer: AudioStream
@@ -172,6 +181,7 @@ extends Node2D
 @export var kitchenOpeningFanfare: AudioStream
 @export var kitchenLongMusic: Array[AudioStream]
 @export var kitchenShortMusic: Array[AudioStream]
+@export var kitchenAmbiance: Array[AudioStream]
 
 @export_subgroup("Sound Effects")
 @export var openingKitchenCupboard: AudioStream
@@ -214,17 +224,20 @@ extends Node2D
 
 
 var musicScene := SceneManager.SceneID.UNINITIALIZED
-var playingFanfare: bool
 var victory: bool
 var timeUntilNextMusic: float
 var consecutiveShortMusics: int
 var musicFadeTween: Tween
 var computerCleaningMusicFadeTween: Tween
 
-enum {LONG, SHORT}
+enum {LONG, SHORT, AMBIANCE, FANFARE}
 var lastMusicType: int
 var lastLongMusic: AudioStream
 var lastShortMusic: AudioStream
+var lastAmbiance: AudioStream
+
+var nextMusicLong: bool
+var addAmbianceBeforeNextMusic: bool
 
 var waitingActions: Dictionary[Callable, float]
 
@@ -246,21 +259,25 @@ func _process(delta):
 	timeUntilNextMusic -= delta
 	if timeUntilNextMusic <= 0:
 
-		var timeForLongMusic: bool = randf() < 0.2*consecutiveShortMusics - 0.4
+		timeUntilNextMusic = 999
 
 		match musicScene:
 
 			SceneManager.SceneID.MAIN_MENU:
-				if timeForLongMusic:
+				if nextMusicLong:
 					musicPlayer.stream = _getNextMusic(mainMenuLongMusic, LONG)
 					musicPlayer.play()
 					consecutiveShortMusics = 0
+				elif addAmbianceBeforeNextMusic:
+					musicPlayer.stream = _getNextMusic(mainMenuAmbiance, AMBIANCE)
+					musicPlayer.play()
 				else:
 					musicPlayer.stream = _getNextMusic(mainMenuShortMusic, SHORT)
 					musicPlayer.play()
 					consecutiveShortMusics += 1
 
 			SceneManager.SceneID.ENDING:
+				assert(not addAmbianceBeforeNextMusic, "Ambiance doesn't exist for endings! Something went wrong...")
 				if victory:
 					musicPlayer.stream = _getNextMusic(victoriousEndingMusic, SHORT)
 					musicPlayer.play()
@@ -271,40 +288,52 @@ func _process(delta):
 					consecutiveShortMusics += 1
 
 			SceneManager.SceneID.BATHROOM:
-				if timeForLongMusic:
+				if nextMusicLong:
 					musicPlayer.stream = _getNextMusic(bathroomLongMusic, LONG)
 					musicPlayer.play()
 					consecutiveShortMusics = 0
+				elif addAmbianceBeforeNextMusic:
+					musicPlayer.stream = _getNextMusic(bathroomAmbiance, AMBIANCE)
+					musicPlayer.play()
 				else:
 					musicPlayer.stream = _getNextMusic(bathroomShortMusic, SHORT)
 					musicPlayer.play()
 					consecutiveShortMusics += 1
 
 			SceneManager.SceneID.FRONT_YARD:
-				if timeForLongMusic:
+				if nextMusicLong:
 					musicPlayer.stream = _getNextMusic(frontYardLongMusic, LONG)
 					musicPlayer.play()
 					consecutiveShortMusics = 0
+				elif addAmbianceBeforeNextMusic:
+					musicPlayer.stream = _getNextMusic(frontYardAmbiance, AMBIANCE)
+					musicPlayer.play()
 				else:
 					musicPlayer.stream = _getNextMusic(frontYardShortMusic, SHORT)
 					musicPlayer.play()
 					consecutiveShortMusics += 1
 
 			SceneManager.SceneID.BEDROOM:
-				if timeForLongMusic:
+				if nextMusicLong:
 					musicPlayer.stream = _getNextMusic(bedroomLongMusic, LONG)
 					musicPlayer.play()
 					consecutiveShortMusics = 0
+				elif addAmbianceBeforeNextMusic:
+					musicPlayer.stream = _getNextMusic(bedroomAmbiance, AMBIANCE)
+					musicPlayer.play()
 				else:
 					musicPlayer.stream = _getNextMusic(bedroomShortMusic, SHORT)
 					musicPlayer.play()
 					consecutiveShortMusics += 1
 
 			SceneManager.SceneID.KITCHEN:
-				if timeForLongMusic:
+				if nextMusicLong:
 					musicPlayer.stream = _getNextMusic(kitchenLongMusic, LONG)
 					musicPlayer.play()
 					consecutiveShortMusics = 0
+				elif addAmbianceBeforeNextMusic:
+					musicPlayer.stream = _getNextMusic(kitchenAmbiance, AMBIANCE)
+					musicPlayer.play()
 				else:
 					musicPlayer.stream = _getNextMusic(kitchenShortMusic, SHORT)
 					musicPlayer.play()
@@ -315,23 +344,30 @@ func queueAction(action: Callable, delay: float):
 	waitingActions[action] = delay
 
 
-func playSound(stream: AudioStream, overrideTextInputSound := false, busName: String = "OtherSounds", volume_linear: float = 1) -> OneShotAudio:
+func playSound(stream: AudioStream, overrideTextInputSound := false, busName: String = "OtherSounds", volume_linear: float = 1,
+			   p_process_mode := PROCESS_MODE_INHERIT) -> OneShotAudio:
 	var oneShotAudio: OneShotAudio = oneShotAudioPrefab.instantiate()
+	oneShotAudio.process_mode = p_process_mode
 	soundEffectsNode.add_child(oneShotAudio)
 	oneShotAudio.init(stream, busName, volume_linear)
 
-	if overrideTextInputSound: textInputPlayer.stop()
+	if overrideTextInputSound: defaultTextInputPlayer.stop()
 	return oneShotAudio
 
-func playTextInputSound():
-	textInputPlayer.play()
+func playDefaultTextInputSound():
+	defaultTextInputPlayer.stream = defaultTextInput.pick_random()
+	defaultTextInputPlayer.play()
 
 func playMowerLoop():
 	mowerPlayer.play()
 
+func stopMowerLoop():
+	mowerPlayer.stop()
+	playSound(stoppingMower)
+
 func playClippySound():
 	clippyPlayer.stream = clippyTalking.pick_random()
-	clippyPlayer.play()
+	clippyPlayer.play(randf_range(0,0.3))
 
 func playFan():
 	fanPlayer.play()
@@ -359,7 +395,7 @@ func removeOvenNoise():
 func clearSounds():
 	for soundEffect in soundEffectsNode.get_children():
 		soundEffect.queue_free()
-	textInputPlayer.stop()
+	defaultTextInputPlayer.stop()
 	mowerPlayer.stop()
 	clippyPlayer.stop()
 	fanPlayer.stop()
@@ -369,16 +405,25 @@ func clearSounds():
 
 func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare := false):
 	musicScene = scene
-	playingFanfare = true
+	lastMusicType = FANFARE
 	victory = p_victory
 	consecutiveShortMusics = 0
+	timeUntilNextMusic = 999
+	addAmbianceBeforeNextMusic = false
+	nextMusicLong = false
 	if musicFadeTween and musicFadeTween.is_valid(): musicFadeTween.kill()
 	musicPlayer.volume_linear = 1
+	backgroundNoisePlayer.volume_linear = 1
+	backgroundNoisePlayer.play()
 
 	match musicScene:
 
 		SceneManager.SceneID.MAIN_MENU:
-			musicPlayer.stream = mainMenuOpeningFanfare
+			if skipFanfare:
+				musicPlayer.stream = _getNextMusic(mainMenuShortMusic, SHORT)
+				consecutiveShortMusics += 1
+			else:
+				musicPlayer.stream = mainMenuOpeningFanfare
 			musicPlayer.play()
 
 		SceneManager.SceneID.ENDING:
@@ -399,9 +444,8 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare 
 
 		SceneManager.SceneID.BEDROOM:
 			if skipFanfare:
-				musicPlayer.stream = bedroomShortMusic.pick_random()
+				musicPlayer.stream = _getNextMusic(bedroomShortMusic, SHORT)
 				consecutiveShortMusics += 1
-				playingFanfare = false
 			else:
 				musicPlayer.stream = bedroomOpeningFanfare
 			musicPlayer.play()
@@ -414,57 +458,94 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare 
 			print("Umm... This scene doesn't have music directly associated with it: " + str(musicScene))
 
 func _onMusicStreamFinished():
-	if playingFanfare:
-		playingFanfare = false
-		timeUntilNextMusic = randf_range(3.0, 5.0)
-	elif lastMusicType == LONG:
-		timeUntilNextMusic = randf_range(5.0, 10.0)
-	elif lastMusicType == SHORT:
-		timeUntilNextMusic = randf_range(1.5, 3.0)
 
-func _getNextMusic(choices: Array[AudioStream], longOrShort: int) -> AudioStream:
+	
+	if addAmbianceBeforeNextMusic: # Did we just finish playing ambiance?
+		addAmbianceBeforeNextMusic = false
+		nextMusicLong = false
+	else:
+		nextMusicLong = randf() < 0.2*consecutiveShortMusics - 0.4
+		if not nextMusicLong and not musicScene == SceneManager.SceneID.ENDING and consecutiveShortMusics > 0:
+			addAmbianceBeforeNextMusic = randf() < 0.6
 
-	var avoid: AudioStream = lastLongMusic if longOrShort == LONG else lastShortMusic
+	match lastMusicType:
+		FANFARE: timeUntilNextMusic = randf_range(4.0, 6.0)
+		SHORT when not addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(3.0, 5.0)
+		SHORT when addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(1.0, 2.0)
+		AMBIANCE: timeUntilNextMusic = randf_range(1.0, 2.0)
+		LONG: timeUntilNextMusic = randf_range(5.0, 10.0)
+		
+
+func _getNextMusic(choices: Array[AudioStream], musicType: int) -> AudioStream:
+
+	var avoid: AudioStream
+	match musicType:
+		SHORT: avoid = lastShortMusic
+		LONG: avoid = lastLongMusic
+		AMBIANCE: avoid = lastAmbiance
+
 	var choice: AudioStream = choices.pick_random()
 	while choice == avoid: choice = choices.pick_random()
 
-	if longOrShort == LONG:
-		lastLongMusic = choice
-	elif longOrShort == SHORT:
-		lastShortMusic = choice
-	lastMusicType = longOrShort
+	match musicType:
+		SHORT: lastShortMusic = choice
+		LONG: lastLongMusic = choice
+		AMBIANCE: lastAmbiance = choice
+	lastMusicType = musicType
 
 	return choice
 
 func stopMusic():
 	musicPlayer.stop()
+	backgroundNoisePlayer.stop()
 	musicScene = SceneManager.SceneID.UNINITIALIZED
 
 func fadeOutMusic(duration := 2.0):
 	if musicFadeTween and musicFadeTween.is_valid(): musicFadeTween.kill()
 	musicFadeTween = create_tween()
 	musicFadeTween.tween_property(musicPlayer, "volume_linear", 0, duration)
+	musicFadeTween.parallel().tween_property(backgroundNoisePlayer, "volume_linear", 0, duration)
 	musicFadeTween.tween_callback(stopMusic)
 
 
+func clearMusicPlayerFinishedConnections():
+	for connection in computerCleaningMusicPlayer.finished.get_connections():
+		computerCleaningMusicPlayer.finished.disconnect(connection.callable)
+
 func startClippyMusic():
+	if computerCleaningMusicFadeTween and computerCleaningMusicFadeTween.is_valid(): computerCleaningMusicFadeTween.kill()
 	computerCleaningMusicPlayer.stream = clippyIntroMusicIntro
-	if computerCleaningMusicPlayer.finished.is_connected(_startComputerCleaningLoop):
-		computerCleaningMusicPlayer.finished.disconnect(_startComputerCleaningLoop)
-	computerCleaningMusicPlayer.finished.connect(_startClippyMusicLoop, ConnectFlags.CONNECT_ONE_SHOT)
+	computerCleaningMusicPlayer.volume_linear = 1
+	computerCleaningMusicPlayer.play()
+	clearMusicPlayerFinishedConnections()
+	computerCleaningMusicPlayer.finished.connect(_startClippyMusicLoop)
 
 func _startClippyMusicLoop():
 	computerCleaningMusicPlayer.stream = clippyIntroMusicLoop
 	computerCleaningMusicPlayer.play()
 
 func startComputerCleaningMusic():
-	if computerCleaningMusicPlayer.finished.is_connected(_startClippyMusicLoop):
-		computerCleaningMusicPlayer.finished.disconnect(_startClippyMusicLoop)
+	if computerCleaningMusicFadeTween and computerCleaningMusicFadeTween.is_valid(): computerCleaningMusicFadeTween.kill()
 	computerCleaningMusicPlayer.stream = computerCleaningMusicIntro
-	computerCleaningMusicPlayer.finished.connect(_startComputerCleaningLoop, ConnectFlags.CONNECT_ONE_SHOT)
+	computerCleaningMusicPlayer.volume_linear = 1
+	computerCleaningMusicPlayer.play()
+	clearMusicPlayerFinishedConnections()
+	computerCleaningMusicPlayer.finished.connect(_startComputerCleaningMusicLoop)
 
-func _startComputerCleaningLoop():
+func _startComputerCleaningMusicLoop():
 	computerCleaningMusicPlayer.stream = computerCleaningMusicLoop
+	computerCleaningMusicPlayer.play()
+
+func startCCVictoryMusic():
+	if computerCleaningMusicFadeTween and computerCleaningMusicFadeTween.is_valid(): computerCleaningMusicFadeTween.kill()
+	computerCleaningMusicPlayer.stream = ccVictoryMusicIntro
+	computerCleaningMusicPlayer.volume_linear = 1
+	computerCleaningMusicPlayer.play()
+	clearMusicPlayerFinishedConnections()
+	computerCleaningMusicPlayer.finished.connect(_startCCVictoryMusicLoop)
+
+func _startCCVictoryMusicLoop():
+	computerCleaningMusicPlayer.stream = ccVictoryMusicLoop
 	computerCleaningMusicPlayer.play()
 
 func fadeOutComputerCleaningMusic(duration := 2.0):

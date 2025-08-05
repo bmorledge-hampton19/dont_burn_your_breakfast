@@ -6,12 +6,12 @@ extends InputParser
 enum ActionID {
 	INSPECT, SELECT,
 	PLAY, TAKE_SHORTCUT, ENDINGS, HELP, OPTIONS, CREDITS,
-	MAIN_MENU, POOP, QUIT, AFFIRM, DENY,
+	MAIN_MENU, POOP, QUIT, AFFIRM, DENY, PLAY_MUSIC # Placeholder for confirming action
 }
 
 enum SubjectID {
 	PLAY_BUTTON, HELP_BUTTON, OPTIONS_BUTTON, CREDITS_BUTTON, AMBIGUOUS_BUTTON, 
-	QUAKER_MAN, MILK, CEREAL, GASOLINE, MATCH, TITLE
+	QUAKER_MAN, MILK, CEREAL, GASOLINE, MATCH, TITLE, MUSIC
 }
 
 enum ModifierID {
@@ -27,7 +27,7 @@ func initParsableActions():
 			["main menu", "menu", "main", "go to the main menu","go to main menu", "go back to the main menu",
 			"go back to main menu", "return to the main menu", "return to main menu"])
 	addParsableAction(ActionID.SELECT, ["select", "click", "choose", "go to"])
-	addParsableAction(ActionID.PLAY, ["play game", "play", "start", "begin"])
+	addParsableAction(ActionID.PLAY, ["play game", "play don't burn your breakfast", "play", "start", "begin"])
 	addParsableAction(ActionID.TAKE_SHORTCUT, ["take shortcut", "use shortcut", "shortcut"])
 	addParsableAction(ActionID.HELP, ["help me", "help", "get help", "--help", "-h"])
 	addParsableAction(ActionID.OPTIONS, ["options", "settings"])
@@ -62,6 +62,8 @@ func initParsableSubjects():
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.TITLE, ["title", "don't burn your breakfast", "burn", "fire", "flames", "flame", "words"],
 			[ActionID.INSPECT])
+	addParsableSubject(SubjectID.MUSIC, ["music notes", "music note", "music", "notes", "note", "song"],
+			[ActionID.INSPECT, ActionID.PLAY])
 	
 
 
@@ -163,6 +165,18 @@ func parseItems() -> String:
 					)
 					return ""
 
+				SubjectID.MUSIC:
+					if EndingsManager.areAllEndingsUnlocked():
+						parseEventsSinceLastConfirmation = 0
+						confirmingActionID = ActionID.PLAY_MUSIC
+						return (
+							"Despite the name of the game explicitly discouraging it, " +
+							"you've managed to find all the different ways to burn your breakfast! " +
+							"As a reward, you've unlocked a special musical surprise! Would you like to play it now?"
+						)
+					else:
+						return wrongContextParse()
+
 
 		ActionID.SELECT:
 			
@@ -187,7 +201,15 @@ func parseItems() -> String:
 
 
 		ActionID.PLAY:
-			return attemptStartGame(modifierID)
+			if subjectID == SubjectID.MUSIC:
+				if EndingsManager.areAllEndingsUnlocked():
+					mainMenu.playSong()
+					return "Enjoy!"
+				else:
+					return "Nice try, but you've got to earn this one! Try again once you've unlocked all the endings."
+			else:
+				return attemptStartGame(modifierID)
+
 
 		ActionID.TAKE_SHORTCUT:
 			if modifierID == -1:
@@ -235,6 +257,10 @@ func parseItems() -> String:
 					ActionID.QUIT:
 						get_tree().quit()
 
+					ActionID.PLAY_MUSIC:
+						mainMenu.playSong()
+						return "Enjoy!"
+
 			else:
 				return (
 					"It's not clear what you want to say yes to..."
@@ -276,7 +302,8 @@ func attemptStartGame(startGameModifierID: ModifierID):
 
 
 func queueLevelStart(whichLevel: SceneManager.SceneID) -> String:
-	AudioManager.fadeOutMusic()
+	AudioManager.stopMusic()
+	AudioManager.clearSounds()
 	AudioManager.playSound(AudioManager.startGame, true)
 	transitionQueued = true
 	terminal.onFinishOutput.connect(func(): SceneManager.transitionToScene(whichLevel), ConnectFlags.CONNECT_ONE_SHOT)

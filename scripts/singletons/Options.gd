@@ -28,21 +28,25 @@ var displayMode: DisplayMode:
 		config.set_value("display", "mode", value)
 		config.save(_getOptionsFilePath())
 
+const MUSIC_BASE_VOLUME := 1.0
+
 var _musicVolume := 100
 var musicVolume: int:
 	get: return _musicVolume
 	set(value):
 		_musicVolume = value
-		AudioServer.set_bus_volume_linear(1, float(_musicVolume)/100.0)
+		AudioServer.set_bus_volume_linear(1, float(_musicVolume)/100.0*MUSIC_BASE_VOLUME)
 		config.set_value("volume", "music", value)
 		config.save(_getOptionsFilePath())
+
+const OTHER_SOUND_BASE_VOLUME := 1.0
 
 var _otherSoundVolume := 100
 var otherSoundVolume: int:
 	get: return _otherSoundVolume
 	set(value):
 		_otherSoundVolume = value
-		AudioServer.set_bus_volume_linear(2, float(_otherSoundVolume)/100.0)
+		AudioServer.set_bus_volume_linear(2, float(_otherSoundVolume)/100.0*OTHER_SOUND_BASE_VOLUME)
 		config.set_value("volume", "otherSound", value)
 		config.save(_getOptionsFilePath())
 

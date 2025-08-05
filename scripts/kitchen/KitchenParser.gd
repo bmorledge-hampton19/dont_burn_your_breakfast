@@ -2026,6 +2026,7 @@ func parseItems() -> String:
 						kitchen.openBottomFridgeDoor()
 						return "You open up the refrigerator."
 					else:
+						kitchen.movePlayer(Kitchen.PlayerPos.FRIDGE)
 						return "You tug on the refrigerator door, but it's locked shut. You'll need to unlock it first."
 
 

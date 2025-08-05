@@ -97,6 +97,7 @@ func _ready():
 	var sceneName := get_tree().current_scene.name.to_upper()
 	if sceneName == "OPTIONS_SCENE": currentScene = SceneID.OPTIONS
 	else: currentScene = SceneID[sceneName]
+	resetAudioForNewScene(currentScene)
 	preloadedEndingsScene = load(_getScenePath(SceneID.ACHIEVEMENTS))
 	preloadedComputerScene = load(_getScenePath(SceneID.COMPUTER_CLEANING))
 	# print("Starting scene: " + str(currentScene))
@@ -162,16 +163,35 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 	if customStartingMessage and endingID != EndingID.NONE:
 		customStartingMessage += "\n(Input any command to continue.)"
 
+	resetAudioForNewScene(sceneID)
+
+	if sceneID == currentScene:
+		get_tree().reload_current_scene()
+	else:
+		lastScene = currentScene
+		currentScene = sceneID
+		# print("Transitioning to " + _getScenePath(sceneID))
+		var newSceneResource := ResourceLoader.load_threaded_get(_getScenePath(sceneID))
+		get_tree().change_scene_to_packed(newSceneResource)
+
+		# currentScene.free()
+		# currentScene = newScene.instantiate()
+		# get_tree().root.add_child(currentScene)
+
+
+func resetAudioForNewScene(newScene: SceneID):
 	AudioManager.clearSounds()
 	AudioManager.waitingActions.clear()
+	AudioManager.computerCleaningMusicPlayer.stop()
 
-	match sceneID:
+	match newScene:
 
 		SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS:
 			AudioManager.playSound(AudioManager.minorSceneTransitionIn)
 
 		SceneID.MAIN_MENU:
 			if currentScene not in [SceneID.HELP, SceneID.OPTIONS, SceneID.CREDITS]:
+				AudioManager.playSound(AudioManager.mainMenuOpeningFanfare)
 				AudioManager.startNewMusic(SceneID.MAIN_MENU)
 			else:
 				AudioManager.playSound(AudioManager.minorSceneTransitionOut)
@@ -190,19 +210,6 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 		
 		SceneID.KITCHEN:
 			AudioManager.startNewMusic(SceneID.KITCHEN)
-
-	if sceneID == currentScene:
-		get_tree().reload_current_scene()
-	else:
-		lastScene = currentScene
-		currentScene = sceneID
-		# print("Transitioning to " + _getScenePath(sceneID))
-		var newSceneResource := ResourceLoader.load_threaded_get(_getScenePath(sceneID))
-		get_tree().change_scene_to_packed(newSceneResource)
-
-		# currentScene.free()
-		# currentScene = newScene.instantiate()
-		# get_tree().root.add_child(currentScene)
 
 
 func openEndings(openingScene: Scene):
@@ -231,15 +238,16 @@ func closeEndings():
 		if (pausedScene as Kitchen).activeBurner != Kitchen.NONE: AudioManager.addOvenNoise()
 
 func openComputerCleaning(openingScene: Scene):
+	AudioManager.clearSounds()
+	AudioManager.waitingActions.clear()
+	AudioManager.fadeOutMusic()
 	openingScene.pause()
 	pausedScene = openingScene
 	openComputerScene = preloadedComputerScene.instantiate()
 	pausedScene.add_sibling(openComputerScene)
 	openComputerScene.initFromExistingTerminal(openingScene.terminal)
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-	AudioManager.clearSounds()
-	AudioManager.waitingActions.clear()
-	AudioManager.fadeOutMusic()
+	
 
 func closeComputerCleaning():
 	openComputerScene.inputParser.disconnectTerminal()
@@ -249,7 +257,7 @@ func closeComputerCleaning():
 	AudioManager.clearSounds()
 	AudioManager.computerCleaningMusicPlayer.stop()
 	AudioManager.playSound(AudioManager.minorSceneTransitionOut).finished.connect(
-		AudioManager.startNewMusic(SceneID.BEDROOM, false, true)
+		func(): AudioManager.startNewMusic(SceneID.BEDROOM, false, true)
 	)
 	AudioManager.waitingActions.clear()
 	get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT

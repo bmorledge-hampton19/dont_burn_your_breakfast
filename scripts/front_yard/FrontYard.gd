@@ -72,6 +72,7 @@ var playerHasGasoline := false
 var mowerHasCap := true
 var mowerHasGas := false
 var isMowerRunning := false
+var mowerFuelRemaining := 0.0
 
 var isBedroomDoorOpen := false
 
@@ -90,6 +91,13 @@ func _init():
 
 func _ready():
 	super()
+
+func _process(delta):
+	if isMowerRunning:
+		mowerFuelRemaining -= delta
+		if mowerFuelRemaining <= 0:
+			mowerHasGas = false
+			turnOffMower()
 
 
 func movePlayer(newPos: SpritePos):
@@ -329,16 +337,19 @@ func refuelMower():
 func startMower():
 	AudioManager.playSound(AudioManager.startingMower, true).finished.connect(AudioManager.playMowerLoop)
 	isMowerRunning = true
+	mowerFuelRemaining = 20.0
 	mowerWithCap.hide()
 	mowerRunning.show()
 
 func turnOffMower():
-	assert(false, "NOT ALLOWED")
+	AudioManager.stopMowerLoop()
 	isMowerRunning = false
+	mowerWithCap.show()
+	mowerRunning.hide()
 
 
 func mowStep():
-	AudioManager.playSound(AudioManager.mowingGrass, true)
+	AudioManager.playSound(AudioManager.mowingGrass, true, "OtherSounds", 1.5)
 	mowerControl.position = Vector2(340, 242)
 
 	unmownGrass.hide()

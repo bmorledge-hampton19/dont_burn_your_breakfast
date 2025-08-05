@@ -60,13 +60,13 @@ func initParsableModifiers():
 
 func receiveInputFromTerminal(input: String):
 	if firstParse:
-		if input.to_lower() in replayPrompts:
+		if input.to_lower() in REPLAY_PROMPTS:
 			terminal.initMessage(
 				terminal.lastReplayableMessage +
 				"\n(Ok, fine. I guess *technically* you have to input any command EXCEPT one that replays the last message " +
 				"to continue.)", false
 			)
-			AudioManager.playTextInputSound()
+			AudioManager.playDefaultTextInputSound()
 		elif input.to_lower() in [
 			"retry level", "retry the current level", "retry", "replay level", "r", "back",
 			"restart level", "restart the current level", "restart",
@@ -93,7 +93,7 @@ func receiveInputFromTerminal(input: String):
 						"Don't forget that you can buy hints for the ones you're missing.\n" +
 						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
 					)
-				AudioManager.playTextInputSound()
+				AudioManager.playDefaultTextInputSound()
 				terminal.initMessage(message, true)
 			else:
 				AudioManager.stopMusic()

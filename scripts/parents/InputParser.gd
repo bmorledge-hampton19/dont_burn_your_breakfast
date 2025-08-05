@@ -14,9 +14,18 @@ const omittedArticlesAndAdjectives: Array[String] = [
 	"the", "a", "an", "it", "this", "that", "these", "those", "your", "his", "my"
 ]
 
-const replayPrompts: Array[String] = [
+const REPLAY_PROMPTS: Array[String] = [
 	"replay", "replay message", "replay last message",
 	"repeat", "repeat message", "repeat last message"
+]
+
+const PAUSE_PROMPTS: Array[String] = [
+	"pause", "suspend",
+	"wait", "wait!", "hold on", "hold on!", "slow down", "slow down!"
+]
+
+const UNPAUSE_PROMPTS: Array[String] = [
+	"unpause", "un-pause", "resume", "keep going", "go", "go!", "continue"
 ]
 
 var parsableActions: Array[_ParsableItem]
@@ -170,10 +179,28 @@ func testParsables():
 
 func receiveInputFromTerminal(input: String):
 	storeThisMessage = true
-	AudioManager.playTextInputSound()
-	if input.to_lower() in replayPrompts:
+	AudioManager.playDefaultTextInputSound()
+	if input.to_lower() in REPLAY_PROMPTS:
 		terminal.initMessage(terminal.lastReplayableMessage, false)
+	elif input.to_lower() in PAUSE_PROMPTS:
+		if get_tree().paused:
+			terminal.initMessage("The game is already paused.", false)
+		else:
+			get_tree().paused = true
+			terminal.pauseOverlay.show()
+			terminal.initMessage("Time slows to a halt. The game is now paused.", false)
+	elif input.to_lower() in UNPAUSE_PROMPTS:
+		if not get_tree().paused:
+			terminal.initMessage("The game is not paused.", false)
+		else:
+			get_tree().paused = false
+			terminal.pauseOverlay.hide()
+			terminal.initMessage("Ready, set, go!", false)
 	elif input:
+		if get_tree().paused:
+			terminal.initMessage("The game is currently paused. Use the \"unpause\" command to resume gameplay.", false)
+			AudioManager.playSound(AudioManager.badTextInput, true, "OtherSounds", 1, PROCESS_MODE_ALWAYS)
+			return
 		var message := parseInput(input)
 		if not message:
 			storeThisMessage = false

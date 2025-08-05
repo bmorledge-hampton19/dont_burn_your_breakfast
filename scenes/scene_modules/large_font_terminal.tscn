@@ -4,13 +4,30 @@
 [ext_resource type="Script" uid="uid://dbuci2vxfruu" path="res://scripts/terminal/InputText.gd" id="2_qqffw"]
 [ext_resource type="Script" uid="uid://c8g3ul514evpv" path="res://scripts/terminal/Caret.gd" id="3_sxbsv"]
 
-[node name="Terminal" type="ColorRect" node_paths=PackedStringArray("terminalLines", "inputText")]
+[node name="Terminal" type="ColorRect" node_paths=PackedStringArray("terminalLines", "inputText", "pauseOverlay")]
+process_mode = 3
 custom_minimum_size = Vector2(720, 140)
 size_flags_vertical = 3
 color = Color(0, 0, 0, 1)
 script = ExtResource("1_mb7pi")
 terminalLines = [NodePath("VBoxContainer/Line1/Label1"), NodePath("VBoxContainer/Line2/Label2"), NodePath("VBoxContainer/Line3/Label3"), NodePath("VBoxContainer/Line4/Label4")]
 inputText = NodePath("VBoxContainer/ActiveLine/HBoxContainer/InputText/InputLabel")
+pauseOverlay = NodePath("PauseOverlay")
+
+[node name="PauseOverlay" type="ColorRect" parent="."]
+visible = false
+offset_top = -400.0
+offset_right = 720.0
+color = Color(0, 0, 0, 0.25098)
+
+[node name="Label" type="Label" parent="PauseOverlay"]
+layout_mode = 0
+offset_right = 720.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 24
+text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1

@@ -1,11 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnu48bem3t508"]
+[gd_scene load_steps=6 format=3 uid="uid://dnu48bem3t508"]
 
 [ext_resource type="Script" uid="uid://dc6huo2qh1h3j" path="res://scripts/main_menu/MainMenu.gd" id="1_5vyrw"]
 [ext_resource type="Texture2D" uid="uid://xytc042qa6w0" path="res://sprites/backgrounds/repeating_background.png" id="2_c6pnt"]
 [ext_resource type="Texture2D" uid="uid://cuco0kwfdox22" path="res://sprites/backgrounds/main_menu.png" id="2_q1rol"]
 [ext_resource type="Script" uid="uid://bdkn4w3uj3n15" path="res://scripts/main_menu/MainMenuParser.gd" id="3_7srbg"]
+[ext_resource type="Texture2D" uid="uid://j56vgl76vwpn" path="res://sprites/movable_objects/music_notes.png" id="4_bi8wh"]
 
-[node name="Main_Menu" type="CenterContainer" node_paths=PackedStringArray("inputParser")]
+[node name="Main_Menu" type="CenterContainer" node_paths=PackedStringArray("musicNotesControl", "inputParser")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -19,6 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_5vyrw")
+musicNotesControl = NodePath("VBoxContainer/Background/MusicNotes")
 inputParser = NodePath("MainMenuParser")
 
 [node name="Borders" type="ColorRect" parent="."]
@@ -85,6 +87,32 @@ offset_bottom = 308.0
 text = "Credits"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="MusicNotes" type="Control" parent="VBoxContainer/Background"]
+visible = false
+modulate = Color(1, 1, 1, 0.498039)
+anchors_preset = 0
+
+[node name="MusicNotes1" type="TextureRect" parent="VBoxContainer/Background/MusicNotes"]
+layout_mode = 0
+offset_left = 602.0
+offset_top = 184.0
+offset_right = 650.0
+offset_bottom = 232.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_bi8wh")
+stretch_mode = 5
+
+[node name="MusicNotes2" type="TextureRect" parent="VBoxContainer/Background/MusicNotes"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 291.0
+offset_right = 84.0
+offset_bottom = 339.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_bi8wh")
+stretch_mode = 5
+flip_h = true
 
 [node name="PlaceholderTerminal" parent="VBoxContainer" instance_placeholder="res://scenes/scene_modules/large_font_terminal.tscn"]
 layout_mode = 2

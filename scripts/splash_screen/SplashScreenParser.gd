@@ -27,7 +27,7 @@ func initParsableActions():
 	addParsableAction(ActionID.POKE, ["poke", "touch", "caress", "pet", "click on", "click",])
 	addParsableAction(ActionID.PUT, ["put"])
 
-	addParsableAction(ActionID.SKIP, ["skip scene", "skip splash screen", "skip intro", "skip dr. bean", "skip"])
+	addParsableAction(ActionID.SKIP, ["skip scene", "skip splash screen", "skip intro", "skip dr. bean", "skip", "play game", "play"])
 	addParsableAction(ActionID.MAIN_MENU,
 		["main menu", "menu", "main", "go to main menu", "go back to main menu", "return to main menu"])
 	addParsableAction(ActionID.QUIT, ["quit game", "quit", "exit game"])

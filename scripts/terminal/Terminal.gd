@@ -6,6 +6,8 @@ extends ColorRect
 @export var lineCount = 4
 @export var lineCharacterMax := 30
 
+@export var pauseOverlay: ColorRect
+
 signal sendInputForParsing(input: String)
 
 var timeSinceLastUpdate: float

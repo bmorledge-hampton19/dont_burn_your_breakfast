@@ -438,7 +438,7 @@ func putAwayClothing(clothing: Clothing):
 
 func playDrawerNoise(opening):
 	if opening: AudioManager.playSound(AudioManager.openingBedroomDrawer, true)
-	else: if opening: AudioManager.playSound(AudioManager.closingBedroomDrawer, true)
+	else: AudioManager.playSound(AudioManager.closingBedroomDrawer, true)
 
 func toggleTopLeftDrawer():
 	movePlayer(PlayerPos.DRESSER)

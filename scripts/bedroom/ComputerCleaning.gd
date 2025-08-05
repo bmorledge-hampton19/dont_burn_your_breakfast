@@ -268,6 +268,7 @@ func spawnMouse(withAudio: bool):
 	newMouse.position = Vector2(randf_range(0, newMouse.maxX), randf_range(0, newMouse.maxY))
 	newMouse.onReproduction.connect(func(): spawnMice(1))
 	newMouse.onDestroy.connect(decreaseMouseRamLoad)
+	increaseMouseRamLoad()
 
 func spawnMice(count: int, withAudio = true):
 	var mouseSpawnTween = create_tween()
@@ -282,17 +283,30 @@ func decreaseMouseRamLoad():
 	resourceMonitor.targetRamUsage -= MOUSE_RAM_USAGE
 
 
-func attemptCloseCatPic():
+func getCatPicByHeader(headerText: String) -> CatPic:
+	for i in range(len(catPics)-1,-1,-1):
+		if catPics[i].headerText.text.to_lower() == headerText: return catPics[i]
+	return null
+
+func getSpreadsheetByHeader(headerText: String) -> Spreadsheet:
+	for i in range(len(spreadsheets)-1,-1,-1):
+		if spreadsheets[i].headerText.text.to_lower() == headerText: return spreadsheets[i]
+	return null
+
+
+func attemptCloseCatPic(closingCatPic: CatPic = null):
 
 	if not catPics: return false
 
-	var closingCatPic: CatPic
-	for i in range(len(catPics)-1,-1,-1):
-		if catPics[i].angry:
-			continue
-		else:
-			closingCatPic = catPics.pop_at(i)
-			break
+	if closingCatPic:
+		catPics.erase(closingCatPic)
+	else:
+		for i in range(len(catPics)-1,-1,-1):
+			if catPics[i].angry:
+				continue
+			else:
+				closingCatPic = catPics.pop_at(i)
+				break
 
 	if not closingCatPic:
 		AudioManager.playSound(AudioManager.angryCat, true)
@@ -305,11 +319,14 @@ func attemptCloseCatPic():
 	AudioManager.playSound(AudioManager.closingWindow.pick_random(), true)
 	return true
 
-func attemptCloseSpreadsheet():
+func attemptCloseSpreadsheet(closingSpreadsheet: Spreadsheet = null):
 
 	if not spreadsheets: return false
 
-	var closingSpreadsheet: Spreadsheet = spreadsheets.pop_back()
+	if closingSpreadsheet:
+		spreadsheets.erase(closingSpreadsheet)
+	else:	
+		closingSpreadsheet = spreadsheets.pop_back()
 
 	resourceMonitor.targetRamUsage += CLOSING_SPREADSHEET_RAM_USAGE
 	spreadsheetsBeingClosed.append(CLOSING_SPREADSHEET_RAM_USAGE)

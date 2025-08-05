@@ -19,7 +19,7 @@ const TITLE_TEXTS: Dictionary[Type, Array] = {
 	Type.CEREAL : ["Cereal", "Best cereals", "My Cereals", "The Cerealnomicon", "The Cerealopedia", "Cereal for the Ages"],
 	Type.CEREAL_BOX : ["Cereal Boxes", "Cereal Packaging", "Cereal Prisons", "Catalog of Cereal Boxes"],
 	Type.MILK : ["Favorite Milks", "Cereal Milks", "The Milk Menagerie", "Milk Demystified", "Hot MILKS in Your Area"],
-	Type.SPOON : ["Spooning 101", "Spoons", "Cereal Spoons", "Best Spoons", "Seriously Spoons!"],
+	Type.SPOON : ["Spooning 101", "Spoons", "Cereal Spoons", "Best Spoons", "Seriously Spoons"],
 	Type.MIXES : ["Cereal Mixes", "Cereal Type Matchups", "The Mixing Mandate", "MIXUM62", "Best Cereal Mixes"]
 }
 

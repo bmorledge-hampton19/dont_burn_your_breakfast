@@ -1,6 +1,8 @@
 class_name MainMenu
 extends Scene
 
+@export var musicNotesControl: Control
+
 func _init():
 	var sid := SceneManager.SceneID
 	sceneTransitions = [
@@ -14,4 +16,14 @@ func _init():
 	)
 
 func _ready():
+	if EndingsManager.areAllEndingsUnlocked(): musicNotesControl.show()
 	super()
+
+func playSong():
+	AudioManager.fadeOutMusic(2.0)
+	musicNotesControl.modulate.a = 1.0
+	
+	var songPlayer := AudioManager.playSound(AudioManager.dontBurnYourBreakfastSong, true)
+
+	songPlayer.finished.connect(func(): AudioManager.startNewMusic(SceneManager.SceneID.MAIN_MENU, false, true))
+	songPlayer.finished.connect(func(): musicNotesControl.modulate.a = 0.5)

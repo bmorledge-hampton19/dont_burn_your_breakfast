@@ -25,7 +25,7 @@ enum SubjectID {
 }
 
 enum ModifierID {
-	GENTLY, ON_GROUND, IN_MOWER, ON_MOWER, ON_FUEL_TANK, WITH_GAS,
+	GENTLY, ON_GROUND, TO_SHELF, ON_SHELF, FROM_SHELF, IN_MOWER, ON_MOWER, OFF_MOWER, ON_FUEL_TANK, OFF_FUEL_TANK, WITH_GAS,
 	ON_RIGHT_FOOT, ON_LEFT_FOOT, ON_AMBIGUOUS_FOOT, ON_BOTH_FEET,
 	ON_STEP, ON_FIRST_STEP,
 	ON, OFF, BACK, AWAY, DOWN,
@@ -183,16 +183,41 @@ func initParsableModifiers():
 	addParsableModifier(ModifierID.ON_GROUND,
 			["on ground", "on concrete", "on patio", "on pad"],
 			[ActionID.PUT, ActionID.POUR])
+	addParsableModifier(ModifierID.TO_SHELF,
+			["to shelf", "to supply shelf", "to tool shelf", "to wooden shelf",],
+			[ActionID.REPLACE])
+	addParsableModifier(ModifierID.ON_SHELF,
+			["on shelf", "on supply shelf", "on tool shelf", "on wooden shelf",
+			 "back on shelf", "back on supply shelf", "back on tool shelf", "back on wooden shelf",],
+			[ActionID.PUT])
+	addParsableModifier(ModifierID.FROM_SHELF,
+			["off shelf", "off supply shelf", "off tool shelf", "off wooden shelf",
+			 "off of shelf", "off of supply shelf", "off of tool shelf", "off of wooden shelf",
+			 "from shelf", "from supply shelf", "from tool shelf", "from wooden shelf",],
+			[ActionID.TAKE])
+	addParsableModifier(ModifierID.ON_FUEL_TANK,
+			["on tank", "on fuel tank", "on gas tank", "on mower tank", "on mower fuel tank", "on mower gas tank",
+			 "back on tank", "back on fuel tank", "back on gas tank",
+			 "back on mower tank", "back on mower fuel tank", "back on mower gas tank"],
+			[ActionID.PUT, ActionID.POUR])
+	addParsableModifier(ModifierID.OFF_FUEL_TANK,
+			["off tank", "off fuel tank", "off gas tank",
+			 "off of tank", "off of fuel tank", "off of gas tank",
+			 "from tank", "from fuel tank", "from gas tank",
+			 "off mower tank", "off mower fuel tank", "off mower gas tank",
+			 "off of mower tank", "off of mower fuel tank", "off of mower gas tank",
+			 "from mower tank", "from mower fuel tank", "from mower gas tank"],
+			[ActionID.TAKE, ActionID.REMOVE])
 	addParsableModifier(ModifierID.IN_MOWER,
 			["in mower", "in lawn mower",
 			"in tank", "in fuel tank", "in gas tank"],
 			[ActionID.PUT, ActionID.POUR])
 	addParsableModifier(ModifierID.ON_MOWER,
-			["on mower", "on lawn mower"],
-			[ActionID.PUT, ActionID.POUR])
-	addParsableModifier(ModifierID.ON_FUEL_TANK,
-			["on tank", "on fuel tank", "on gas tank"],
-			[ActionID.PUT, ActionID.POUR])
+			["on mower", "on lawn mower", "back on mower", "back on lawn mower"],
+			[ActionID.PUT, ActionID.POUR, ActionID.REPLACE])
+	addParsableModifier(ModifierID.OFF_MOWER,
+			["off mower", "off of mower", "from mower", "off lawn mower", "off of lawn mower", "from lawn mower"],
+			[ActionID.TAKE, ActionID.REMOVE])
 	addParsableModifier(ModifierID.WITH_GAS, ["with gasoline", "with gas", "with fuel"], [ActionID.REFUEL])
 	addParsableModifier(ModifierID.ON_RIGHT_FOOT,
 			["on right foot", "on r foot", "on right", "on r"],
@@ -230,6 +255,7 @@ func initParseSubs():
 	addParseSubs(["carefully", "lightly", "gingerly", "softly"], "gently")
 	addParseSub("handle", "knob")
 	addParseSub("doorknob","door knob")
+	addParseSub("mower's", "mower")
 
 
 func parseItems() -> String:
@@ -1019,7 +1045,7 @@ func parseItems() -> String:
 							return attemptFuelMower(true)
 						ModifierID.IN_MOWER:
 							return attemptFuelMower(false)
-						ModifierID.BACK, ModifierID.AWAY, ModifierID.DOWN:
+						ModifierID.BACK, ModifierID.AWAY, ModifierID.DOWN, ModifierID.ON_SHELF:
 							if not frontYard.playerHasGasoline:
 								return "You're not holding the gasoline."
 							elif frontYard.isPlayerOnConcrete():
