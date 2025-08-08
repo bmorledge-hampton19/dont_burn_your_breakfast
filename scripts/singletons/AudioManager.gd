@@ -36,11 +36,11 @@ extends Node2D
 @export var mainMenuLongMusic: Array[AudioStream]
 @export var mainMenuShortMusic: Array[AudioStream]
 @export var mainMenuAmbiance: Array[AudioStream]
+@export var themeSong: AudioStream
 
 @export_subgroup("Sound Effects")
 
 @export var startGame: AudioStream
-@export var dontBurnYourBreakfastSong: AudioStream
 
 
 # Options
@@ -428,10 +428,16 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare 
 
 		SceneManager.SceneID.ENDING:
 			if victory:
-				musicPlayer.stream = endingOpeningFanfareVictorious
+				if skipFanfare:
+					musicPlayer.stream = _getNextMusic(victoriousEndingMusic, SHORT)
+				else:
+					musicPlayer.stream = endingOpeningFanfareVictorious
 				musicPlayer.play()
 			else:
-				musicPlayer.stream = endingOpeningFanfareOminous
+				if skipFanfare:
+					musicPlayer.stream = _getNextMusic(ominousEndingMusic, SHORT)
+				else:
+					musicPlayer.stream = endingOpeningFanfareOminous
 				musicPlayer.play()
 
 		SceneManager.SceneID.BATHROOM:
@@ -458,7 +464,6 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare 
 			print("Umm... This scene doesn't have music directly associated with it: " + str(musicScene))
 
 func _onMusicStreamFinished():
-
 	
 	if addAmbianceBeforeNextMusic: # Did we just finish playing ambiance?
 		addAmbianceBeforeNextMusic = false
@@ -468,12 +473,15 @@ func _onMusicStreamFinished():
 		if not nextMusicLong and not musicScene == SceneManager.SceneID.ENDING and consecutiveShortMusics > 0:
 			addAmbianceBeforeNextMusic = randf() < 0.6
 
-	match lastMusicType:
-		FANFARE: timeUntilNextMusic = randf_range(4.0, 6.0)
-		SHORT when not addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(3.0, 5.0)
-		SHORT when addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(1.0, 2.0)
-		AMBIANCE: timeUntilNextMusic = randf_range(1.0, 2.0)
-		LONG: timeUntilNextMusic = randf_range(5.0, 10.0)
+	if musicScene == SceneManager.SceneID.ENDING:
+		timeUntilNextMusic = randf_range(2.0, 3.0)
+	else:
+		match lastMusicType:
+			FANFARE: timeUntilNextMusic = randf_range(4.0, 6.0)
+			SHORT when not addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(3.0, 5.0)
+			SHORT when addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(1.0, 2.0)
+			AMBIANCE: timeUntilNextMusic = randf_range(1.0, 2.0)
+			LONG: timeUntilNextMusic = randf_range(5.0, 10.0)
 		
 
 func _getNextMusic(choices: Array[AudioStream], musicType: int) -> AudioStream:

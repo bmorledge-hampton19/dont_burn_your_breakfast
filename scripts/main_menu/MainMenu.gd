@@ -20,10 +20,10 @@ func _ready():
 	super()
 
 func playSong():
-	AudioManager.fadeOutMusic(2.0)
+	AudioManager.fadeOutMusic(1.5)
 	musicNotesControl.modulate.a = 1.0
-	
-	var songPlayer := AudioManager.playSound(AudioManager.dontBurnYourBreakfastSong, true)
+
+	var songPlayer := AudioManager.playSound(AudioManager.themeSong, true)
 
 	songPlayer.finished.connect(func(): AudioManager.startNewMusic(SceneManager.SceneID.MAIN_MENU, false, true))
 	songPlayer.finished.connect(func(): musicNotesControl.modulate.a = 0.5)

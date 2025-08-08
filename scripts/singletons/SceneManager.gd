@@ -180,9 +180,10 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 
 
 func resetAudioForNewScene(newScene: SceneID):
-	AudioManager.clearSounds()
-	AudioManager.waitingActions.clear()
-	AudioManager.computerCleaningMusicPlayer.stop()
+	if newScene not in [SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS]:
+		AudioManager.clearSounds()
+		AudioManager.waitingActions.clear()
+		AudioManager.computerCleaningMusicPlayer.stop()
 
 	match newScene:
 

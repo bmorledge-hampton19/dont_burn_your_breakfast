@@ -82,22 +82,29 @@ func receiveInputFromTerminal(input: String):
 				if EndingsManager.areAllEndingsUnlocked():
 					message = (
 						"Congratulations on reaching the end of the game! You're a true breakfast champion!\n" + 
-						"It looks like you've found all the endings too! " +
-						"Impressive! Have you visited the options menu or collected all your cereal coins yet?\n\n" +
+						"It looks like you've found all the endings too. Impressive!\n" +
+						"That means you've unlocked some secret settings in the options menu, " +
+						"and I'll bet you're rolling in cereal coins too! " +
+						"There's also a little surprise waiting for you at the main menu. " +
+						"Be sure to go check it out. You've earned it!\n\n" +
 						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
 					)
 				else:
 					message = (
 						"Congratulations on reaching the end of the game! You're a true breakfast champion!\n" + 
 						"But... It looks like you still have some endings left to find. " +
-						"Don't forget that you can buy hints for the ones you're missing.\n" +
+						"Don't forget that you can buy hints for the ones you're missing!\n" +
 						"(You can either return to the [m]ain menu now or [r]estart the current level.)"
 					)
 				AudioManager.playDefaultTextInputSound()
 				terminal.initMessage(message, true)
 			else:
 				AudioManager.stopMusic()
-				AudioManager.playSound(AudioManager.youBurnedYourBreakfast, true)
+				AudioManager.playSound(AudioManager.youBurnedYourBreakfast, true, "OtherSounds", 1.3).finished.connect(
+					func():
+						await get_tree().create_timer(3).timeout
+						AudioManager.startNewMusic(SceneManager.SceneID.ENDING, false, true)
+				)
 				endingScene.setMainEndingTexture()
 				terminal.initMessage(endingMessage, true)
 	else: super(input)

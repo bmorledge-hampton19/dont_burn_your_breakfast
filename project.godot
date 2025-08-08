@@ -56,10 +56,6 @@ window/stretch/aspect="expand"
 
 project/assembly_name="dont_burn_your_breakfast"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/resources_spreadsheet_view/plugin.cfg")
-
 [filesystem]
 
 import/blender/enabled=false
@@ -67,6 +63,21 @@ import/blender/enabled=false
 [gui]
 
 theme/custom_font="res://fonts/kongtext.ttf"
+
+[importer_defaults]
+
+wav={
+"compress/mode": 0,
+"edit/loop_begin": 0,
+"edit/loop_end": -1,
+"edit/loop_mode": 0,
+"edit/normalize": false,
+"edit/trim": false,
+"force/8_bit": false,
+"force/max_rate": false,
+"force/max_rate_hz": 44100,
+"force/mono": false
+}
 
 [rendering]
 

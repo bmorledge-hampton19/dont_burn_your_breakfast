@@ -14,6 +14,7 @@ enum ActionID {
 	POUR, EAT,
 	PUT, TURN, 
 	MAIN_MENU, ENDINGS, POOP, QUIT, AFFIRM, DENY,
+	TEST
 }
 
 enum SubjectID {
@@ -153,6 +154,8 @@ func initParsableActions():
 	addParsableAction(ActionID.QUIT, ["quit game", "quit", "exit game"])
 	addParsableAction(ActionID.AFFIRM, ["affirmative", "yes please", "yes", "yup", "y"])
 	addParsableAction(ActionID.DENY, ["negative", "nope", "no thank you", "no", "n"])
+
+	addParsableAction(ActionID.TEST, ['test'])
 
 
 func initParsableSubjects():
@@ -476,7 +479,7 @@ func eggParse() -> String:
 
 
 func parseItems() -> String:
-
+	if actionID == ActionID.TEST: win()
 	if kitchen.isEggOnFloor and not eggParsing:
 		return eggParse()
 
