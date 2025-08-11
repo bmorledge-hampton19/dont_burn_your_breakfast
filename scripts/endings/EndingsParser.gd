@@ -115,7 +115,7 @@ func parseItems() -> String:
 				SubjectID.COINS:
 					return (
 						"These are cereal coins, the best currency! You can use them here to buy hints, and you'll earn more " +
-						"for every ending you unlock."
+						"for every ending you unlock. Just don't forget to [collect] the coins from the endings."
 					)
 				
 				SubjectID.ENDING:

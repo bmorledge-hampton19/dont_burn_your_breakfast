@@ -732,6 +732,14 @@ texture = ExtResource("5_3qhgj")
 region_enabled = true
 region_rect = Rect2(224, 0, 30, 2)
 
+[node name="OpenedKitchenDoor" type="Sprite2D" parent="VBoxContainer/Background"]
+visible = false
+position = Vector2(680, 189)
+scale = Vector2(2, 2)
+texture = ExtResource("5_3qhgj")
+region_enabled = true
+region_rect = Rect2(256, 0, 22, 105)
+
 [node name="PlayerControl" type="Control" parent="VBoxContainer/Background"]
 anchors_preset = 0
 offset_left = 24.0
@@ -912,14 +920,6 @@ scale = Vector2(2, 2)
 texture = ExtResource("5_3qhgj")
 region_enabled = true
 region_rect = Rect2(240, 16, 13, 9)
-
-[node name="OpenedKitchenDoor" type="Sprite2D" parent="VBoxContainer/Background"]
-visible = false
-position = Vector2(680, 189)
-scale = Vector2(2, 2)
-texture = ExtResource("5_3qhgj")
-region_enabled = true
-region_rect = Rect2(256, 0, 22, 105)
 
 [node name="ZoombaTable" type="Control" parent="VBoxContainer/Background"]
 anchors_preset = 0

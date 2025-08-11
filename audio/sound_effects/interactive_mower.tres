@@ -1,0 +1,32 @@
+[gd_resource type="AudioStreamInteractive" load_steps=4 format=3 uid="uid://nlapw6ylog47"]
+
+[ext_resource type="AudioStream" uid="uid://dnry167054h70" path="res://audio/sound_effects/starting_mower.wav" id="1_hmisq"]
+[ext_resource type="AudioStream" uid="uid://oeo3yr8jl3e" path="res://audio/sound_effects/running_mower.wav" id="2_fv3sn"]
+[ext_resource type="AudioStream" uid="uid://bco75wk3amwju" path="res://audio/sound_effects/stopping_mower.wav" id="3_rrqkx"]
+
+[resource]
+clip_count = 3
+clip_0/name = &"Starting Mower"
+clip_0/stream = ExtResource("1_hmisq")
+clip_0/auto_advance = 1
+clip_0/next_clip = 1
+clip_1/name = &"Running Mower"
+clip_1/stream = ExtResource("2_fv3sn")
+clip_1/auto_advance = 0
+clip_2/name = &"Stopping Mower"
+clip_2/stream = ExtResource("3_rrqkx")
+clip_2/auto_advance = 0
+_transitions = {
+Vector2i(-1, 2): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 3,
+"to_time": 1
+},
+Vector2i(0, 1): {
+"fade_beats": 1.0,
+"fade_mode": 0,
+"from_time": 0,
+"to_time": 1
+}
+}

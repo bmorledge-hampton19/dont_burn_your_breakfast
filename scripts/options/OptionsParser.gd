@@ -186,12 +186,12 @@ func parseItems() -> String:
 							else:
 								optionsScene.setFontSize(Options.FontSize.PAINFULLY_LARGE)
 								if optionsScene.painfulOptionsRevealed:
-									return "Setting font size to painfully large. Good luck"
+									return "Setting font size to painfully large. Good luck."
 								else:
 									optionsScene.revealPainfulOptions()
 									return (
 										"It looks like this isn't your first rodeo! " +
-										"Setting font size to painfully large. Good luck"
+										"Setting font size to painfully large. Good luck."
 									)
 
 						ModifierID.QUESTION_MARKS:

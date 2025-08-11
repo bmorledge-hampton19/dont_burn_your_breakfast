@@ -439,7 +439,9 @@ func parseItems() -> String:
 
 
 		ActionID.USE:
-			if subjectID == SubjectID.FLAMETHROWER:
+			if subjectID == -1:
+				return requestAdditionalSubjectContext()
+			elif subjectID == SubjectID.FLAMETHROWER:
 				return useFlamethrower()
 			else:
 				return requestSpecificAction()

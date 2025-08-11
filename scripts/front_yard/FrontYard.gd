@@ -93,6 +93,9 @@ func _ready():
 	super()
 
 func _process(delta):
+
+	if paused: return
+
 	if isMowerRunning:
 		mowerFuelRemaining -= delta
 		if mowerFuelRemaining <= 0:
@@ -335,14 +338,14 @@ func refuelMower():
 	mowerHasGas = true
 
 func startMower():
-	AudioManager.playSound(AudioManager.startingMower, true).finished.connect(AudioManager.playMowerLoop)
+	AudioManager.startMower()
 	isMowerRunning = true
 	mowerFuelRemaining = 20.0
 	mowerWithCap.hide()
 	mowerRunning.show()
 
 func turnOffMower():
-	AudioManager.stopMowerLoop()
+	AudioManager.stopMower()
 	isMowerRunning = false
 	mowerWithCap.show()
 	mowerRunning.hide()

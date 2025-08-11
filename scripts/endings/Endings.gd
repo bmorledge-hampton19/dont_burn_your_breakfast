@@ -53,19 +53,22 @@ func initFromExistingTerminal(existingTerminal):
 	inputParser.connectTerminal(existingTerminal)
 
 func _process(delta):
-	visualCerealCoinNumber = int(fractionalCerealCoinNumber)
-	cerealCoinCounter.text = str(visualCerealCoinNumber)
+	
 
 	if visualCerealCoinNumber > EndingsManager.getCerealCoins():
 		cerealCoinCounter.add_theme_color_override("font_color", Color.DARK_RED)
-		fractionalCerealCoinNumber = lerp(fractionalCerealCoinNumber, EndingsManager.getCerealCoins()*0.96, delta/2)
+		fractionalCerealCoinNumber = lerp(fractionalCerealCoinNumber, EndingsManager.getCerealCoins()*0.95, delta*1.5)
 		if fractionalCerealCoinNumber < EndingsManager.getCerealCoins(): fractionalCerealCoinNumber = EndingsManager.getCerealCoins()
+		visualCerealCoinNumber = ceili(fractionalCerealCoinNumber)
 	elif visualCerealCoinNumber < EndingsManager.getCerealCoins():
 		cerealCoinCounter.add_theme_color_override("font_color", Color.ROYAL_BLUE)
-		fractionalCerealCoinNumber = lerp(fractionalCerealCoinNumber, EndingsManager.getCerealCoins()*1.05, delta/2)
+		fractionalCerealCoinNumber = lerp(fractionalCerealCoinNumber, EndingsManager.getCerealCoins()*1.1, delta*1.5)
 		if fractionalCerealCoinNumber > EndingsManager.getCerealCoins(): fractionalCerealCoinNumber = EndingsManager.getCerealCoins()
+		visualCerealCoinNumber = floori(fractionalCerealCoinNumber)
 	else:
 		cerealCoinCounter.add_theme_color_override("font_color", Color.WHITE)
+
+	cerealCoinCounter.text = str(visualCerealCoinNumber)
 
 
 func getBackgroundTexture() -> Texture2D:
@@ -139,6 +142,8 @@ func viewEnding(endingPreviewIndex):
 	prevText.hide()
 	nextText.hide()
 
+	cerealCoinCounter.add_theme_constant_override("outline_size", 8)
+
 	viewingEndingID = currentLevelEndingPreviews[endingPreviewIndex].endingID
 	if EndingsManager.isEndingUnlocked(viewingEndingID):
 		if not EndingsManager.haveCoinsBeenCollected(viewingEndingID):
@@ -159,6 +164,8 @@ func returnFromEnding():
 	else: prevText.show()
 	if currentLevel == SceneManager.SceneID.ENDING: nextText.hide()
 	else: nextText.show()
+
+	cerealCoinCounter.add_theme_constant_override("outline_size", 0)
 
 	background.texture = getBackgroundTexture()
 

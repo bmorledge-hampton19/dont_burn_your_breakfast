@@ -82,7 +82,8 @@ func displayFirstClippyMessage():
 func displaySecondClippyMessage():
 	speechBubbleText.text = (
 		"But... Yikes! Things are in pretty bad shape...\n        \n" +
-		"Let's be real. With the state things are in, you're gonna need some help..."
+		"Let's be real. You're gonna need some help, and I know just the guy!            \n" +
+		"(Spoiler alert: It's me!)"
 	)
 	speechBubbleText.visible_ratio = 0
 	clippyTextTween = create_tween()
@@ -91,6 +92,7 @@ func displaySecondClippyMessage():
 	clippyTextTween.tween_callback(stopClippyTalking)
 	clippyTextTween.tween_interval(3)
 	clippyTextTween.tween_callback(displayThirdClippyMessage)
+
 
 func displayThirdClippyMessage():
 	speechBubbleText.text = (

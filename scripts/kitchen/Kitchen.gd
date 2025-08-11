@@ -432,24 +432,24 @@ func _process(delta):
 		)
 
 
-func openTopLeftCupboard():
-	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
+func openTopLeftCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	topLeftCupboard.show()
 	isTopLeftCupboardOpen = true
 	movePlayer(PlayerPos.MICROWAVE)
-func closeTopLeftCupboard():
-	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
+func closeTopLeftCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	topLeftCupboard.hide()
 	isTopLeftCupboardOpen = false
 	movePlayer(PlayerPos.MICROWAVE)
 
-func openBottomLeftCupboard():
-	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
+func openBottomLeftCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	bottomLeftCupboard.show()
 	isBottomLeftCupboardOpen = true
 	movePlayer(PlayerPos.MICROWAVE)
-func closeBottomLeftCupboard():
-	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
+func closeBottomLeftCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	bottomLeftCupboard.hide()
 	isBottomLeftCupboardOpen = false
 	movePlayer(PlayerPos.MICROWAVE)
@@ -487,13 +487,13 @@ func closeTopDrawer():
 	isTopDrawerOpen = false
 	movePlayer(PlayerPos.DRAWERS)
 
-func openMiddleLeftCupboard():
-	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
+func openMiddleLeftCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	middleLeftCupboard.show()
 	isMiddleLeftCupboardOpen = true
 	movePlayer(PlayerPos.MIDDLE_LEFT_CUPBOARD)
-func closeMiddleLeftCupboard():
-	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
+func closeMiddleLeftCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	middleLeftCupboard.hide()
 	isMiddleLeftCupboardOpen = false
 	movePlayer(PlayerPos.MIDDLE_LEFT_CUPBOARD)
@@ -508,13 +508,13 @@ func feedDemon():
 	movePlayer(PlayerPos.MIDDLE_LEFT_CUPBOARD)
 func satisfyDemon(): feedDemon() ## An alias for feedDemon.
 
-func openMiddleRightCupboard():
-	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
+func openMiddleRightCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	middleRightCupboard.show()
 	isMiddleRightCupboardOpen = true
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
-func closeMiddleRightCupboard():
-	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
+func closeMiddleRightCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	middleRightCupboard.hide()
 	isMiddleRightCupboardOpen = false
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
@@ -528,13 +528,13 @@ func putForkBack():
 	_removePlayerHeldItem()
 	movePlayer(PlayerPos.MIDDLE_RIGHT_CUPBOARD)
 
-func openBottomRightCupboard():
-	AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
+func openBottomRightCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.openingKitchenCupboard, true)
 	bottomRightCupboard.show()
 	isBottomRightCupboardOpen = true
 	movePlayer(PlayerPos.RIGHT_CUPBOARD)
-func closeBottomRightCupboard():
-	AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
+func closeBottomRightCupboard(withAudio := true):
+	if withAudio: AudioManager.playSound(AudioManager.closingKitchenCupboard, true)
 	bottomRightCupboard.hide()
 	isBottomRightCupboardOpen = false
 	movePlayer(PlayerPos.RIGHT_CUPBOARD)
@@ -554,12 +554,12 @@ func closeOvenDoor():
 	movePlayer(PlayerPos.OVEN)
 
 func turnOvenOn():
-	AudioManager.playSound(AudioManager.startingOvenOrStove, true).finished.connect(AudioManager.addOvenNoise)
+	AudioManager.startOven()
 	ovenFlames.show()
 	isOvenOn = true
 	movePlayer(PlayerPos.OVEN)
 func turnOvenOff():
-	AudioManager.removeOvenNoise()
+	AudioManager.stopOven()
 	ovenFlames.hide()
 	isOvenOn = false
 	movePlayer(PlayerPos.OVEN)
@@ -634,14 +634,14 @@ func moveFryingPan(whichBurner: int):
 	movePlayer(PlayerPos.OVEN)
 
 func turnOnBurner(whichBurner: int):
-	AudioManager.playSound(AudioManager.startingOvenOrStove, true).finished.connect(AudioManager.addOvenNoise)
+	AudioManager.startStove()
 	activeBurner = whichBurner
 	dials[whichBurner].show()
 	if whichBurner in [FRONT_LEFT, BACK_LEFT]: leftActiveBurner.show()
 	else: rightActiveBurner.show()
 	movePlayer(PlayerPos.OVEN)
 func turnOffBurner():
-	AudioManager.removeOvenNoise()
+	AudioManager.stopStove()
 	dials[activeBurner].hide()
 	leftActiveBurner.hide()
 	rightActiveBurner.hide()

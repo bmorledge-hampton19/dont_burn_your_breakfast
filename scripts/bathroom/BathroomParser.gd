@@ -329,14 +329,46 @@ func parseItems() -> String:
 						)
 				SubjectID.TOOTHPASTE, SubjectID.TOOTHPASTE_TUBE:
 					if bathroom.isCabinetOpen or bathroom.playerHasToothpaste:
-						if bathroom.remainingToothpaste > 0:
-							return "This is a tube of aw-key-fresh toothpaste. Every tube is guaranteed to contain a key!"
-						else:
-							bathroom.lookDownBarrelOfToothpaste()
-							return (
-								"You bring the tube of toothpaste up to eye level where you can see the tip of a key " +
-								"protruding from the opening. A good squeeze should get it out of there!"
-							)
+
+						match bathroom.remainingToothpaste:
+							5:
+								return (
+									"That's a brand new tube of aw-key-fresh toothpaste. " +
+									"Just under the nutrition facts, it says that there's guaranteed to be a key inside!\n" +
+									"But... the tricky part is actually getting to it. You'll have to empty out " +
+									"all the toothpaste just to reach it."
+								)
+							4:
+								return (
+									"The toothpaste tube feels a bit lighter now. " +
+									"Keep it up, and you're sure to find the key eventually!"
+								)
+							3:
+								return (
+									"The toothpaste tube feels even lighter. " +
+									"You're making good progress!"
+								)
+							2:
+								return (
+									"The toothpaste tube has started to deflate significantly. " +
+									"You must be getting close!"
+								)
+							1:
+								return (
+									"You're having to really strain to get toothpaste out of the tube now. " +
+									"One more brushing should do the trick!"
+								)
+							0 when not bathroom.isKeyInLock:
+								bathroom.lookDownBarrelOfToothpaste()
+								return (
+									"You bring the tube of toothpaste up to eye level where you can see the tip of a key " +
+									"protruding from the opening. A good squeeze should get it out of there!"
+								)
+							0 when bathroom.isKeyInLock:
+								return (
+									"The tube is all used up, and your mouth is filled with the taste of minty-fresh brass."
+								)
+					
 					else: return wrongContextParse()
 				SubjectID.TOOTHBRUSH:
 					if not bathroom.isMiddleDrawerOpen and not bathroom.playerHasToothbrush:
@@ -393,7 +425,7 @@ func parseItems() -> String:
 					)
 				SubjectID.SINK:
 					return (
-						"You have an extra-long sink for your extra-long counter! It's even got an extra-long cabinet underneath it!" +
+						"You have an extra-long sink for your extra-long counter! It's even got an extra-long cabinet underneath it! " +
 						"It seemed like too much of a hassle to install normal plumbing, " + 
 						"so you just connected the sink faucet directly to the grapefruit juicer."
 					)
@@ -459,7 +491,10 @@ func parseItems() -> String:
 
 
 		ActionID.USE:
-			return requestSpecificAction()
+			if subjectID == -1:
+				return requestAdditionalSubjectContext()
+			else:
+				return requestSpecificAction()
 
 
 		ActionID.TURN_ON, ActionID.TURN:
@@ -1403,7 +1438,7 @@ func useToothpaste(toothpasteModifierID: int) -> String:
 				if bathroom.isToothbrushRinsed and not bathroom.isToothbrushToothpasted:
 					if bathroom.remainingToothpaste > 0:
 						bathroom.applyToothpasteToToothbrush()
-						var message := "You squeeze a walnut-sized blob of toothpaste onto your toothbrush. Just right! "
+						var message := "You squeeze a walnut-sized blob of toothpaste onto your toothbrush. Just right!\n"
 						match bathroom.remainingToothpaste:
 
 							4:

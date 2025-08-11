@@ -23,7 +23,7 @@ resources_spreadsheet_view/context_menu_on_leftclick=false
 config/name="Don't Burn Your Breakfast"
 config/description="A silly little game about the inherent dangers of the most important meal of the day.
 Inspired by the timeless classic, \"Don't Shit Your Pants\"."
-config/version="0.3"
+config/version="1.0"
 run/main_scene="uid://d20cc824v4s0y"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/show_image=false
@@ -37,6 +37,7 @@ Options="*res://scripts/singletons/Options.gd"
 EndingsManager="*res://scripts/singletons/EndingsManager.gd"
 Helpers="*res://scripts/singletons/Helpers.gd"
 AudioManager="*res://scenes/main_scenes/audio_manager.tscn"
+ScreenshotManager="res://scripts/editor_scripts/ScreenshotManager.gd"
 
 [debug]
 

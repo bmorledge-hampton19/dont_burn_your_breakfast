@@ -9,6 +9,7 @@ extends Node2D
 @export var clippyPlayer: AudioStreamPlayer2D
 @export var fanPlayer: AudioStreamPlayer2D
 @export var ovenPlayer: AudioStreamPlayer2D
+@export var stovePlayer: AudioStreamPlayer2D
 
 @export var oneShotAudioPrefab: PackedScene
 
@@ -118,6 +119,7 @@ extends Node2D
 @export var startingMower: AudioStream
 @export var runningMowerLoop: AudioStream
 @export var stoppingMower: AudioStream
+@export var interactiveMower: AudioStreamInteractive
 @export var mowingGrass: AudioStream
 @export var tyingShoe: AudioStream
 @export var creakingStep: AudioStream
@@ -202,6 +204,7 @@ extends Node2D
 @export var fryingEgg: AudioStream
 @export var startingOvenOrStove: AudioStream
 @export var ovenOrStoveLoop: AudioStream
+@export var interactiveOvenOrStove: AudioStreamInteractive
 @export var washingAndDryingBowl: AudioStream
 @export var pressFridgeButton: Array[AudioStream]
 @export var unlockFridge: AudioStream
@@ -232,12 +235,19 @@ var computerCleaningMusicFadeTween: Tween
 
 enum {LONG, SHORT, AMBIANCE, FANFARE}
 var lastMusicType: int
-var lastLongMusic: AudioStream
-var lastShortMusic: AudioStream
-var lastAmbiance: AudioStream
+var lastTwoLongMusics: Array[AudioStream]
+var lastFourShortMusics: Array[AudioStream]
+var lastFourAmbiances: Array[AudioStream]
 
 var nextMusicLong: bool
 var addAmbianceBeforeNextMusic: bool
+
+var isThemeSongPlaying: bool:
+	get:
+		for soundEffect: OneShotAudio in soundEffectsNode.get_children():
+			if soundEffect.stream == themeSong: return true
+		return false
+
 
 var waitingActions: Dictionary[Callable, float]
 
@@ -358,12 +368,15 @@ func playDefaultTextInputSound():
 	defaultTextInputPlayer.stream = defaultTextInput.pick_random()
 	defaultTextInputPlayer.play()
 
-func playMowerLoop():
+func startMower():
 	mowerPlayer.play()
-
-func stopMowerLoop():
-	mowerPlayer.stop()
-	playSound(stoppingMower)
+func resumeMowerLoop():
+	mowerPlayer.play()
+	var playback := mowerPlayer.get_stream_playback() as AudioStreamPlaybackInteractive
+	playback.switch_to_clip(1)
+func stopMower():
+	var playback := mowerPlayer.get_stream_playback() as AudioStreamPlaybackInteractive
+	playback.switch_to_clip(2)
 
 func playClippySound():
 	clippyPlayer.stream = clippyTalking.pick_random()
@@ -372,34 +385,34 @@ func playClippySound():
 func playFan():
 	fanPlayer.play()
 
-func addOvenNoise():
+func startOven():
+	ovenPlayer.play()
+func resumeOvenLoop():
+	ovenPlayer.play()
+	var playback := ovenPlayer.get_stream_playback() as AudioStreamPlaybackInteractive
+	playback.switch_to_clip(1)
+func stopOven():
+	ovenPlayer.stop()
 
-	if earlyRemoveOvenNoiseCalls > 0:
-		earlyRemoveOvenNoiseCalls -= 1
-		return
+func startStove():
+	stovePlayer.play()
+func resumeStoveLoop():
+	stovePlayer.play()
+	var playback := stovePlayer.get_stream_playback() as AudioStreamPlaybackInteractive
+	playback.switch_to_clip(1)
+func stopStove():
+	stovePlayer.stop()
 
-	if not ovenPlayer.playing:
-		ovenPlayer.volume_linear = 1
-		ovenPlayer.play()
-	else:
-		ovenPlayer.volume_linear = 1.5
-
-func removeOvenNoise():
-	if not ovenPlayer.playing:
-		earlyRemoveOvenNoiseCalls += 1
-	elif ovenPlayer.volume_linear > 1.4:
-		ovenPlayer.volume_linear = 1
-	else:
-		ovenPlayer.stop()
-
-func clearSounds():
-	for soundEffect in soundEffectsNode.get_children():
-		soundEffect.queue_free()
+func clearSounds(keep := []):
+	for soundEffect: OneShotAudio in soundEffectsNode.get_children():
+		if soundEffect.stream not in keep:
+			soundEffect.queue_free()
 	defaultTextInputPlayer.stop()
 	mowerPlayer.stop()
 	clippyPlayer.stop()
 	fanPlayer.stop()
 	ovenPlayer.stop()
+	stovePlayer.stop()
 	earlyRemoveOvenNoiseCalls = 0
 
 
@@ -413,8 +426,8 @@ func startNewMusic(scene: SceneManager.SceneID, p_victory := false, skipFanfare 
 	nextMusicLong = false
 	if musicFadeTween and musicFadeTween.is_valid(): musicFadeTween.kill()
 	musicPlayer.volume_linear = 1
-	backgroundNoisePlayer.volume_linear = 1
-	backgroundNoisePlayer.play()
+	# backgroundNoisePlayer.volume_linear = 1
+	# backgroundNoisePlayer.play()
 
 	match musicScene:
 
@@ -469,36 +482,42 @@ func _onMusicStreamFinished():
 		addAmbianceBeforeNextMusic = false
 		nextMusicLong = false
 	else:
-		nextMusicLong = randf() < 0.2*consecutiveShortMusics - 0.4
+		nextMusicLong = randf() < 0.25*consecutiveShortMusics - 0.5
 		if not nextMusicLong and not musicScene == SceneManager.SceneID.ENDING and consecutiveShortMusics > 0:
 			addAmbianceBeforeNextMusic = randf() < 0.6
 
 	if musicScene == SceneManager.SceneID.ENDING:
-		timeUntilNextMusic = randf_range(2.0, 3.0)
+		timeUntilNextMusic = randf_range(3.0, 5.0)
 	else:
 		match lastMusicType:
-			FANFARE: timeUntilNextMusic = randf_range(4.0, 6.0)
-			SHORT when not addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(3.0, 5.0)
-			SHORT when addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(1.0, 2.0)
-			AMBIANCE: timeUntilNextMusic = randf_range(1.0, 2.0)
-			LONG: timeUntilNextMusic = randf_range(5.0, 10.0)
+			FANFARE: timeUntilNextMusic = randf_range(6.0, 8.0)
+			SHORT when not addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(4.0, 6.0)
+			SHORT when addAmbianceBeforeNextMusic: timeUntilNextMusic = randf_range(2.0, 3.0)
+			AMBIANCE: timeUntilNextMusic = randf_range(4.0, 6.0)
+			LONG: timeUntilNextMusic = randf_range(7.0, 11.0)
 		
 
 func _getNextMusic(choices: Array[AudioStream], musicType: int) -> AudioStream:
 
-	var avoid: AudioStream
+	var avoid: Array[AudioStream]
 	match musicType:
-		SHORT: avoid = lastShortMusic
-		LONG: avoid = lastLongMusic
-		AMBIANCE: avoid = lastAmbiance
+		SHORT: avoid = lastFourShortMusics
+		LONG: avoid = lastTwoLongMusics
+		AMBIANCE: avoid = lastFourAmbiances
 
 	var choice: AudioStream = choices.pick_random()
-	while choice == avoid: choice = choices.pick_random()
+	while choice in avoid: choice = choices.pick_random()
 
 	match musicType:
-		SHORT: lastShortMusic = choice
-		LONG: lastLongMusic = choice
-		AMBIANCE: lastAmbiance = choice
+		SHORT:
+			lastFourShortMusics.append(choice)
+			while len(lastFourShortMusics) > 4: lastFourShortMusics.remove_at(0)
+		LONG:
+			lastTwoLongMusics.append(choice)
+			while len(lastTwoLongMusics) > 2: lastTwoLongMusics.remove_at(0)
+		AMBIANCE:
+			lastFourAmbiances.append(choice)
+			while len(lastFourAmbiances) > 4: lastFourAmbiances.remove_at(0)
 	lastMusicType = musicType
 
 	return choice

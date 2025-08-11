@@ -19,9 +19,15 @@ func _ready():
 	if EndingsManager.areAllEndingsUnlocked(): musicNotesControl.show()
 	super()
 
+func _process(_delta):
+	if AudioManager.isThemeSongPlaying:
+		musicNotesControl.modulate.a = 1.0
+	else:
+		musicNotesControl.modulate.a = 0.5
+
+
 func playSong():
 	AudioManager.fadeOutMusic(1.5)
-	musicNotesControl.modulate.a = 1.0
 
 	var songPlayer := AudioManager.playSound(AudioManager.themeSong, true)
 

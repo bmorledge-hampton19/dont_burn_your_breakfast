@@ -231,14 +231,19 @@ func parseInput(input: String) -> String:
 		requestingSubject = false
 		subjectID = findBestMatch(findSubject, true)
 		if subjectID != -1: return parseItems()
-		elif previousActionID in actionsWithWildcards:
+		else:
 			subjectID = findBestMatch(findSubject, false)
 			if subjectID != -1:
-				wildCard = workingInput.strip_edges()
-				return parseItems()
-			else:
+				modifierID = findModifier(false)
+				if not workingInput:
+					return parseItems()
+				elif modifierID != -1 and previousActionID in actionsWithWildcards:
+					wildCard = workingInput.strip_edges()
+					return parseItems()
+				else: return unrecognizedResponseParse(input)
+			elif previousActionID in actionsWithWildcards:
 				requestingWildCard = true # I'm starting to think this is unnecessary... But I'm too afraid to try and remove it, lol.
-		else: return unrecognizedResponseParse(input)
+			else: return unrecognizedResponseParse(input)
 
 	if requestingModifier:
 		recallLastParse()

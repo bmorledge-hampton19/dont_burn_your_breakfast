@@ -87,7 +87,6 @@ func getNextMessageChunk():
 
 	if not remainingMessage:
 		currentMessageChunk = ""
-		onFinishOutput.emit()
 
 	elif nextNewlineIndex != -1 and nextNewlineIndex <= lineCharacterMax:
 		currentMessageChunk = remainingMessage.substr(0, nextNewlineIndex+1)
@@ -109,6 +108,8 @@ func getNextMessageChunk():
 		currentMessageChunk = remainingMessage.substr(0, acceptableSpaceIndex)
 		remainingMessage = remainingMessage.substr(acceptableSpaceIndex+overflowOffset)
 
+	if not currentMessageChunk: onFinishOutput.emit()
+
 
 func scrollTerminalLines():
 	for i in range(lineCount-1):
@@ -117,6 +118,7 @@ func scrollTerminalLines():
 
 func receiveInput(input: String):
 	if currentMessageChunk: fastTrackCurrentMessage()
+	if not is_inside_tree(): return # Used to short circuit function if onFinishOutput removed this object from the scene tree.
 	scrollTerminalLines()
 	terminalLines[lineCount-1].text = "> " + input
 	sendInputForParsing.emit(input)
@@ -140,4 +142,5 @@ func fastTrackCurrentMessage():
 		getNextMessageChunk()
 		scrollTerminalLines()
 		terminalLines[lineCount-1].text = currentMessageChunk.strip_edges()
+		if not remainingMessage: onFinishOutput.emit()
 	currentMessageChunk = ""

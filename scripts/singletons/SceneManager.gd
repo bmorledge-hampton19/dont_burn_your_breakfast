@@ -180,7 +180,10 @@ func transitionToScene(sceneID: SceneID, p_customStartingMessage = "", p_endingI
 
 
 func resetAudioForNewScene(newScene: SceneID):
-	if newScene not in [SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS]:
+	if (
+		newScene not in [SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS] and
+		currentScene not in [SceneID.HELP, SceneID.OPTIONS, SceneID.CREDITS]
+	):
 		AudioManager.clearSounds()
 		AudioManager.waitingActions.clear()
 		AudioManager.computerCleaningMusicPlayer.stop()
@@ -188,14 +191,13 @@ func resetAudioForNewScene(newScene: SceneID):
 	match newScene:
 
 		SceneID.OPTIONS, SceneID.HELP, SceneID.CREDITS:
-			AudioManager.playSound(AudioManager.minorSceneTransitionIn)
+			AudioManager.playSound(AudioManager.minorSceneTransitionIn, true)
 
 		SceneID.MAIN_MENU:
 			if currentScene not in [SceneID.HELP, SceneID.OPTIONS, SceneID.CREDITS]:
-				AudioManager.playSound(AudioManager.mainMenuOpeningFanfare)
 				AudioManager.startNewMusic(SceneID.MAIN_MENU)
 			else:
-				AudioManager.playSound(AudioManager.minorSceneTransitionOut)
+				AudioManager.playSound(AudioManager.minorSceneTransitionOut, true)
 		
 		SceneID.ENDING:
 			AudioManager.startNewMusic(SceneID.ENDING, endingID == EndingID.CHAMPION_OF_BREAKFASTS)
@@ -221,27 +223,26 @@ func openEndings(openingScene: Scene):
 	openEndingsScene.initFromExistingTerminal(openingScene.terminal)
 	if currentScene in endingsByScene and currentScene != SceneID.ENDING:
 		openEndingsScene.changeLevel(currentScene)
-	AudioManager.clearSounds()
-	AudioManager.playSound(AudioManager.minorSceneTransitionIn)
+	AudioManager.clearSounds([AudioManager.themeSong])
+	AudioManager.playSound(AudioManager.minorSceneTransitionIn, true)
 	AudioManager.waitingActions.clear()
 
 func closeEndings():
 	openEndingsScene.inputParser.disconnectTerminal()
 	pausedScene.resume()
 	openEndingsScene.queue_free()
-	AudioManager.clearSounds()
-	AudioManager.playSound(AudioManager.minorSceneTransitionOut)
+	AudioManager.playSound(AudioManager.minorSceneTransitionOut, true)
 	AudioManager.waitingActions.clear()
 	if pausedScene is FrontYard:
-		if (pausedScene as FrontYard).isMowerRunning: AudioManager.playMowerLoop()
+		if (pausedScene as FrontYard).isMowerRunning: AudioManager.resumeMowerLoop()
 	elif pausedScene is Kitchen:
-		if (pausedScene as Kitchen).isOvenOn: AudioManager.addOvenNoise()
-		if (pausedScene as Kitchen).activeBurner != Kitchen.NONE: AudioManager.addOvenNoise()
+		if (pausedScene as Kitchen).isOvenOn: AudioManager.resumeOvenLoop()
+		if (pausedScene as Kitchen).activeBurner != Kitchen.NONE: AudioManager.resumeStoveLoop()
 
 func openComputerCleaning(openingScene: Scene):
 	AudioManager.clearSounds()
 	AudioManager.waitingActions.clear()
-	AudioManager.fadeOutMusic()
+	AudioManager.stopMusic()
 	openingScene.pause()
 	pausedScene = openingScene
 	openComputerScene = preloadedComputerScene.instantiate()

@@ -62,24 +62,35 @@ func initParsableSubjects():
 			[ActionID.INSPECT])
 	addParsableSubject(SubjectID.TITLE, ["title", "don't burn your breakfast", "burn", "fire", "flames", "flame", "words"],
 			[ActionID.INSPECT])
-	addParsableSubject(SubjectID.MUSIC, ["music notes", "music note", "music", "notes", "note", "song"],
+	addParsableSubject(SubjectID.MUSIC,
+			["musical notes", "musical note", "music notes", "music note", "music", "notes", "note", "song",
+			 "secret", "surprise", "theme song"],
 			[ActionID.INSPECT, ActionID.PLAY])
 	
 
 
 func initParsableModifiers():
-	addParsableModifier(ModifierID.BATHROOM, ["bathroom", "at bathroom", "from bathroom", "on bathroom", "to bathroom"],
+	addParsableModifier(ModifierID.BATHROOM,
+			["bathroom", "at bathroom", "from bathroom", "on bathroom", "to bathroom",
+			 "level 1", "at level 1", "from level 1", "on level 1", "to level 1",
+			 "first level", "at first level", "from first level", "on first level", "to first level"],
 			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
 	addParsableModifier(ModifierID.FRONT_YARD,
-			[
-				"yard", "at yard", "on yard", "from yard", "to yard",
-				"front yard", "at front yard", "on front yard", "from front yard", "to front yard",
-				"outside", "at outside", "on outside", "from outside", "to outside"
-			],
+			["yard", "at yard", "on yard", "from yard", "to yard",
+			 "front yard", "at front yard", "on front yard", "from front yard", "to front yard",
+			 "outside", "at outside", "on outside", "from outside", "to outside",
+			 "level 2", "at level 2", "from level 2", "on level 2", "to level 2",
+			 "second level", "at second level", "from second level", "on second level", "to second level"],
 			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
-	addParsableModifier(ModifierID.BEDROOM, ["bedroom", "at bedroom", "on bedroom", "from bedroom", "to bedroom"],
+	addParsableModifier(ModifierID.BEDROOM,
+			["bedroom", "at bedroom", "on bedroom", "from bedroom", "to bedroom",
+			 "level 3", "at level 3", "from level 3", "on level 3", "to level 3",
+			 "third level", "at third level", "from third level", "on third level", "to third level"],
 			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
-	addParsableModifier(ModifierID.KITCHEN, ["kitchen", "at kitchen", "on kitchen", "from kitchen", "to kitchen"],
+	addParsableModifier(ModifierID.KITCHEN,
+			["kitchen", "at kitchen", "on kitchen", "from kitchen", "to kitchen",
+			 "level 4", "at level 4", "from level 4", "on level 4", "to level 4",
+			 "fourth level", "at fourth level", "from fourth level", "on fourth level", "to fourth level"],
 			[ActionID.PLAY, ActionID.SELECT, ActionID.TAKE_SHORTCUT])
 
 
@@ -203,8 +214,11 @@ func parseItems() -> String:
 		ActionID.PLAY:
 			if subjectID == SubjectID.MUSIC:
 				if EndingsManager.areAllEndingsUnlocked():
-					mainMenu.playSong()
-					return "Enjoy!"
+					if AudioManager.isThemeSongPlaying:
+						return "You're already listening to the theme song. You can play it again once it's finished though :)"
+					else:
+						mainMenu.playSong()
+						return "Enjoy!"
 				else:
 					return "Nice try, but you've got to earn this one! Try again once you've unlocked all the endings."
 			else:
@@ -258,8 +272,11 @@ func parseItems() -> String:
 						get_tree().quit()
 
 					ActionID.PLAY_MUSIC:
-						mainMenu.playSong()
-						return "Enjoy!"
+						if AudioManager.isThemeSongPlaying:
+							return "You're already listening to the theme song. You can play it again once it's finished though :)"
+						else:
+							mainMenu.playSong()
+							return "Enjoy!"
 
 			else:
 				return (

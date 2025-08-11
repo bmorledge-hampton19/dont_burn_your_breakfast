@@ -209,7 +209,7 @@ func openToiletSeat():
 	isToiletSeatOpened = true
 
 func closeToiletSeat():
-	AudioManager.playSound(AudioManager.closingToilet, true)
+	AudioManager.playSound(AudioManager.closingToilet, true, "OtherSounds", 0.75)
 	movePlayer(PlayerPosition.IN_FRONT_OF_TOILET)
 	openedToiletSeat.hide()
 	isToiletSeatOpened = false

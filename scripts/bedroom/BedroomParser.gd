@@ -22,7 +22,7 @@ enum SubjectID {
 	TOP_LEFT_DRAWER, TOP_RIGHT_DRAWER, MIDDLE_DRAWER, BOTTOM_DRAWER, AMBIGUOUS_TOP_DRAWER, AMBIGUOUS_DRAWER, DRESSER, STATS,
 	LEGO_TABLE, ZOOMBA_TABLE, AMBIGUOUS_TABLE,
 	SMOKEY, BEARD, HAIR, AXE, MACHETE, FIRE_EXTINGUISHER, HAT, TOOLS,
-	ZOOMBA_BED, ZOOMBA_FOOD, MAT, ZOOMBA, PEPPER_FLAKES, FLINT_FLAKES, BREAD_CRUMBS, CHARCOAL_POWDER,
+	ZOOMBA_BED, ZOOMBA_FOOD, MAT, ZOOMBA, PEPPER_FLAKES, FLINT_FLAKES, AMBIGUOUS_FLAKES, BREAD_CRUMBS, CHARCOAL_POWDER,
 	GAMING_CHAIR, CABLES, COMPUTER, 
 	CTC_POSTER, MILK_POSTER, AMBIGUOUS_POSTER, FLOOR,
 	NONE = -1
@@ -61,7 +61,7 @@ func initParsableActions():
 	addParsableAction(ActionID.PULL_DOWN, ["pull down", "lock"])
 	addParsableAction(ActionID.PULL, ["pull"])
 	addParsableAction(ActionID.MAKE, ["make", "build", "construct", "assemble"])
-	addParsableAction(ActionID.TIDY_UP, ["tidy up", "tidy", "straighten", "organize", "clean up", "clean", "declutter"])
+	addParsableAction(ActionID.TIDY_UP, ["tidy up", "tidy", "straighten", "organize", "clean up", "clean", "declutter", "fluff", "smooth"])
 
 	addParsableAction(ActionID.DRESS, ["dress up", "dress", "clothe"])
 	addParsableAction(ActionID.CUT, ["cut", "trim", "groom", "shave"])
@@ -209,9 +209,12 @@ func initParsableSubjects():
 	addParsableSubject(SubjectID.MAT, ["mat", "zoomba's mat", "zoomba mat", "best boi <3", "best boi"],
 		[ActionID.INSPECT, ActionID.MOVE_TO])
 	addParsableSubject(SubjectID.PEPPER_FLAKES,
-		["pepper flakes", "red pepper flakes", "crushed pepper", "crushed red pepper", "pepper"],
+		["pepper flakes", "red pepper flakes", "crushed pepper", "crushed red pepper", "pepper", "chili flakes", "red chili flakes"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.EAT])
 	addParsableSubject(SubjectID.FLINT_FLAKES, ["flint flakes", "flint", "gray box", "gray cereal box", "gray cereal"],
+		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.EAT])
+	addParsableSubject(SubjectID.AMBIGUOUS_FLAKES,
+		["flakes"],
 		[ActionID.INSPECT, ActionID.TAKE, ActionID.REPLACE, ActionID.PUT, ActionID.SCATTER, ActionID.EAT])
 	addParsableSubject(SubjectID.BREAD_CRUMBS,
 		["bread crumbs", "breadcrumbs", "buttery bread crumbs", "butter", "bread", "yellow box", "yellow cereal box", "yellow cereal", "crumbs"],
@@ -498,6 +501,12 @@ func parseItems() -> String:
 		return ""
 
 	if (
+		subjectID in [SubjectID.PILLOWS, SubjectID.SHEET, SubjectID.COMFORTER] and
+		(actionID == ActionID.MOVE_TO and actionAlias == "move" and modifierID == -1)
+	):
+		return requestAdditionalModifierContext()
+
+	if (
 		(actionID == ActionID.TIDY_UP or actionID == ActionID.PULL_UP or (actionID == ActionID.PULL and modifierID == ModifierID.UP) or
 		(actionID == ActionID.REPLACE and actionAlias in ["replace", "put back", "return"]) or
 		(actionID == ActionID.PUT and modifierID in [ModifierID.AT_TOP_OF_BED, ModifierID.UP, ModifierID.BACK]) or
@@ -726,7 +735,8 @@ func parseItems() -> String:
 	# Feeding Zoomba
 	if (
 		(actionID == ActionID.SCATTER or (actionID == ActionID.PUT and modifierID == ModifierID.ON_FLOOR)) and
-		subjectID in [SubjectID.ZOOMBA_FOOD, SubjectID.PEPPER_FLAKES, SubjectID.FLINT_FLAKES, SubjectID.BREAD_CRUMBS, SubjectID.CHARCOAL_POWDER]
+		subjectID in [SubjectID.ZOOMBA_FOOD, SubjectID.PEPPER_FLAKES, SubjectID.FLINT_FLAKES, SubjectID.AMBIGUOUS_FLAKES,
+					  SubjectID.BREAD_CRUMBS, SubjectID.CHARCOAL_POWDER]
 	):
 
 		var relevantSubject: int
@@ -739,6 +749,13 @@ func parseItems() -> String:
 				
 				_:
 					return "You're not holding any of Zoomba's food right now."
+		elif subjectID == SubjectID.AMBIGUOUS_FLAKES:
+			match bedroom.playerHeldItem:
+				bedroom.PlayerHeldItem.PEPPER_FLAKES: relevantSubject = SubjectID.PEPPER_FLAKES
+				bedroom.PlayerHeldItem.FLINT_FLAKES: relevantSubject = SubjectID.FLINT_FLAKES
+				
+				_:
+					return "You're not holding any flakes right now."
 		else: relevantSubject = subjectID
 
 		if bedroom.playerHeldItem != SUBJECT_TO_HELD[relevantSubject]:
@@ -840,7 +857,7 @@ func parseItems() -> String:
 			return "You reach down and pet Zoomba lovingly. His motor whirrs contentedly."
 		else:
 			bedroom.movePlayer(Bedroom.PlayerPos.ZOOMBA)
-			return "You reach down towards the sleepy vacuum and gently pat him on the head. He shifts slightly in his sleep."
+			return "You reach down towards the snoozing vacuum and gently pat him on the head. He shifts slightly in his sleep."
 
 
 	### Cleaning Computer
@@ -1213,6 +1230,12 @@ func parseItems() -> String:
 							"You'll have to make sure there's some food ready for him when he wakes up."
 						)
 
+				SubjectID.AMBIGUOUS_FLAKES:
+					return requestAdditionalContextCustom(
+						"Are you trying to " + actionAlias + " the red pepper flakes or the flint flakes?",
+						REQUEST_SUBJECT, [], [" flakes"]
+					)
+
 				SubjectID.PEPPER_FLAKES:
 					return "This crushed red pepper sure has a kick to it! Maybe Zoomba would like some extra spice in his breakfast?"
 
@@ -1426,6 +1449,12 @@ func parseItems() -> String:
 					else:
 						return "You'll need to put down what you're holding first."
 
+				SubjectID.AMBIGUOUS_FLAKES:
+					return requestAdditionalContextCustom(
+							"Are you trying to " + actionAlias + " the red pepper flakes or the flint flakes?",
+							REQUEST_SUBJECT, [], [" flakes"]
+						)
+
 				SubjectID.PEPPER_FLAKES:
 					if bedroom.playerHeldItem == bedroom.PlayerHeldItem.NONE:
 						bedroom.pickUpPepperFlakes()
@@ -1611,7 +1640,7 @@ func parseItems() -> String:
 						return "You're not wearing the hat right now."
 
 
-				SubjectID.ZOOMBA_FOOD, SubjectID.PEPPER_FLAKES, SubjectID.FLINT_FLAKES, SubjectID.BREAD_CRUMBS, SubjectID.CHARCOAL_POWDER when (
+				SubjectID.ZOOMBA_FOOD, SubjectID.PEPPER_FLAKES, SubjectID.FLINT_FLAKES, SubjectID.AMBIGUOUS_FLAKES, SubjectID.BREAD_CRUMBS, SubjectID.CHARCOAL_POWDER when (
 					modifierID not in [-1, ModifierID.ON_TABLE, ModifierID.BACK, ModifierID.AWAY, ModifierID.DOWN]
 				):
 					assert(modifierID != ModifierID.ON_FLOOR, "This should have been handled earlier...")
@@ -1632,6 +1661,16 @@ func parseItems() -> String:
 						return "You put the " + subjectAlias + " back on the table."
 					else:
 						return "You're not holding any food for Zoomba right now."
+
+				SubjectID.AMBIGUOUS_FLAKES:
+					if bedroom.playerHeldItem == bedroom.PlayerHeldItem.PEPPER_FLAKES:
+						bedroom.replacePepperFlakes()
+						return "You put the " + subjectAlias + " back on the table."
+					elif bedroom.playerHeldItem == bedroom.PlayerHeldItem.FLINT_FLAKES:
+						bedroom.replaceFlintFlakes()
+						return "You put the " + subjectAlias + " back on the table."
+					else:
+						return "You're not holding any " + subjectAlias + " right now."
 
 				SubjectID.PEPPER_FLAKES:
 					if bedroom.playerHeldItem == bedroom.PlayerHeldItem.PEPPER_FLAKES:
